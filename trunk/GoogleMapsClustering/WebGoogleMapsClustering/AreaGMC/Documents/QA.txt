@@ -1,0 +1,87 @@
+VERSION 1 BY Kunuk Nykjaer
+
+
+Q. How do I get an overview of how this Google Maps Server-side clustering works?
+
+A. Read my blog http://kunuk.wordpress.com/2011/11/05/google-map-server-side-clustering-with-asp-net/
+---------------------------------
+
+Q. Who made this?
+
+A. Kunuk Nykjaer spend the time in the weekends to make 
+a stationary grid-based clustering after preliminary research on different clustering approach.
+All the server-side clustering logic is made by Kunuk Nykjaer.
+The JS GUI-part is largely adapted and reworked by Kunuk Nykjaer and it was based on work 
+from Jonas Olsen, Lars Gundersen and misc. http://stackoverflow.com/ pages as inspiration. 
+The server-side webservice definition are based on work from Lasse Rasch.
+The JS logic-part (cluster points updating, lines drawing) was made by Kunuk Nykjaer).
+The address search part done with inspiration 
+from http://tech.cibul.net/geocode-with-google-maps-api-v3/.
+---------------------------------
+
+Q. How do you control the grid size?
+
+A. In the file mapdkclustering.js
+specific values are set for gridx and gridy in the settings
+---------------------------------
+
+Q. How do you load the dataset?
+
+A. By default the dataset are loaded from a csv file to the Application session.
+Look how it is done in Kunukn.GooglemapsClustering.WebGoogleMapClustering.Application_Start
+The csv file is located at 
+GoogleMapsClustering\WebGoogleMapsClustering\AreaGMC\Files\Point.csv
+
+The format of the csv file is 
+longitude; latitude; point id in GUID format; type id in GUID format.
+The GUID data in this example are dummy data.
+
+There is also the possible to load from a serialized file programmatically but no example file is included.
+Look in the code Kunukn.GooglemapsClustering.DataUtility.Dataset.LoadDatasetFromDatabase() 
+---------------------------------
+
+Q. How do I generate random data points?
+
+A. Use the method: Kunukn.GooglemapsClustering.TestConsole.Program.GenerateRandomDatasetToCSVFile()
+Update information for how many points you want and in which area you want them.
+---------------------------------
+
+Q. How do you enable/disable the red gridlines?
+
+A. In the file mapdkclustering.js 
+set the showGridLines to false or disable it server-side
+setting Kunukn.GooglemapsClustering.Clustering.Config.DoShowGridLinesInGoogleMap to false. 
+---------------------------------
+
+Q. Why do the red gridlines look wierd when zoomed far out?
+
+A. The data for drawing the gridlines are assumed correct last time I checked. The Google API 
+for drawing red linens can't drawa all longitude value scenarious, 
+e.g. from 60 to -100. I didn't want to spend more time on the value scenarious to make a fix 
+by splitting draw functions to something like e.g. 60 to 180 and then -180 to -100
+---------------------------------
+
+Q. How do you extend the viewport data send to the client?
+
+A. Increase or decrease the value in 
+Kunukn.GooglemapsClustering.Clustering.Config.OuterGridExtend
+---------------------------------
+
+Q. How do you control the cluster mergin point?
+
+A. Increase or decrease the value in 
+Kunukn.GooglemapsClustering.Clustering.Config.MergeWithin
+---------------------------------
+
+Q. How did you get the idea for the clustering part?
+
+A. Inspiration from 
+http://www.crunchpanorama.com/ and 
+http://code.google.com/intl/da-DK/apis/maps/articles/toomanymarkers.html
+---------------------------------
+
+Q. Who made the Google Maps search function in this example?
+
+A. The example code is taken from
+http://tech.cibul.net/geocode-with-google-maps-api-v3/
+---------------------------------

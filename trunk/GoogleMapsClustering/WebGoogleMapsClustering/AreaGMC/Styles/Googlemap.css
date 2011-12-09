@@ -1,0 +1,29 @@
+﻿.ui-autocomplete {
+	background-color: #ffffff;
+	width: 410px;
+	border: 1px solid #cfcfcf;
+	list-style-type: none;
+	padding-left: 0px;
+}
+
+#search
+{
+    position: relative;
+    width: 400px;    
+}
+
+#map_container
+{
+    width: 1124px;
+    margin: 10px;
+    position: relative;
+    border: 0px #f00 solid;
+}
+    
+#map_canvas
+{
+    width: 800px; /* 640  1024 */
+    height:   600px; /* 480 768 */
+    overflow: hidden;
+    border: 1px #000 solid;
+}

@@ -1,0 +1,4 @@
+﻿VERSION 1
+	
+- test with points all around the world
+
