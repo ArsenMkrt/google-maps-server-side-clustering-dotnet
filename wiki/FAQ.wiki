@@ -77,7 +77,7 @@ http://code.google.com/intl/da-DK/apis/maps/articles/toomanymarkers.html
 
 *Q. Who made the Google Maps search function in this example?*
 
-A. The example code is taken from
+A. The example code is with inspiration from
 http://tech.cibul.net/geocode-with-google-maps-api-v3/
 
 ---------------------------------
