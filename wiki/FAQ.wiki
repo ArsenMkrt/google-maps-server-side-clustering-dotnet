@@ -6,7 +6,7 @@ A. Read my blog http://kunuk.wordpress.com/2011/11/05/google-map-server-side-clu
 
 ---------------------------------
 
-*Q. What do I need to make this work?*
+*Q. What do I need to run this?*
 
 A. Windows, Visual Studio 2010 or later, .Net v4
 
