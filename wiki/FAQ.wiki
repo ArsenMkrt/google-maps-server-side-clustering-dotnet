@@ -18,7 +18,7 @@ specific values are set for gridx and gridy in the settings
 A. By default the dataset are loaded from a csv file to the Application session.
 Look how it is done in Kunukn.GooglemapsClustering.WebGoogleMapClustering.Application_Start
 The csv file is located at 
-GoogleMapsClustering\WebGoogleMapsClustering\AreaGMC\Files\Point.csv
+GoogleMapsClustering/WebGoogleMapsClustering/AreaGMC/Files/Point.csv
 
 The format of the csv file is 
 longitude; latitude; point id in GUID format; type id in GUID format.
