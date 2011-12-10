@@ -54,12 +54,12 @@
     <Content Include="AreaGMC\Controls\MapClustering.ascx" />
     <Content Include="AreaGMC\Controls\MapWorld.ascx" />
     <Content Include="AreaGMC\Controls\MapDK.ascx" />
+    <Content Include="AreaGMC\Documents\FAQ.txt" />
     <Content Include="AreaGMC\Images\clusteringpreview.gif" />
     <Content Include="AreaGMC\MapClustering.aspx" />
     <Content Include="AreaGMC\Documents\Design\googlemaps-clustering-viewport_ver1.png" />
     <Content Include="AreaGMC\Documents\Design\GoogleMapsClustering_SD_ver1.png" />
     <Content Include="AreaGMC\Documents\License.txt" />
-    <Content Include="AreaGMC\Documents\QA.txt" />
     <Content Include="AreaGMC\Documents\Readme.htm" />
     <Content Include="AreaGMC\Documents\TODO.txt" />
     <Content Include="AreaGMC\MapDK.aspx" />
