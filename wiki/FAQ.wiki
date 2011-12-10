@@ -93,5 +93,6 @@ The server-side webservice definition are based on work from Lasse Rasch.
 The JS logic-part (cluster points updating, lines drawing) was made by Kunuk Nykjaer).
 The address search part done with inspiration 
 from http://tech.cibul.net/geocode-with-google-maps-api-v3/.
+The cluster images are taken from Google's example images.
 
 ---------------------------------
