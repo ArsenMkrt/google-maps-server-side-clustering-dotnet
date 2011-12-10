@@ -6,6 +6,12 @@ A. Read my blog http://kunuk.wordpress.com/2011/11/05/google-map-server-side-clu
 
 ---------------------------------
 
+*Q. What do I need to make this work?*
+
+A. Windows, VS 2010 or later, .Net v4
+
+---------------------------------
+
 *Q. How do you control the grid size?*
 
 A. In the file mapdkclustering.js
