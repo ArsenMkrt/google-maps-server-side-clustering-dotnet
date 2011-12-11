@@ -23,7 +23,7 @@ It should be possible to increase the number of points and keep a delay below 1 
 *Q. How do you control the grid size?*
 
 A. In the file mapdkclustering.js
-specific values are set for gridx and gridy in the settings
+specific values are set for gridx and gridy in the settings.
 
 ---------------------------------
 
@@ -31,6 +31,7 @@ specific values are set for gridx and gridy in the settings
 
 A. By default the dataset are loaded from a csv file to the Application session.
 Look how it is done in {{{Kunukn.GooglemapsClustering.WebGoogleMapClustering.Application_Start}}}
+
 The csv file is located at 
 {{{GoogleMapsClustering/WebGoogleMapsClustering/AreaGMC/Files/Points.csv}}}
 
