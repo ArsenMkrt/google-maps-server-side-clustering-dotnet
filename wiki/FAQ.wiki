@@ -40,7 +40,7 @@ longitude; latitude; point id in GUID format; type id.
 
 The point id and type id data in this example are dummy data.
 Only the longitude and latitude are parsed to double values.
-point id and type id are simple string values and are not parsed.
+point id and type id are string values and are not parsed.
 
 There is also the possible to load from a serialized file programmatically but no example file is included.
 Look in the code {{{Kunukn.GooglemapsClustering.DataUtility.Dataset.LoadDatasetFromDatabase()}}}
@@ -112,5 +112,11 @@ The JS logic-part (cluster points updating, lines drawing) was made by Kunuk Nyk
 The address search part done with inspiration 
 from http://tech.cibul.net/geocode-with-google-maps-api-v3/.
 The cluster images are taken from Google's example images.
+
+---------------------------------
+
+*Q. What license type is this?*
+
+A. MIT License.
 
 ---------------------------------
