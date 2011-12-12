@@ -20,14 +20,14 @@ It should be possible to increase the number of points and keep a delay below 1 
 
 ---------------------------------
 
-*Q. How do you control the grid size?*
+*Q. How do I control the grid size?*
 
 A. In the file mapdkclustering.js
 specific values are set for gridx and gridy in the settings.
 
 ---------------------------------
 
-*Q. How do you load the dataset?*
+*Q. How do I load the dataset?*
 
 A. By default the dataset are loaded from a csv file to the Application session.
 Look how it is done in {{{Kunukn.GooglemapsClustering.WebGoogleMapClustering.Application_Start}}}
@@ -47,6 +47,13 @@ Look in the code {{{Kunukn.GooglemapsClustering.DataUtility.Dataset.LoadDatasetF
 
 ---------------------------------
 
+*Q. How do I set the initial zoom-level and position?*
+
+A. In the file mapdkclustering.js
+those values are set in the settings area.
+
+---------------------------------
+
 *Q. How do I generate random data points?*
 
 A. Use the method: {{{Kunukn.GooglemapsClustering.TestConsole.Program.GenerateRandomDatasetToCSVFile()}}}
@@ -54,7 +61,7 @@ to update information for how many points you want and in which area you want th
 
 ---------------------------------
 
-*Q. How do you enable/disable the red gridlines?*
+*Q. How do I enable/disable the red gridlines?*
 
 A. In the file {{{mapdkclustering.js }}}
 set the showGridLines to false or disable it server-side
@@ -62,14 +69,14 @@ setting {{{Kunukn.GooglemapsClustering.Clustering.Config.DoShowGridLinesInGoogle
 
 ---------------------------------
 
-*Q. How do you extend the viewport data send to the client?*
+*Q. How do I extend the viewport data send to the client?*
 
 A. Increase or decrease the value in 
 {{{Kunukn.GooglemapsClustering.Clustering.Config.OuterGridExtend}}}
 
 ---------------------------------
 
-*Q. How do you control the cluster merging point?*
+*Q. How do I control the cluster merging point?*
 
 A. Increase or decrease the value in 
 {{{Kunukn.GooglemapsClustering.Clustering.Config.MergeWithin}}}
