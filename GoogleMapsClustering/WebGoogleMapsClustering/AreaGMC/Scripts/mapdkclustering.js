@@ -168,8 +168,9 @@ var mymap = {
         access_token: 'todo',
         jsonMarkerUrl: 'WebService/MapService.asmx/GetMarkers',
         jsonMarkerDetailUrl: 'WebService/MapService.asmx/GetMarkerDetail',
+
         clusterImage: {
-            src: 'Images/cluster2.png',
+            src: 'Images/cluster2.png', //this is invisible img only used for click-event detecting
             height: 60,
             width: 60,
             offsetH: 30,
@@ -179,6 +180,27 @@ var mymap = {
             src: 'Images/pin24.png',
             height: 24,
             width: 24,
+            offsetH: 0,
+            offsetW: 0
+        },
+        pinImage1: {
+            src: 'Images/markers/court.png',
+            height: 37,
+            width: 32,
+            offsetH: 0,
+            offsetW: 0
+        },
+        pinImage2: {
+            src: 'Images/markers/firstaid.png',
+            height: 37,
+            width: 32,
+            offsetH: 0,
+            offsetW: 0
+        },
+        pinImage3: {
+            src: 'Images/markers/house.png',
+            height: 37,
+            width: 32,
             offsetH: 0,
             offsetW: 0
         },
@@ -270,6 +292,9 @@ var mymap = {
 
             var clusterImg = new google.maps.MarkerImage(mymap.settings.clusterImage.src, new google.maps.Size(mymap.settings.clusterImage.width, mymap.settings.clusterImage.height), null, new google.maps.Point(mymap.settings.clusterImage.offsetW, mymap.settings.clusterImage.offsetH));
             var pinImg = new google.maps.MarkerImage(mymap.settings.pinImage.src, new google.maps.Size(mymap.settings.pinImage.width, mymap.settings.pinImage.height), null, null);
+            var pinImg1 = new google.maps.MarkerImage(mymap.settings.pinImage1.src, new google.maps.Size(mymap.settings.pinImage1.width, mymap.settings.pinImage1.height), null, null);
+            var pinImg2 = new google.maps.MarkerImage(mymap.settings.pinImage2.src, new google.maps.Size(mymap.settings.pinImage2.width, mymap.settings.pinImage2.height), null, null);
+            var pinImg3 = new google.maps.MarkerImage(mymap.settings.pinImage3.src, new google.maps.Size(mymap.settings.pinImage3.width, mymap.settings.pinImage3.height), null, null);
 
             var webMethod = mymap.settings.jsonMarkerUrl;
             var parameters = '{' + '"access_token":"' + mymap.settings.access_token + '","nelat":"' + mapData.neLat + '","nelon":"' + mapData.neLon + '","swlat":"' + mapData.swLat + '","swlon":"' + mapData.swLon + '","zoomlevel":"' + mapData.zoomLevel + '","gridx":"' + mymap.settings.gridx + '","gridy":"' + mymap.settings.gridy + '","zoomlevelClusterStop":"' + mymap.settings.zoomlevelClusterStop + '","sendid":"' + (++async.lastSend) + '"}';
@@ -360,7 +385,7 @@ var mymap = {
                         }
                     }
 
-                    // remove current markers which should not be displayd
+                    // remove current markers which should not be displayed
                     for (i in markers) {
                         if (markers.hasOwnProperty(i)) {
                             var m = markers[i];
@@ -393,13 +418,28 @@ var mymap = {
 
                     $.each(newmarkersTodo, function () {
                         var item = this;
-                        var lat = item.Y;
-                        var lon = item.X;
-                        var index = item.I;
+                        var lat = item.Y; //lat
+                        var lon = item.X; //lon
+                        var index = item.I; //id
 
                         var latLng = new google.maps.LatLng(lat, lon, true);
 
-                        iconImg = (item.C === 1) ? pinImg : clusterImg;
+                        var iconImg;
+                        if (item.C === 1) {
+                            if (item.T === '1') {
+                                iconImg = pinImg1;
+                            }
+                            else if (item.T === '2') {
+                                iconImg = pinImg2;
+                            }
+                            else if (item.T === '3') {
+                                iconImg = pinImg3;
+                            } else {
+                                iconImg = pinImg;
+                            }
+                        } else {
+                            iconImg = clusterImg;
+                        }
 
                         var marker = new google.maps.Marker({
                             position: latLng,
@@ -489,7 +529,7 @@ var mymap = {
 // lon, lat, count
 var getKey = function (x, y, c) {
     var s = x + "__" + y + "__" + c;
-    return s.replace(/\./g, "_");
+    return s.replace(/\./g, "_"); //replace . with _
 }
 
 google.maps.event.addDomListener(window, 'load', mymap.initialize); // load google map
@@ -517,10 +557,7 @@ var Label = function (opt_options, id, count) {
     else {
         span.style.cssText = mymap.clusterOptions.styles[0].style;
     }
-    /*
-    span.style.cssText = 'font-family: arial;display:block;position: relative; left: -26px;top: -26px;font-weight:bold;text-align:center;line-height:53px;font-size:12px;font-weight:bold;' +
-    'white-space: nowrap;color:#fff;background:url(/Images/m1.png) no-repeat 0 0;width:53px;height:52px;';
-    */
+
     var div = this.div_ = document.createElement('div');
     div.appendChild(span);
     div.className = "countinfo_" + id;

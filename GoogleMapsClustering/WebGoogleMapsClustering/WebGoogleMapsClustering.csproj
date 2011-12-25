@@ -56,6 +56,9 @@
     <Content Include="AreaGMC\Controls\MapDK.ascx" />
     <Content Include="AreaGMC\Documents\FAQ.txt" />
     <Content Include="AreaGMC\Images\clusteringpreview.gif" />
+    <Content Include="AreaGMC\Images\markers\court.png" />
+    <Content Include="AreaGMC\Images\markers\firstaid.png" />
+    <Content Include="AreaGMC\Images\markers\house.png" />
     <Content Include="AreaGMC\MapClustering.aspx" />
     <Content Include="AreaGMC\Documents\Design\googlemaps-clustering-viewport_ver1.png" />
     <Content Include="AreaGMC\Documents\Design\GoogleMapsClustering_SD_ver1.png" />
