@@ -116,11 +116,10 @@ A. Time complexity is O(m*n) and space complexity is O(n) where n is the number 
 *Q. Who made this?*
 
 A. Kunuk Nykjaer spend the time in the weekends to make 
-a stationary grid-based clustering after preliminary research on different clustering approach.
+a stationary grid-based clustering after preliminary research on different clustering approach. On my time on the job I made a marker-clusterer version which I later discontinued because I felt the grid-based worked better. 
 All the server-side clustering logic is made by Kunuk Nykjaer.
-The JS GUI-part is largely adapted and reworked by Kunuk Nykjaer and it was based on work 
-from Jonas Olsen, Lars Gundersen and misc. http://stackoverflow.com/ pages as inspiration. 
-The server-side webservice definition are based on work from Lasse Rasch.
+The JS GUI-part is largely adapted and reworked by Kunuk Nykjaer and the inspiration came partly from JS-implementation by Jonas Olsen, Lars Gundersen and misc. http://stackoverflow.com/ pages. 
+The server-side webservice definition are with inspiration from Lasse Rasch's implementations.
 The JS logic-part (cluster points updating, lines drawing) was made by Kunuk Nykjaer).
 The address search part done with inspiration 
 from http://tech.cibul.net/geocode-with-google-maps-api-v3/.
