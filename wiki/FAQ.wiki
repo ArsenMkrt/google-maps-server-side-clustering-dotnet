@@ -126,10 +126,10 @@ from http://tech.cibul.net/geocode-with-google-maps-api-v3/.
 The cluster images are taken from Google's example images.
 The marker images are taken from http://mapicons.nicolasmollet.com/
 
-Kunuk Nykjaer http://dk.linkedin.com/in/kunukn/
-Jonas Olsen http://dk.linkedin.com/in/joolz/
-Lars Gundersen http://dk.linkedin.com/in/larsgundersen/
-Lasse Rasch http://dk.linkedin.com/pub/lasse-rasch/7/991/a10/
+  Kunuk Nykjaer http://dk.linkedin.com/in/kunukn/
+  Jonas Olsen http://dk.linkedin.com/in/joolz/
+  Lars Gundersen http://dk.linkedin.com/in/larsgundersen/
+  Lasse Rasch http://dk.linkedin.com/pub/lasse-rasch/7/991/a10/
 ---------------------------------
 
 *Q. What license type is this?*
