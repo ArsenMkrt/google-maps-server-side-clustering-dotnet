@@ -65,3 +65,15 @@ span.mono
    
 }
 
+#checkboxContainer
+{
+    position: fixed;
+    width:140px;    
+    height:200px;
+    border: 1px #000 solid;
+    background: #eee;
+    left:30px;
+    bottom:100px;
+    opacity: 0.9;
+    z-index: 3;
+}
