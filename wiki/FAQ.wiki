@@ -110,7 +110,7 @@ http://tech.cibul.net/geocode-with-google-maps-api-v3/
 
 *Q. What is the complexity of time and space?*
 
-A. Time complexity is O(m*n) and space complexity is O(n) where n is the number of points used in total and m is the number of grids returned to the client.
+A. Time complexity is O(m*n) and space complexity is O(n) where n is the number of points used in total and m is the number of grids returned to the client. You are welcome to analyse it yourself :) I use hashset and hashmap to minimize the time complexity.
 
 ---------------------------------
 
