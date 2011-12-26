@@ -7,7 +7,8 @@ var map, infowindow, debugMarker, debuginfo;
 var searchInfo = {
     searchMarker: null,
     zoomLevel: 13,
-    round: 6
+    round: 6,
+    prefix: 4
 };
 
 var geocoder = new google.maps.Geocoder();

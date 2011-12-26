@@ -3,7 +3,8 @@
 var searchInfo = {
     searchMarker: null,
     zoomLevel: 13,
-    round: 6
+    round: 6,
+    prefix: 4
 };
 
 var geocoder = new google.maps.Geocoder();
@@ -11,14 +12,18 @@ var geocoder = new google.maps.Geocoder();
 var mymap = {
 
     latlonsearch: function () {
-        //parseFloat()       
-        var lat = $('#latitude').val().toFixed(searchInfo.round);
-        var lon = $('#longitude').val().toFixed(searchInfo.round);
+        // parseFloat() .toFixed(searchInfo.round);    
+        var lat = $('#latitude').val() + "";
+        var lon = $('#longitude').val() + "";
+        if (lat.length > searchInfo.round + searchInfo.prefix) lat = lat.substring(0, searchInfo.round + 2 + searchInfo.prefix);
+        if (lon.length > searchInfo.round + searchInfo.prefix) lon = lon.substring(0, searchInfo.round + 2 + searchInfo.prefix);
+        lat = parseFloat(lat).toFixed(searchInfo.round);
+        lon = parseFloat(lon).toFixed(searchInfo.round);
         $('#latitude').val(lat); //update
         $('#longitude').val(lon);
         $('#lonlat').val(lon + ';' + lat);
-
         var latlon = new google.maps.LatLng(lat, lon);
+
         geocoder.geocode({ 'latLng': latlon }, function (results, status) {
             if (status === google.maps.GeocoderStatus.OK) {
                 if (results[0]) {
@@ -92,9 +97,14 @@ var mymap = {
             geocoder.geocode({ 'latLng': searchInfo.searchMarker.getPosition() }, function (results, status) {
                 if (status === google.maps.GeocoderStatus.OK) {
                     if (results[0]) {
-                        $('#search').val(results[0].formatted_address.replace(/, Danmark/gi, ""));
-                        var lat = searchInfo.searchMarker.getPosition().lat().toFixed(searchInfo.round);
-                        var lon = searchInfo.searchMarker.getPosition().lng().toFixed(searchInfo.round);
+                        $('#search').val(results[0].formatted_address.replace(/, Danmark/gi, ""));                        
+                        var lat = searchInfo.searchMarker.getPosition().lat() + "";
+                        var lon = searchInfo.searchMarker.getPosition().lng() + "";
+                        if (lat.length > searchInfo.round + searchInfo.prefix) lat = lat.substring(0, searchInfo.round + 2 + searchInfo.prefix);
+                        if (lon.length > searchInfo.round + searchInfo.prefix) lon = lon.substring(0, searchInfo.round + 2 + searchInfo.prefix);
+                        lat = parseFloat(lat).toFixed(searchInfo.round);
+                        lon = parseFloat(lon).toFixed(searchInfo.round);       
+
                         $('#latitude').val(lat);
                         $('#longitude').val(lon);
                         $('#lonlat').val(lon + ';' + lat);
@@ -122,17 +132,18 @@ var mymap = {
                 },
                 //This bit is executed upon selection of an address
                 select: function (event, ui) {
-                    var lat = ui.item.latitude;
-                    var lon = ui.item.longitude;
-                    //if (lat.length > searchInfo.round) lat = lat.substring(searchInfo.round);
-                    //if (lon.length > searchInfo.round) lon = lon.substring(searchInfo.round);
-                    lat = lat.toFixed(searchInfo.round);
-                    lon = lon.toFixed(searchInfo.round);
+                    //parseFloat()   
+                    var lat = ui.item.latitude + "";
+                    var lon = ui.item.longitude + "";
+                    if (lat.length > searchInfo.round + searchInfo.prefix) lat = lat.substring(0, searchInfo.round + 2 + searchInfo.prefix);
+                    if (lon.length > searchInfo.round + searchInfo.prefix) lon = lon.substring(0, searchInfo.round + 2 + searchInfo.prefix);
+                    lat = parseFloat(lat).toFixed(searchInfo.round);
+                    lon = parseFloat(lon).toFixed(searchInfo.round);                    
 
                     $("#latitude").val(lat);
                     $("#longitude").val(lon);
                     $('#lonlat').val(lon + ';' + lat);
-                    var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
+                    var location = new google.maps.LatLng(lat, lon);
 
                     searchInfo.searchMarker.setPosition(location);
                     searchInfo.searchMarker.setVisible(true);
@@ -148,9 +159,9 @@ var mymap = {
 
     },
     settings: {
-        mapCenterLat: 55.7,
-        mapCenterLon: 12.6,
-        zoomLevel: 6
+        mapCenterLat: 56.1,
+        mapCenterLon: 11.7,
+        zoomLevel: 7
     }
 }
 
