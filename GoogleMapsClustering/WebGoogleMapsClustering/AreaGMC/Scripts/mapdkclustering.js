@@ -24,6 +24,8 @@ var async = {
     lastReceived: 0,
     lastSendMarkerDetail: 0,
     lastReceivedMarkerDetail: 0,
+    lastSendSetType: 0,
+    lastReceivedSetType: 0,
     lastCache: ""
 };
 
@@ -83,7 +85,7 @@ var mymap = {
             maxZoom: 19
         });
 
-        google.maps.event.addListener(map, 'idle', function () { mymap.events.getBounds(map); });
+        google.maps.event.addListener(map, 'idle', function () { mymap.events.getBounds(map,false); });
         google.maps.event.addListener(map, 'zoom_changed', function () {
             document.getElementById("zoomInfo").innerHTML = "zoom: " + map.getZoom() + ".  ";
         });
@@ -111,7 +113,7 @@ var mymap = {
             zIndex: 1
         });
 
-        searchInfo.searchMarker.setPosition(new google.maps.LatLng(55.5, 11.8));
+        searchInfo.searchMarker.setPosition(new google.maps.LatLng(mymap.settings.mapCenterLat, mymap.settings.mapCenterLon));
         searchInfo.searchMarker.setVisible(true);
 
         //Add listener to marker for reverse geocoding
@@ -125,7 +127,7 @@ var mymap = {
                         if (lat.length > searchInfo.round + searchInfo.prefix) lat = lat.substring(0, searchInfo.round + 2 + searchInfo.prefix);
                         if (lon.length > searchInfo.round + searchInfo.prefix) lon = lon.substring(0, searchInfo.round + 2 + searchInfo.prefix);
                         lat = parseFloat(lat).toFixed(searchInfo.round);
-                        lon = parseFloat(lon).toFixed(searchInfo.round);     
+                        lon = parseFloat(lon).toFixed(searchInfo.round);
                         $('#latitude').val(lat);
                         $('#longitude').val(lon);
                         $('#lonlat').val(lon + ';' + lat);
@@ -160,7 +162,7 @@ var mymap = {
                     if (lat.length > searchInfo.round + searchInfo.prefix) lat = lat.substring(0, searchInfo.round + 2 + searchInfo.prefix);
                     if (lon.length > searchInfo.round + searchInfo.prefix) lon = lon.substring(0, searchInfo.round + 2 + searchInfo.prefix);
                     lat = parseFloat(lat).toFixed(searchInfo.round);
-                    lon = parseFloat(lon).toFixed(searchInfo.round);     
+                    lon = parseFloat(lon).toFixed(searchInfo.round);
 
                     $("#latitude").val(lat);
                     $("#longitude").val(lon);
@@ -192,6 +194,7 @@ var mymap = {
         access_token: 'todo',
         jsonMarkerUrl: 'WebService/MapService.asmx/GetMarkers',
         jsonMarkerDetailUrl: 'WebService/MapService.asmx/GetMarkerDetail',
+        jsonSetTypeUrl: 'WebService/MapService.asmx/SetType',
 
         clusterImage: {
             src: 'Images/cluster2.png', //this is invisible img only used for click-event detecting
@@ -262,7 +265,7 @@ var mymap = {
 
 
     events: {
-        getBounds: function (map) {
+        getBounds: function (map, forceUpdate) {
 
             if (!infowindow) {
                 infowindow = new google.maps.InfoWindow();
@@ -302,7 +305,7 @@ var mymap = {
             // avoid repeated request, similar to avoiding double events on doubleclick
             var _ = "_";
             var cache = mapData.neLat + _ + mapData.neLon + _ + mapData.swLat + _ + mapData.swLon + _ + mapData.zoomLevel;
-            if (async.lastCache === cache)
+            if (async.lastCache === cache && forceUpdate === false)
                 return;
             async.lastCache = cache; // update
 
@@ -514,7 +517,36 @@ var mymap = {
 
         },
 
+        setType: function (type, isChecked) {
+            var webMethod = mymap.settings.jsonSetTypeUrl;
+            var parameters = '{' + '"access_token":"' + mymap.settings.access_token + '","type":"' + type + '","isChecked":"' + isChecked + '","sendid":"' + (++async.lastSendSetType) + '"}';
+            $.ajax({
+                type: 'POST',
+                url: webMethod,
+                data: parameters,
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (data) {
+                    var items = jQuery.parseJSON(data.d);
+                    var success = items.Success;
+                    var lastReceivedSetType = items.ReplyId;
+                    if (lastReceivedSetType <= async.lastReceivedSetType) {
+                        // async mismatch, this is old reply, dont use it
+                        //console.log('async mismatch ' + lastReceivedSetType + ' ' + async.lastReceivedSetType);
+                        return;
+                    }
+                    // update
+                    async.lastReceivedSetType = lastReceivedSetType;
 
+                    // update screen
+                    mymap.events.getBounds(map,true);
+                },
+                error: function (xhr, err) {
+                    alert("readyState: " + xhr.readyState + "\nstatus: " + xhr.status + "\nresponseText: " + xhr.responseText);
+                }
+
+            });
+        },
 
         attachCallOut: function (marker, item) {
             var webMethod = mymap.settings.jsonMarkerDetailUrl;
@@ -559,6 +591,9 @@ var getKey = function (x, y, c) {
 google.maps.event.addDomListener(window, 'load', mymap.initialize); // load google map
 
 
+var checkboxClicked = function (type, isChecked) {    
+    mymap.events.setType(type, isChecked);
+}
 
 
 //COUNT LABELS ON CLUSTERS

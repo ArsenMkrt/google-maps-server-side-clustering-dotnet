@@ -10,14 +10,14 @@ namespace Kunukn.GooglemapsClustering.Data
         public int ReplyId { get; set; }
 
         [ScriptIgnore]  //dont include in json reply
-        public string Id  { get; set; }
+        public string Type  { get; set; }
         [ScriptIgnore]
-        public string Type { get; set; }
+        public string Id { get; set; }
 
         public JsonMarkerInfoReply()
         {
             Id = string.Empty;
-            Type = string.Empty;
+            Type = string.Empty;            
             ReplyId = 1;
         }
 

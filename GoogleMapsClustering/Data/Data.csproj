@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClusterInfo.cs" />
+    <Compile Include="JsonSetTypeReply.cs" />
     <Compile Include="Point2.cs" />
     <Compile Include="Bucket.cs" />
     <Compile Include="Boundary.cs" />
