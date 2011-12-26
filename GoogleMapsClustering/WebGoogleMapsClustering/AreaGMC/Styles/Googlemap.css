@@ -27,3 +27,41 @@
     overflow: hidden;
     border: 1px #000 solid;
 }
+
+input
+{
+    font-family:monospace;
+}
+span
+{
+    font-family:monospace;
+}
+
+#lonlat
+{
+    border: 1px #fff solid;
+    border: none;
+    background: transparent;
+}
+
+#longitude
+{
+    
+}
+
+#latitude
+{
+   
+}
+
+#btnLatLonSearch
+{
+   
+}
+
+
+#zoomInfo
+{
+   
+}
+

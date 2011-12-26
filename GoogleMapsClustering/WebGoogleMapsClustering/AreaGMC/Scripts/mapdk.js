@@ -2,18 +2,20 @@
 
 var searchInfo = {
     searchMarker: null,
-    zoomLevel: 13
+    zoomLevel: 13,
+    round: 6
 };
 
 var geocoder = new google.maps.Geocoder();
 
 var mymap = {
 
-    latlonsearch: function () {
-        var lat = parseFloat($('#latitude').val());
-        var lon = parseFloat($('#longitude').val());
+    latlonsearch: function () {        
+        var lat = parseFloat($('#latitude').val()).toFixed(searchInfo.round);
+        var lon = parseFloat($('#longitude').val()).toFixed(searchInfo.round);
         $('#latitude').val(lat); //update
         $('#longitude').val(lon);
+        $('#lonlat').val(lon + ';' + lat);
 
         var latlon = new google.maps.LatLng(lat, lon);
         geocoder.geocode({ 'latLng': latlon }, function (results, status) {
@@ -88,10 +90,13 @@ var mymap = {
         google.maps.event.addListener(searchInfo.searchMarker, 'drag', function () {
             geocoder.geocode({ 'latLng': searchInfo.searchMarker.getPosition() }, function (results, status) {
                 if (status === google.maps.GeocoderStatus.OK) {
-                    if (results[0]) {                        
+                    if (results[0]) {
                         $('#search').val(results[0].formatted_address.replace(/, Danmark/gi, ""));
-                        $('#latitude').val(searchInfo.searchMarker.getPosition().lat());
-                        $('#longitude').val(searchInfo.searchMarker.getPosition().lng());
+                        var lat = searchInfo.searchMarker.getPosition().lat().toFixed(searchInfo.round);
+                        var lon = searchInfo.searchMarker.getPosition().lng().toFixed(searchInfo.round);
+                        $('#latitude').val(lat);
+                        $('#longitude').val(lon);
+                        $('#lonlat').val(lon + ';' + lat);
                     }
                 }
             });
