@@ -56,7 +56,7 @@ namespace Kunukn.GooglemapsClustering.DataUtility
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.StackTrace + "\nPress a key ... ");
+                Console.WriteLine( Util.GetException(ex) + "\nPress a key ... ");
                 Console.ReadKey();
             }
 
