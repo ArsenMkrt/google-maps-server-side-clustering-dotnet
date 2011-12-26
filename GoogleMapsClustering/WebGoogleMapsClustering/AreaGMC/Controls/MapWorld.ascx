@@ -15,8 +15,8 @@
 
     <div id="map_canvas"></div>    
 
-    <label>latitude: </label><input id="latitude" size="8" maxlength="20"  type="text" /> <label>longitude: </label><input id="longitude" size="8" maxlength="20"  type="text" />
+    <label>latitude: </label><input id="latitude" size="10" class="mono" maxlength="20"  type="text" /> <label>longitude: </label><input id="longitude" size="10" class="mono" maxlength="20"  type="text" />
     <input id="btnLatLonSearch" type="button" value="search" onclick="mymap.latlonsearch(); return false;"/>
-    <span id="zoomInfo">zoom: </span>  &nbsp;&nbsp;&nbsp;<input id="lonlat" maxlength="20"  onclick="document.getElementById('lonlat').select();" />
+    <span id="zoomInfo" class="mono">zoom: </span>  &nbsp;&nbsp;&nbsp;<input id="lonlat" class="mono" maxlength="20"  onclick="document.getElementById('lonlat').select();" />
 
 </div>
