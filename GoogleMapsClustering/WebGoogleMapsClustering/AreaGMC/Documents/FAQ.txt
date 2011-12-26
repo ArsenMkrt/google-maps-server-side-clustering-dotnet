@@ -1,87 +1,140 @@
-VERSION 1 BY Kunuk Nykjaer
+= Frequently Asked Questions = 
 
-
-Q. How do I get an overview of how this Google Maps Server-side clustering works?
+*Q. How do I get an overview of how this Google Maps Server-side clustering works?*
 
 A. Read my blog http://kunuk.wordpress.com/2011/11/05/google-map-server-side-clustering-with-asp-net/
+
 ---------------------------------
 
-Q. How do you control the grid size?
+*Q. What do I need to run this?*
+
+A. Windows, Visual Studio 2010 or later, .Net v4.
+For deployment the web.config is configured for IIS 7 or later.
+
+---------------------------------
+
+*Q. How many points can I use?*
+
+A. With current implementation, the upper limit should be around 300.000 where the delay is below 1 sec. 
+The server running time with an average laptop was about 300 msec. for 300.000 points. 
+
+It should be possible to increase the number of points and keep a delay below 1 sec. 
+by implementing a spatial data structure such as range search but it would only help if you are zoomed in. 
+If you are zoomed all the way out you will have to iterate all the points  
+then you would have to rely on pre-clustering for time complexity improvement.
+
+---------------------------------
+
+*Q. How do I control the grid size?*
 
 A. In the file mapdkclustering.js
-specific values are set for gridx and gridy in the settings
+specific values are set for gridx and gridy in the settings.
+
 ---------------------------------
 
-Q. How do you load the dataset?
+*Q. How do I load the dataset?*
 
 A. By default the dataset are loaded from a csv file to the Application session.
-Look how it is done in Kunukn.GooglemapsClustering.WebGoogleMapClustering.Application_Start
+Look how it is done in {{{Kunukn.GooglemapsClustering.WebGoogleMapClustering.Application_Start}}}
+
 The csv file is located at 
-GoogleMapsClustering\WebGoogleMapsClustering\AreaGMC\Files\Points.csv
+{{{GoogleMapsClustering/WebGoogleMapsClustering/AreaGMC/Files/Points.csv}}}
 
 The format of the csv file is 
-longitude; latitude; point id in GUID format; type id in GUID format.
-The GUID data in this example are dummy data.
+longitude; latitude; point id in GUID format; type id.
+
+The point id and type id data in this example are dummy data.
+Only the longitude and latitude are parsed to double values.
+point id and type id are string values and are not parsed.
 
 There is also the possible to load from a serialized file programmatically but no example file is included.
-Look in the code Kunukn.GooglemapsClustering.DataUtility.Dataset.LoadDatasetFromDatabase() 
+Look in the code {{{Kunukn.GooglemapsClustering.DataUtility.Dataset.LoadDatasetFromDatabase()}}}
+
 ---------------------------------
 
-Q. How do I generate random data points?
+*Q. How do I set the initial zoom-level and position?*
 
-A. Use the method: Kunukn.GooglemapsClustering.TestConsole.Program.GenerateRandomDatasetToCSVFile()
+A. In the file mapdkclustering.js
+those values are set in the settings area.
+
+---------------------------------
+
+*Q. How do I generate random data points?*
+
+A. Use the method: {{{Kunukn.GooglemapsClustering.TestConsole.Program.GenerateRandomDatasetToCSVFile()}}}
 to update information for how many points you want and in which area you want them.
+
 ---------------------------------
 
-Q. How do you enable/disable the red gridlines?
+*Q. How do I enable/disable the red gridlines?*
 
-A. In the file mapdkclustering.js 
+A. In the file {{{mapdkclustering.js }}}
 set the showGridLines to false or disable it server-side
-setting Kunukn.GooglemapsClustering.Clustering.Config.DoShowGridLinesInGoogleMap to false. 
+setting {{{Kunukn.GooglemapsClustering.Clustering.Config.DoShowGridLinesInGoogleMap}}} to false. 
+
 ---------------------------------
 
-Q. Why do the red gridlines look wierd when zoomed far out?
+*Q. How do I extend the viewport data send to the client?*
+
+A. Increase or decrease the value in 
+{{{Kunukn.GooglemapsClustering.Clustering.Config.OuterGridExtend}}}
+
+---------------------------------
+
+*Q. How do I control the cluster merging point?*
+
+A. Increase or decrease the value in 
+{{{Kunukn.GooglemapsClustering.Clustering.Config.MergeWithin}}}
+
+---------------------------------
+
+*Q. Why do the red gridlines look wierd when zoomed far out?*
 
 A. The data for drawing the gridlines are assumed correct last time I checked. The Google API 
 for drawing red linens can't drawa all longitude value scenarious, 
 e.g. from 60 to -100. I didn't want to spend more time on the value scenarious to make a fix 
 by splitting draw functions to something like e.g. 60 to 180 and then -180 to -100
+
 ---------------------------------
 
-Q. How do you extend the viewport data send to the client?
-
-A. Increase or decrease the value in 
-Kunukn.GooglemapsClustering.Clustering.Config.OuterGridExtend
----------------------------------
-
-Q. How do you control the cluster merging point?
-
-A. Increase or decrease the value in 
-Kunukn.GooglemapsClustering.Clustering.Config.MergeWithin
----------------------------------
-
-Q. How did you get the idea for the clustering part?
+*Q. How did you get the idea for the clustering part?*
 
 A. Inspiration from 
 http://www.crunchpanorama.com/ and 
 http://code.google.com/intl/da-DK/apis/maps/articles/toomanymarkers.html
+
 ---------------------------------
 
-Q. Who made the Google Maps search function in this example?
+*Q. Who made the Google Maps search function in this example?*
 
 A. The example code is with inspiration from
 http://tech.cibul.net/geocode-with-google-maps-api-v3/
+
 ---------------------------------
 
-Q. Who made this?
+*Q. What is the complexity of time and space?*
+
+A. Time complexity is O(m*n) and space complexity is O(n) 
+where n is the number of points used in total and m is the number of grids returned to the client. 
+You are welcome to analyse it yourself :) I use hashset and hashmap to minimize the time complexity.
+
+---------------------------------
+
+*Q. Could you port this to Java?*
+
+A. Yes I could but I want to spend my time on something else.
+
+---------------------------------
+
+*Q. Who made this?*
 
 A. Kunuk Nykjaer spend the time in the weekends to make 
 a stationary grid-based clustering after preliminary research on different clustering approach. 
-On my time on the job I made a marker-clusterer version which I later discontinued because 
-I felt the grid-based worked better. 
+On my time on the job I made a marker-clusterer version 
+which I later discontinued because I felt the grid-based worked better. 
 All the server-side clustering logic is made by Kunuk Nykjaer.
-The JS GUI-part is largely adapted and reworked by Kunuk Nykjaer and the inspiration 
-came partly from JS-implementation by Jonas Olsen, Lars Gundersen and misc. http://stackoverflow.com/ pages. 
+The JS GUI-part is largely adapted and reworked by Kunuk Nykjaer and the inspiration came partly 
+from JS-implementation by Jonas Olsen, Lars Gundersen and misc. http://stackoverflow.com/ pages. 
 The server-side webservice definition are with inspiration from Lasse Rasch's implementations.
 The JS logic-part (cluster points updating, lines drawing) was made by Kunuk Nykjaer).
 The address search part done with inspiration 
@@ -89,8 +142,14 @@ from http://tech.cibul.net/geocode-with-google-maps-api-v3/.
 The cluster images are taken from Google's example images.
 The marker images are taken from http://mapicons.nicolasmollet.com/
 
-Kunuk Nykjaer http://dk.linkedin.com/in/kunukn
-Jonas Olsen http://dk.linkedin.com/in/joolz
-Lars Gundersen http://dk.linkedin.com/in/larsgundersen
-Lasse Rasch http://dk.linkedin.com/pub/lasse-rasch/7/991/a10
+  * Kunuk Nykjaer http://dk.linkedin.com/in/kunukn/
+  * Jonas Olsen http://dk.linkedin.com/in/joolz/
+  * Lars Gundersen http://dk.linkedin.com/in/larsgundersen/
+  * Lasse Rasch http://dk.linkedin.com/pub/lasse-rasch/7/991/a10/
+---------------------------------
+
+*Q. What license type is this?*
+
+A. MIT License.
+
 ---------------------------------
