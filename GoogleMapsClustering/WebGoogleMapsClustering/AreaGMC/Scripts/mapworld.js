@@ -11,8 +11,9 @@ var geocoder = new google.maps.Geocoder();
 var mymap = {
 
     latlonsearch: function () {
-        var lat = parseFloat($('#latitude').val()).toFixed(searchInfo.round);
-        var lon = parseFloat($('#longitude').val()).toFixed(searchInfo.round);
+        // parseFloat()
+        var lat = $('#latitude').val().toFixed(searchInfo.round);
+        var lon = $('#longitude').val().toFixed(searchInfo.round);
         $('#latitude').val(lat); //update
         $('#longitude').val(lon);
         $('#lonlat').val(lon + ';' + lat);
@@ -119,8 +120,16 @@ var mymap = {
                 },
                 //This bit is executed upon selection of an address
                 select: function (event, ui) {
-                    $("#latitude").val(ui.item.latitude);
-                    $("#longitude").val(ui.item.longitude);
+                    var lat = ui.item.latitude;
+                    var lon = ui.item.longitude;
+                    //if (lat.length > searchInfo.round) lat = lat.substring(searchInfo.round);
+                    //if (lon.length > searchInfo.round) lon = lon.substring(searchInfo.round);
+                    lat = lat.toFixed(searchInfo.round);
+                    lon = lon.toFixed(searchInfo.round);
+
+                    $("#latitude").val(lat);
+                    $("#longitude").val(lon);
+                    $('#lonlat').val(lon + ';' + lat);
                     var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
 
                     searchInfo.searchMarker.setPosition(location);
