@@ -17,7 +17,7 @@ For deployment the web.config is configured for IIS 7 or later.
 
 A. With current implementation, the upper limit should be around 300.000 where the delay is below 1 sec. The server running time with an average laptop was about 300 msec. for 300.000 points. 
 
-It should be possible to increase the number of points and keep a delay below 1 sec. by implementing a spatial data structure such as range search.
+It should be possible to increase the number of points and keep a delay below 1 sec. by implementing a spatial data structure such as range search but it would only help if you are zoomed in. If you are zoomed all the way out you will have to iterate all the points and then you would have to rely on pre-clustering for time complexity improvement.
 
 ---------------------------------
 
