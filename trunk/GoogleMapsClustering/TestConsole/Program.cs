@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Mime;
 using System.Web.Script.Serialization;
 using Kunukn.GooglemapsClustering.Clustering;
 using Kunukn.GooglemapsClustering.Data;

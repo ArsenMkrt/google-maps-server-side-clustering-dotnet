@@ -48,6 +48,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
         }
 
         /*
+        // Basic Centroid Calculation of N Points
         public static P GetCentroidFromCluster(List<P> list) //O(n)
         {          
             int count;
@@ -70,6 +71,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
         */
 
         // Circular mean, very relevant for points around New Zealand, where lon -180 to 180 overlap
+        // Adapted Centroid Calculation of N Points for Google Maps usage
         public static P GetCentroidFromClusterLatLon(List<P> list) //O(n)
         {
             int count;

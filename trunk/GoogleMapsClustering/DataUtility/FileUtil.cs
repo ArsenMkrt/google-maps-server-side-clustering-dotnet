@@ -8,6 +8,9 @@ using Kunukn.GooglemapsClustering.Data;
 
 namespace Kunukn.GooglemapsClustering.DataUtility
 {
+    /// <summary>
+    /// Author: Kunuk Nykjaer
+    /// </summary>
     public static class FileUtil
     {
         public const string FolderPath = @"c:\temp\";

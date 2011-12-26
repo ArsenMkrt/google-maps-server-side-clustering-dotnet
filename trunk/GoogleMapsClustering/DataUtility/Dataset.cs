@@ -10,6 +10,9 @@ namespace Kunukn.GooglemapsClustering.DataUtility
 {
     public enum LoadType { Unknown = -1, Serialized, Csv } ;
 
+    /// <summary>
+    /// Author: Kunuk Nykjaer
+    /// </summary>
     public class Dataset
     {        
         // DATABASE SIMULATION

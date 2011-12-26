@@ -7,6 +7,9 @@ using System.Text;
 
 namespace Kunukn.GooglemapsClustering.DataUtility
 {
+    /// <summary>
+    /// Author: Kunuk Nykjaer
+    /// </summary>
     public class Serializer
     {
         public void SerializeObject(string filepath, object objectToSerialize)

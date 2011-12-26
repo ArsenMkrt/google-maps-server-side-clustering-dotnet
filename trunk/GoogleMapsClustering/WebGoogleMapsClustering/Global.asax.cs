@@ -5,13 +5,14 @@ using Kunukn.GooglemapsClustering.DataUtility;
 
 namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering
 {
+    /// <summary>
+    /// Author: Kunuk Nykjaer
+    /// </summary>
     public class Global : System.Web.HttpApplication
     {
         void Application_Start(object sender, EventArgs e)
         {
-            // Code that runs on application startup
-            
-
+            // Code that runs on application startup            
 
             // GOOGLEMAPS CLUSTERING DATABASE LOAD SIMULATION
             var websitepath = HttpContext.Current.Server.MapPath("~") + @"AreaGMC\Files\Points.csv";

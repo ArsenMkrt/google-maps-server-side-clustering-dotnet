@@ -152,6 +152,7 @@ namespace Kunukn.GooglemapsClustering.MathUtility
 
         // used by zoom level and deciding the grid size, O(halfSteps)
         // O(halfSteps) ~  O(maxzoom) ~  O(k) ~  O(1)
+        // Google Maps doubles or halves the view for 1 step zoom level change
         public static double Half(double d, int halfSteps)
         {
             // http://en.wikipedia.org/wiki/Decimal_degrees
