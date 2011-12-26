@@ -14,6 +14,8 @@ namespace Kunukn.GooglemapsClustering.DataUtility
     public static class FileUtil
     {
         public const string FolderPath = @"c:\temp\";
+        private static Encoding _encodingRead = Encoding.Default; // Encoding.Default  Encoding.UTF8  Encoding.Unicode      
+        private static Encoding _encodingWrite = Encoding.Unicode; //Encoding.Default  Encoding.UTF8  Encoding.Unicode
 
         /// <summary>        
         /// folder path is created if not exists
@@ -45,10 +47,10 @@ namespace Kunukn.GooglemapsClustering.DataUtility
 
                 if (!fileInfo.Directory.Exists)
                     Directory.CreateDirectory(fileInfo.Directory.ToString());
-
-                using (StreamWriter streamWriter = fileInfo.CreateText())
+                
+                using (StreamWriter streamWriter = fileInfo.CreateText() )
                 {
-                    streamWriter.Write(data);
+                    streamWriter.Write(data, _encodingWrite);
                     success = true;
                 }
             }
@@ -76,7 +78,7 @@ namespace Kunukn.GooglemapsClustering.DataUtility
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.StackTrace + "\nPress a key ... ");
+                Console.WriteLine(Util.GetException(ex) + "\nPress a key ... ");
                 Console.ReadKey();
             }
             return success;
@@ -114,7 +116,7 @@ namespace Kunukn.GooglemapsClustering.DataUtility
             var list = new List<string>();
             try
             {                
-                using (var reader = new StreamReader(path, System.Text.Encoding.UTF8, true))
+                using (var reader = new StreamReader(path, _encodingRead, true))
                 {
                     string line = reader.ReadLine();
                     while (line != null)
@@ -126,12 +128,14 @@ namespace Kunukn.GooglemapsClustering.DataUtility
             }
             catch (Exception ex)
             {
-                //Console.WriteLine(ex.Message + Environment.NewLine + ex.StackTrace);
+                //Console.WriteLine( Util.GetException(ex) );
                 throw ex;
             }
 
             return list;
         }
 
+
+       
     }
 }
