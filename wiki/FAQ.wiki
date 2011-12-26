@@ -15,9 +15,13 @@ For deployment the web.config is configured for IIS 7 or later.
 
 *Q. How many points can I use?*
 
-A. With current implementation, the upper limit should be around 300.000 where the delay is below 1 sec. The server running time with an average laptop was about 300 msec. for 300.000 points. 
+A. With current implementation, the upper limit should be around 300.000 where the delay is below 1 sec. 
+The server running time with an average laptop was about 300 msec. for 300.000 points. 
 
-It should be possible to increase the number of points and keep a delay below 1 sec. by implementing a spatial data structure such as range search but it would only help if you are zoomed in. If you are zoomed all the way out you will have to iterate all the points and then you would have to rely on pre-clustering for time complexity improvement.
+It should be possible to increase the number of points and keep a delay below 1 sec. 
+by implementing a spatial data structure such as range search but it would only help if you are zoomed in. 
+If you are zoomed all the way out you will have to iterate all the points  
+then you would have to rely on pre-clustering for time complexity improvement.
 
 ---------------------------------
 
@@ -110,7 +114,9 @@ http://tech.cibul.net/geocode-with-google-maps-api-v3/
 
 *Q. What is the complexity of time and space?*
 
-A. Time complexity is O(m*n) and space complexity is O(n) where n is the number of points used in total and m is the number of grids returned to the client. You are welcome to analyse it yourself :) I use hashset and hashmap to minimize the time complexity.
+A. Time complexity is O(m*n) and space complexity is O(n) 
+where n is the number of points used in total and m is the number of grids returned to the client. 
+You are welcome to analyse it yourself :) I use hashset and hashmap to minimize the time complexity.
 
 ---------------------------------
 
@@ -123,9 +129,12 @@ A. Yes I could but I want to spend my time on something else.
 *Q. Who made this?*
 
 A. Kunuk Nykjaer spend the time in the weekends to make 
-a stationary grid-based clustering after preliminary research on different clustering approach. On my time on the job I made a marker-clusterer version which I later discontinued because I felt the grid-based worked better. 
+a stationary grid-based clustering after preliminary research on different clustering approach. 
+On my time on the job I made a marker-clusterer version 
+which I later discontinued because I felt the grid-based worked better. 
 All the server-side clustering logic is made by Kunuk Nykjaer.
-The JS GUI-part is largely adapted and reworked by Kunuk Nykjaer and the inspiration came partly from JS-implementation by Jonas Olsen, Lars Gundersen and misc. http://stackoverflow.com/ pages. 
+The JS GUI-part is largely adapted and reworked by Kunuk Nykjaer and the inspiration came partly 
+from JS-implementation by Jonas Olsen, Lars Gundersen and misc. http://stackoverflow.com/ pages. 
 The server-side webservice definition are with inspiration from Lasse Rasch's implementations.
 The JS logic-part (cluster points updating, lines drawing) was made by Kunuk Nykjaer).
 The address search part done with inspiration 
