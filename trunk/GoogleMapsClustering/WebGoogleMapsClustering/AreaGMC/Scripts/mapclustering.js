@@ -77,6 +77,27 @@ var mymap = {
             offsetH: 0,
             offsetW: 0
         },
+        pinImage1: {
+            src: 'Images/markers/court.png',
+            height: 37,
+            width: 32,
+            offsetH: 0,
+            offsetW: 0
+        },
+        pinImage2: {
+            src: 'Images/markers/firstaid.png',
+            height: 37,
+            width: 32,
+            offsetH: 0,
+            offsetW: 0
+        },
+        pinImage3: {
+            src: 'Images/markers/house.png',
+            height: 37,
+            width: 32,
+            offsetH: 0,
+            offsetW: 0
+        },
         textErrorMessage: 'Error'
     },
 
@@ -165,6 +186,9 @@ var mymap = {
 
             var clusterImg = new google.maps.MarkerImage(mymap.settings.clusterImage.src, new google.maps.Size(mymap.settings.clusterImage.width, mymap.settings.clusterImage.height), null, new google.maps.Point(mymap.settings.clusterImage.offsetW, mymap.settings.clusterImage.offsetH));
             var pinImg = new google.maps.MarkerImage(mymap.settings.pinImage.src, new google.maps.Size(mymap.settings.pinImage.width, mymap.settings.pinImage.height), null, null);
+            var pinImg1 = new google.maps.MarkerImage(mymap.settings.pinImage1.src, new google.maps.Size(mymap.settings.pinImage1.width, mymap.settings.pinImage1.height), null, null);
+            var pinImg2 = new google.maps.MarkerImage(mymap.settings.pinImage2.src, new google.maps.Size(mymap.settings.pinImage2.width, mymap.settings.pinImage2.height), null, null);
+            var pinImg3 = new google.maps.MarkerImage(mymap.settings.pinImage3.src, new google.maps.Size(mymap.settings.pinImage3.width, mymap.settings.pinImage3.height), null, null);
 
             var webMethod = mymap.settings.jsonMarkerUrl;
             var parameters = '{' + '"access_token":"' + mymap.settings.access_token + '","nelat":"' + mapData.neLat + '","nelon":"' + mapData.neLon + '","swlat":"' + mapData.swLat + '","swlon":"' + mapData.swLon + '","zoomlevel":"' + mapData.zoomLevel + '","gridx":"' + mymap.settings.gridx + '","gridy":"' + mymap.settings.gridy + '","zoomlevelClusterStop":"' + mymap.settings.zoomlevelClusterStop + '","sendid":"' + (++async.lastSend) + '"}';
@@ -293,7 +317,22 @@ var mymap = {
 
                         var latLng = new google.maps.LatLng(lat, lon, true);
 
-                        iconImg = (item.C === 1) ? pinImg : clusterImg;
+                        var iconImg;
+                        if (item.C === 1) {
+                            if (item.T === '1') {
+                                iconImg = pinImg1;
+                            }
+                            else if (item.T === '2') {
+                                iconImg = pinImg2;
+                            }
+                            else if (item.T === '3') {
+                                iconImg = pinImg3;
+                            } else {
+                                iconImg = pinImg;
+                            }
+                        } else {
+                            iconImg = clusterImg;
+                        }
 
                         var marker = new google.maps.Marker({
                             position: latLng,
