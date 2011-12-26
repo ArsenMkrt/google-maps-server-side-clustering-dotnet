@@ -8,7 +8,7 @@ A. Read my blog http://kunuk.wordpress.com/2011/11/05/google-map-server-side-clu
 
 *Q. What do I need to run this?*
 
-A. Windows, Visual Studio 2010 or later, .Net v4
+A. Windows, Visual Studio 2010 or later, .Net v4.
 For deployment the web.config is configured for IIS 7 or later.
 
 ---------------------------------
