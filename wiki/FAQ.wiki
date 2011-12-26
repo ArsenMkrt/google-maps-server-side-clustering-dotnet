@@ -9,6 +9,7 @@ A. Read my blog http://kunuk.wordpress.com/2011/11/05/google-map-server-side-clu
 *Q. What do I need to run this?*
 
 A. Windows, Visual Studio 2010 or later, .Net v4
+For deployment the web.config is configured for IIS 7 or later.
 
 ---------------------------------
 
@@ -110,6 +111,12 @@ http://tech.cibul.net/geocode-with-google-maps-api-v3/
 *Q. What is the complexity of time and space?*
 
 A. Time complexity is O(m*n) and space complexity is O(n) where n is the number of points used in total and m is the number of grids returned to the client.
+
+---------------------------------
+
+*Q. Could you port this to Java?*
+
+A. Yes I could but I want to spend my time on something else.
 
 ---------------------------------
 
