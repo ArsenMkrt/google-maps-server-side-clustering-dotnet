@@ -6,5 +6,6 @@ namespace Kunukn.GooglemapsClustering.Data
     {
         public const string Dataset = "Dataset";
         public const string Filter = "Filter";
+        public const string SessionStart = "SessionStart";
     }
 }

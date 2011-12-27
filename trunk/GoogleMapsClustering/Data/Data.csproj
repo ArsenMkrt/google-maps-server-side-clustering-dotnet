@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClusterInfo.cs" />
+    <Compile Include="JsonGetAccessTokenReply.cs" />
+    <Compile Include="JsonReply.cs" />
     <Compile Include="JsonSetTypeReply.cs" />
     <Compile Include="Point2.cs" />
     <Compile Include="Bucket.cs" />
@@ -55,7 +57,7 @@
     <Compile Include="Numbers.cs" />
     <Compile Include="PBase.cs" />
     <Compile Include="DatasetToSerialize.cs" />
-    <Compile Include="JsonReply.cs" />
+    <Compile Include="JsonGetMarkersReply.cs" />
     <Compile Include="P.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

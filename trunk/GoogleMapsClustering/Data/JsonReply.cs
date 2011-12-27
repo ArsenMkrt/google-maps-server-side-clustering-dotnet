@@ -1,20 +1,21 @@
-﻿using System.Collections.Generic;
-
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Kunukn.GooglemapsClustering.Data
 {
     public class JsonReply
     {
-        public List<P> Points { get; set; } // markers or clusters
         public int ReplyId { get; set; } // for async mismatch check
-        public List<Line> Polylines { get; set; } // google map draw lines
-                
+        public string TokenValid { get; set; } // is access token valid
+        public string Success { get; set; } // operation result
+
         public JsonReply()
         {
-            Points = new List<P>();
-            Polylines = new List<Line>();
             ReplyId = 1;
+            TokenValid = "1";
+            Success = "1";
         }
-
     }
 }

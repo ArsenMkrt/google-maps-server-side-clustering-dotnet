@@ -20,16 +20,51 @@ var debug = {
 
 //prevent async send/receive order problem by using counter ref in send/reply in webservice
 var async = {
-    lastSend: 0,
-    lastReceived: 0,
+    lastSendGetMarkers: 0, //get markers
+    lastReceivedGetMarkers: 0,
     lastSendMarkerDetail: 0,
     lastReceivedMarkerDetail: 0,
+    lastSendSetType: 0,
+    lastReceivedSetType: 0,
+    lastSendGetAccessToken: 0,
+    lastReceivedGetAccessToken: 0,
     lastCache: ""
 };
 
 
 var mymap = {
-  
+
+    latlonsearch: function () {
+        // parseFloat() .toFixed(searchInfo.round);    
+        var lat = $('#latitude').val() + "";
+        var lon = $('#longitude').val() + "";
+        if (lat.length > searchInfo.round + searchInfo.prefix) lat = lat.substring(0, searchInfo.round + 2 + searchInfo.prefix);
+        if (lon.length > searchInfo.round + searchInfo.prefix) lon = lon.substring(0, searchInfo.round + 2 + searchInfo.prefix);
+        lat = parseFloat(lat).toFixed(searchInfo.round);
+        lon = parseFloat(lon).toFixed(searchInfo.round);
+        $('#latitude').val(lat); //update
+        $('#longitude').val(lon);
+        $('#lonlat').val(lon + ';' + lat);
+        var latlon = new google.maps.LatLng(lat, lon);
+
+        geocoder.geocode({ 'latLng': latlon }, function (results, status) {
+            if (status === google.maps.GeocoderStatus.OK) {
+                if (results[0]) {
+                    $('#search').val(results[0].formatted_address);
+                }
+            }
+            else {
+                $('#search').val("");
+            }
+
+            searchInfo.searchMarker.setPosition(latlon);
+            map.setOptions({
+                //zoom: searchInfo.zoomLevel,
+                center: latlon
+            });
+        });
+    },
+
     initialize: function () {
         // initialize is exec as $(document).ready(function()
 
@@ -52,21 +87,122 @@ var mymap = {
             maxZoom: 19
         });
 
-        google.maps.event.addListener(map, 'idle', function () { mymap.events.getBounds(map); });
-      
+        google.maps.event.addListener(map, 'idle', function () { mymap.events.getBounds(map, false); });
+        google.maps.event.addListener(map, 'zoom_changed', function () {
+            document.getElementById("zoomInfo").innerHTML = "zoom: " + map.getZoom() + ".  ";
+        });
+        google.maps.event.trigger(map, 'zoom_changed');
+
+
+        // search -------------        
+        // http://tech.cibul.net/geocode-with-google-maps-api-v3/
+
+        document.getElementById('search').focus();
+        $('#latitude').keypress(function (e) {
+            if (e.which == 13) {
+                mymap.latlonsearch();
+            }
+        });
+        $('#longitude').keypress(function (e) {
+            if (e.which == 13) {
+                mymap.latlonsearch();
+            }
+        });
+
+        searchInfo.searchMarker = new google.maps.Marker({
+            map: map,
+            draggable: true,
+            zIndex: 1
+        });
+
+        searchInfo.searchMarker.setPosition(new google.maps.LatLng(mymap.settings.mapCenterLat, mymap.settings.mapCenterLon));
+        searchInfo.searchMarker.setVisible(true);
+
+        //Add listener to marker for reverse geocoding
+        google.maps.event.addListener(searchInfo.searchMarker, 'drag', function () {
+            geocoder.geocode({ 'latLng': searchInfo.searchMarker.getPosition() }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    if (results[0]) {
+                        //var addr = results[0].formatted_address.replace(/, Danmark/gi, "");
+                        var addr = results[0].formatted_address;
+                        $('#search').val(addr);
+                        var lat = searchInfo.searchMarker.getPosition().lat() + "";
+                        var lon = searchInfo.searchMarker.getPosition().lng() + "";
+                        if (lat.length > searchInfo.round + searchInfo.prefix) lat = lat.substring(0, searchInfo.round + 2 + searchInfo.prefix);
+                        if (lon.length > searchInfo.round + searchInfo.prefix) lon = lon.substring(0, searchInfo.round + 2 + searchInfo.prefix);
+                        lat = parseFloat(lat).toFixed(searchInfo.round);
+                        lon = parseFloat(lon).toFixed(searchInfo.round);
+                        $('#latitude').val(lat);
+                        $('#longitude').val(lon);
+                        $('#lonlat').val(lon + ';' + lat);
+                    }
+                }
+            });
+        });
+
+        $(function () {
+            $("#search").autocomplete({
+                //This bit uses the geocoder to fetch address values
+                source: function (request, response) {
+                    //geocoder.geocode({ "address": request.term, "region": "dk" }, function (results, status) { //DENMARK
+                     geocoder.geocode({ 'address': request.term  }, function (results, status) { //WORLD
+                        response($.map(results, function (item) {
+                            if (item.formatted_address.indexOf(", Danmark") >= 0) {
+                                return {
+                                    label: item.formatted_address,//.replace(/, Danmark/gi, ""),
+                                    value: item.formatted_address,//.replace(/, Danmark/gi, ""),
+                                    latitude: item.geometry.location.lat(),
+                                    longitude: item.geometry.location.lng()
+                                }
+                            }
+                        }));
+                    })
+                },
+                //This bit is executed upon selection of an address
+                select: function (event, ui) {
+                    //parseFloat()   
+                    var lat = ui.item.latitude + "";
+                    var lon = ui.item.longitude + "";
+                    if (lat.length > searchInfo.round + searchInfo.prefix) lat = lat.substring(0, searchInfo.round + 2 + searchInfo.prefix);
+                    if (lon.length > searchInfo.round + searchInfo.prefix) lon = lon.substring(0, searchInfo.round + 2 + searchInfo.prefix);
+                    lat = parseFloat(lat).toFixed(searchInfo.round);
+                    lon = parseFloat(lon).toFixed(searchInfo.round);
+
+                    $("#latitude").val(lat);
+                    $("#longitude").val(lon);
+                    $('#lonlat').val(lon + ';' + lat);
+                    var location = new google.maps.LatLng(lat, lon);
+
+                    searchInfo.searchMarker.setPosition(location);
+                    searchInfo.searchMarker.setVisible(true);
+
+                    map.setOptions({
+                        zoom: searchInfo.zoomLevel,
+                        center: location
+                    });
+                }
+            });
+        });
+        // end search -------------
+
+
+
     },
     settings: {
         gridx: 6,
         gridy: 5,
-        mapCenterLat: 0, //-40, //56.1,
-        mapCenterLon: 0, //180, //11,
-        zoomLevel: 1, //7,
+        mapCenterLat: 0, //-40   56.1  0
+        mapCenterLon: 0, //180   11   0
+        zoomLevel: 1, //7  1
         zoomlevelClusterStop: 15,
         access_token: 'todo',
         jsonMarkerUrl: 'WebService/MapService.asmx/GetMarkers',
         jsonMarkerDetailUrl: 'WebService/MapService.asmx/GetMarkerDetail',
+        jsonSetTypeUrl: 'WebService/MapService.asmx/SetType',
+        jsonGetAccessTokenUrl: 'WebService/MapService.asmx/GetAccessToken',
+
         clusterImage: {
-            src: 'Images/cluster2.png',
+            src: 'Images/cluster2.png', //this is invisible img only used for click-event detecting
             height: 60,
             width: 60,
             offsetH: 30,
@@ -134,7 +270,7 @@ var mymap = {
 
 
     events: {
-        getBounds: function (map) {
+        getBounds: function (map, forceUpdate) {
 
             if (!infowindow) {
                 infowindow = new google.maps.InfoWindow();
@@ -174,7 +310,7 @@ var mymap = {
             // avoid repeated request, similar to avoiding double events on doubleclick
             var _ = "_";
             var cache = mapData.neLat + _ + mapData.neLon + _ + mapData.swLat + _ + mapData.swLon + _ + mapData.zoomLevel;
-            if (async.lastCache === cache)
+            if (async.lastCache === cache && forceUpdate === false)
                 return;
             async.lastCache = cache; // update
 
@@ -193,8 +329,9 @@ var mymap = {
             var pinImg3 = new google.maps.MarkerImage(mymap.settings.pinImage3.src, new google.maps.Size(mymap.settings.pinImage3.width, mymap.settings.pinImage3.height), null, null);
 
             var webMethod = mymap.settings.jsonMarkerUrl;
-            var parameters = '{' + '"access_token":"' + mymap.settings.access_token + '","nelat":"' + mapData.neLat + '","nelon":"' + mapData.neLon + '","swlat":"' + mapData.swLat + '","swlon":"' + mapData.swLon + '","zoomlevel":"' + mapData.zoomLevel + '","gridx":"' + mymap.settings.gridx + '","gridy":"' + mymap.settings.gridy + '","zoomlevelClusterStop":"' + mymap.settings.zoomlevelClusterStop + '","sendid":"' + (++async.lastSend) + '"}';
-                 
+            var parameters = '{' + '"access_token":"' + mymap.settings.access_token + '","nelat":"' + mapData.neLat + '","nelon":"' + mapData.neLon + '","swlat":"' + mapData.swLat + '","swlon":"' + mapData.swLon + '","zoomlevel":"' + mapData.zoomLevel + '","gridx":"' + mymap.settings.gridx + '","gridy":"' + mymap.settings.gridy + '","zoomlevelClusterStop":"' + mymap.settings.zoomlevelClusterStop + '","sendid":"' + (++async.lastSendGetMarkers) + '"}';
+
+            // http://stackoverflow.com/questions/3020351/javascript-jquery-ajax-post-error-driving-me-mad            
             $.ajax({
                 type: 'POST',
                 url: webMethod,
@@ -204,15 +341,22 @@ var mymap = {
                 success: function (data) {
                     var items = jQuery.parseJSON(data.d);
 
-                    var lastReceived = items.ReplyId;
-                    if (lastReceived <= async.lastReceived) {
+                    var lastReceivedGetMarkers = items.ReplyId;
+                    if (lastReceivedGetMarkers <= async.lastReceivedGetMarkers) {
                         // async mismatch, this is old reply, dont use it
-                        //console.log('async mismatch ' + lastReceived + ' ' + async.lastReceived);
+                        //console.log('async mismatch ' + lastReceivedGetMarkers + ' ' + async.lastReceivedGetMarkers);
                         return;
                     }
                     // update
-                    async.lastReceived = lastReceived;
+                    async.lastReceivedGetMarkers = lastReceivedGetMarkers;
 
+
+                    if (items.TokenValid === "0") {
+                        alert("Demo time is over, TokenValid is invalid, please relogin");
+                        return;
+                    }
+
+                    var success = items.Success;
 
                     if (debug.showGridLines) {
                         $.each(mymap.events.polys, function () {
@@ -280,7 +424,7 @@ var mymap = {
                         }
                     }
 
-                    // remove current markers which should not be displayd
+                    // remove current markers which should not be displayed
                     for (i in markers) {
                         if (markers.hasOwnProperty(i)) {
                             var m = markers[i];
@@ -313,9 +457,9 @@ var mymap = {
 
                     $.each(newmarkersTodo, function () {
                         var item = this;
-                        var lat = item.Y;
-                        var lon = item.X;
-                        var index = item.I;
+                        var lat = item.Y; //lat
+                        var lon = item.X; //lon
+                        var index = item.I; //id
 
                         var latLng = new google.maps.LatLng(lat, lon, true);
 
@@ -333,7 +477,7 @@ var mymap = {
                                 iconImg = pinImg;
                             }
                         } else {
-                            iconImg = clusterImg;
+                            iconImg = clusterImg; //fallback
                         }
 
                         var marker = new google.maps.Marker({
@@ -384,8 +528,76 @@ var mymap = {
             });
 
         },
+        getAccessToken: function (username, password) {
+            var webMethod = mymap.settings.jsonGetAccessTokenUrl;
+            var parameters = '{' + '"username":"' + username + '","password":"' + password + '","sendid":"' + (++async.lastSendGetAccessToken) + '"}';
+            $.ajax({
+                type: 'POST',
+                url: webMethod,
+                data: parameters,
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (data) {
+                    var items = jQuery.parseJSON(data.d);
 
+                    var lastReceivedGetAccessToken = items.ReplyId;
+                    if (lastReceivedGetAccessToken <= async.lastReceivedGetAccessToken) {
+                        // async mismatch, this is old reply, dont use it
+                        //console.log('async mismatch ' + lastReceivedGetAccessToken + ' ' + async.lastReceivedGetAccessToken);
+                        return;
+                    }
+                    // update
+                    async.lastReceivedGetAccessToken = lastReceivedGetAccessToken;
 
+                    var success = items.Success;
+
+                    // update access token
+                    mymap.settings.access_token = items.AccessToken;
+                },
+                error: function (xhr, err) {
+                    alert("readyState: " + xhr.readyState + "\nstatus: " + xhr.status + "\nresponseText: " + xhr.responseText);
+                }
+
+            });
+        },
+
+        setType: function (type, isChecked) {
+            var webMethod = mymap.settings.jsonSetTypeUrl;
+            var parameters = '{' + '"access_token":"' + mymap.settings.access_token + '","type":"' + type + '","isChecked":"' + isChecked + '","sendid":"' + (++async.lastSendSetType) + '"}';
+            $.ajax({
+                type: 'POST',
+                url: webMethod,
+                data: parameters,
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (data) {
+                    var items = jQuery.parseJSON(data.d);
+
+                    var lastReceivedSetType = items.ReplyId;
+                    if (lastReceivedSetType <= async.lastReceivedSetType) {
+                        // async mismatch, this is old reply, dont use it
+                        //console.log('async mismatch ' + lastReceivedSetType + ' ' + async.lastReceivedSetType);
+                        return;
+                    }
+                    // update
+                    async.lastReceivedSetType = lastReceivedSetType;
+
+                    if (items.TokenValid === "0") {
+                        alert("Demo time is over, TokenValid is invalid, please relogin");
+                        return;
+                    }
+
+                    var success = items.Success;
+
+                    // update screen
+                    mymap.events.getBounds(map, true);
+                },
+                error: function (xhr, err) {
+                    alert("readyState: " + xhr.readyState + "\nstatus: " + xhr.status + "\nresponseText: " + xhr.responseText);
+                }
+
+            });
+        },
 
         attachCallOut: function (marker, item) {
             var webMethod = mymap.settings.jsonMarkerDetailUrl;
@@ -409,6 +621,13 @@ var mymap = {
                     // update
                     async.lastReceivedMarkerDetail = lastReceivedMarkerDetail;
 
+                    if (items.TokenValid === "0") {
+                        alert("Demo time is over, TokenValid is invalid, please relogin");
+                        return;
+                    }
+
+                    var success = items.Success;
+
                     infowindow.setContent(items.Content);
                     infowindow.open(map, marker);
                 },
@@ -424,12 +643,15 @@ var mymap = {
 // lon, lat, count
 var getKey = function (x, y, c) {
     var s = x + "__" + y + "__" + c;
-    return s.replace(/\./g, "_");
+    return s.replace(/\./g, "_"); //replace . with _
 }
 
 google.maps.event.addDomListener(window, 'load', mymap.initialize); // load google map
+mymap.events.getAccessToken('username', 'password', async.lastSendGetAccessToken); // set access token
 
-
+var checkboxClicked = function (type, isChecked) {
+    mymap.events.setType(type, isChecked);
+}
 
 
 //COUNT LABELS ON CLUSTERS
@@ -452,7 +674,7 @@ var Label = function (opt_options, id, count) {
     else {
         span.style.cssText = mymap.clusterOptions.styles[0].style;
     }
-  
+
     var div = this.div_ = document.createElement('div');
     div.appendChild(span);
     div.className = "countinfo_" + id;
