@@ -76,12 +76,12 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
 
 
             // too far out, world is showing countries multiple times
-            if (jsonReceive.Zoomlevel <= 1)
-            {
-                // no data
-                reply = new JsonGetMarkersReply { ReplyId = sendid, Success = _1};
-                return jss.Serialize(reply);
-            }
+            //if (jsonReceive.Zoomlevel <= 1)
+            //{
+            //    // no data
+            //    reply = new JsonGetMarkersReply { ReplyId = sendid, Success = _1};
+            //    return jss.Serialize(reply);
+            //}
 
             // clustering within this zoom level)
             if (jsonReceive.Zoomlevel < jsonReceive.ZoomlevelClusterStop)
