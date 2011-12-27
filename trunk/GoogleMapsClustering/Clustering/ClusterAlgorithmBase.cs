@@ -171,7 +171,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
                         index = i;
                     }
                 }
-                //update color for point to match centroid and re-insert
+                // re-insert
                 var closestBucket = BucketsLookup[index];
                 closestBucket.Points.Add(p);
             }
