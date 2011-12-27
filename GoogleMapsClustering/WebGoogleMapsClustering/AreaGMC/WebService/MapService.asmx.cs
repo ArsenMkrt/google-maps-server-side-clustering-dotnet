@@ -33,7 +33,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
         protected static string NotValidReply(int sendid)
         {
             var jss = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
-            var jsonReply = new JsonReply { ReplyId = sendid, TokenValid = "0", Success = "0" };
+            var jsonReply = new JsonReply { ReplyId = sendid, TokenValid = _0, Success = _0 };
             var json = jss.Serialize(jsonReply);
             return json;
         }
@@ -45,26 +45,21 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
             if (Session == null) throw new ApplicationException("Session is null");
 
             var sessionStart = Session[Names.SessionStart] as DateTime?;
-            if (sessionStart == null) throw new ApplicationException("sessionStart is null");
+            if (sessionStart == null) throw new ApplicationException("sessionStart is null, check Global.asax");
 
             var jss = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
-            JsonGetMarkersReply jsonReply;
-            string json;
+            JsonGetMarkersReply reply;
 
             var isValid = Validation.ValidateAccessToken(access_token, sessionStart.Value);
             if (!isValid) return NotValidReply(sendid);                
             
-
             var jsonReceive = new JsonReceive(access_token, nelat, nelon, swlat, swlon, zoomlevel, gridx, gridy, zoomlevelClusterStop, sendid);
             jsonReceive.Viewport.ValidateLatLon(); // validate google map viewport input
             jsonReceive.Viewport.Normalize();
 
-
             var allpoints = Application[Names.Dataset] as List<P>; // get cached points from DB simulation
             var dataset = allpoints; //unfiltered atm
-            var typeFilter = new HashSet<string>();
-            
-            if (Session != null) typeFilter = Session[Names.Filter] as HashSet<string>; // get filter           
+            var typeFilter = Session[Names.Filter] as HashSet<string>; // get filter           
 
             if (allpoints == null || allpoints.Count == 0)
                 throw new ApplicationException("DB dataset is null or empty");
@@ -81,12 +76,12 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
 
 
             // too far out, world is showing countries multiple times
-            //if (jsonReceive.Zoomlevel <= 1)
-            //{
-            //    // no data
-            //    jsonReply = new JsonReply { ReplyId = sendid };
-            //    return jss.Serialize(jsonReply);                
-            //}
+            if (jsonReceive.Zoomlevel <= 1)
+            {
+                // no data
+                reply = new JsonGetMarkersReply { ReplyId = sendid, Success = _1};
+                return jss.Serialize(reply);
+            }
 
             // clustering within this zoom level)
             if (jsonReceive.Zoomlevel < jsonReceive.ZoomlevelClusterStop)
@@ -94,8 +89,8 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
                 var clusterAlgo = new GridCluster(dataset, jsonReceive);
                 var clusterPoints = clusterAlgo.GetCluster(new ClusterInfo { ZoomLevel = jsonReceive.Zoomlevel });
 
-                jsonReply = new JsonGetMarkersReply { Points = clusterPoints, ReplyId = sendid, Polylines = clusterAlgo.Lines };
-                json = jss.Serialize(jsonReply);
+                reply = new JsonGetMarkersReply { Points = clusterPoints, ReplyId = sendid, Polylines = clusterAlgo.Lines };
+                string json = jss.Serialize(reply);
                 return json;
             }
 
@@ -103,9 +98,8 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
             Boundary viewportExtended = GridCluster.GetBoundaryExtended(jsonReceive);
             List<P> filteredDataset = GridCluster.FilterDataset(dataset, viewportExtended);
 
-            jsonReply = new JsonGetMarkersReply { Points = filteredDataset, ReplyId = sendid };
-            json = jss.Serialize(jsonReply);
-            return json;
+            reply = new JsonGetMarkersReply {Points = filteredDataset, ReplyId = sendid, Success = _1};
+            return jss.Serialize(reply);            
         }
 
         [WebMethod(EnableSession = true)]
@@ -123,7 +117,9 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
             var isValid = Validation.ValidateAccessToken(access_token, sessionStart.Value);            
             if (!isValid) return NotValidReply(sendid);
             
-            reply.BuildContent();            
+            reply.BuildContent();
+
+            reply.Success = _1;
             return jss.Serialize(reply);
         }
 
@@ -133,7 +129,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
         {
             var jss = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
             // dummy set access token
-            var reply = new JsonGetAccessTokenReply { ReplyId = sendid, Success = _1, AccessToken = _valid };                      
+            var reply = new JsonGetAccessTokenReply {ReplyId = sendid, AccessToken = _valid, Success = _1};
             return jss.Serialize(reply);
         }
 
@@ -155,9 +151,8 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
             var reply = new JsonSetTypeReply { Type = type, IsChecked = isChecked, ReplyId = sendid };
 
             // do something with the type, isChecked
-            var typeFilter = new HashSet<string>();
-            
-            if (Session != null) typeFilter = Session[Names.Filter] as HashSet<string>; // get filter     
+
+            var typeFilter = Session[Names.Filter] as HashSet<string>;
             if(typeFilter==null)
                 throw new ApplicationException("Error! typeFilter is null, check Session or Global.asax setup");
 
@@ -172,11 +167,9 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
                     typeFilter.Add(type);
             }
 
-            if (Session != null) Session[Names.Filter] = typeFilter;// set filter
+            Session[Names.Filter] = typeFilter;// set filter
 
-            reply.Success = _true;
-            if (Session == null) reply.Success = _false;
-
+            reply.Success = _1;           
             return jss.Serialize(reply);
         }
     }
