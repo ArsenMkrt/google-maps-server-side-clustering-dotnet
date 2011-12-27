@@ -4,11 +4,10 @@ using System.Web.Script.Serialization;
 
 namespace Kunukn.GooglemapsClustering.Data
 {
-    public class JsonSetTypeReply
+    public class JsonSetTypeReply : JsonReply
     {
-        public string Content { get; set; }
-        public int ReplyId { get; set; }
-        public string Success { get; set; }
+        public string Content { get; set; }        
+        
 
         //dont include in json reply        
         [ScriptIgnore]
@@ -19,9 +18,7 @@ namespace Kunukn.GooglemapsClustering.Data
         public JsonSetTypeReply()
         {            
             Type = string.Empty;
-            IsChecked = string.Empty;
-            Success = string.Empty;
-            ReplyId = 1;
+            IsChecked = string.Empty;                       
         }
 
       

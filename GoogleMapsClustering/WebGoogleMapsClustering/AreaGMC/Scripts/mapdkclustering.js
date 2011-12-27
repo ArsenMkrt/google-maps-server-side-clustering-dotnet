@@ -20,12 +20,14 @@ var debug = {
 
 //prevent async send/receive order problem by using counter ref in send/reply in webservice
 var async = {
-    lastSend: 0,
-    lastReceived: 0,
+    lastSendGetMarkers: 0, //get markers
+    lastReceivedGetMarkers: 0,
     lastSendMarkerDetail: 0,
     lastReceivedMarkerDetail: 0,
     lastSendSetType: 0,
     lastReceivedSetType: 0,
+    lastSendGetAccessToken: 0,
+    lastReceivedGetAccessToken: 0,
     lastCache: ""
 };
 
@@ -85,7 +87,7 @@ var mymap = {
             maxZoom: 19
         });
 
-        google.maps.event.addListener(map, 'idle', function () { mymap.events.getBounds(map,false); });
+        google.maps.event.addListener(map, 'idle', function () { mymap.events.getBounds(map, false); });
         google.maps.event.addListener(map, 'zoom_changed', function () {
             document.getElementById("zoomInfo").innerHTML = "zoom: " + map.getZoom() + ".  ";
         });
@@ -121,7 +123,9 @@ var mymap = {
             geocoder.geocode({ 'latLng': searchInfo.searchMarker.getPosition() }, function (results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
                     if (results[0]) {
-                        $('#search').val(results[0].formatted_address.replace(/, Danmark/gi, ""));
+                        var addr = results[0].formatted_address.replace(/, Danmark/gi, "");
+                        //var addr = results[0].formatted_address;
+                        $('#search').val(addr);
                         var lat = searchInfo.searchMarker.getPosition().lat() + "";
                         var lon = searchInfo.searchMarker.getPosition().lng() + "";
                         if (lat.length > searchInfo.round + searchInfo.prefix) lat = lat.substring(0, searchInfo.round + 2 + searchInfo.prefix);
@@ -187,14 +191,15 @@ var mymap = {
     settings: {
         gridx: 6,
         gridy: 5,
-        mapCenterLat: 56.1, //-40, //56.1,
-        mapCenterLon: 11, //180, //11,
-        zoomLevel: 7, //7,
+        mapCenterLat: 56.1, //-40   56.1  0
+        mapCenterLon: 11, //180   11   0
+        zoomLevel: 7, //7  1
         zoomlevelClusterStop: 15,
         access_token: 'todo',
         jsonMarkerUrl: 'WebService/MapService.asmx/GetMarkers',
         jsonMarkerDetailUrl: 'WebService/MapService.asmx/GetMarkerDetail',
         jsonSetTypeUrl: 'WebService/MapService.asmx/SetType',
+        jsonGetAccessTokenUrl: 'WebService/MapService.asmx/GetAccessToken',
 
         clusterImage: {
             src: 'Images/cluster2.png', //this is invisible img only used for click-event detecting
@@ -324,7 +329,7 @@ var mymap = {
             var pinImg3 = new google.maps.MarkerImage(mymap.settings.pinImage3.src, new google.maps.Size(mymap.settings.pinImage3.width, mymap.settings.pinImage3.height), null, null);
 
             var webMethod = mymap.settings.jsonMarkerUrl;
-            var parameters = '{' + '"access_token":"' + mymap.settings.access_token + '","nelat":"' + mapData.neLat + '","nelon":"' + mapData.neLon + '","swlat":"' + mapData.swLat + '","swlon":"' + mapData.swLon + '","zoomlevel":"' + mapData.zoomLevel + '","gridx":"' + mymap.settings.gridx + '","gridy":"' + mymap.settings.gridy + '","zoomlevelClusterStop":"' + mymap.settings.zoomlevelClusterStop + '","sendid":"' + (++async.lastSend) + '"}';
+            var parameters = '{' + '"access_token":"' + mymap.settings.access_token + '","nelat":"' + mapData.neLat + '","nelon":"' + mapData.neLon + '","swlat":"' + mapData.swLat + '","swlon":"' + mapData.swLon + '","zoomlevel":"' + mapData.zoomLevel + '","gridx":"' + mymap.settings.gridx + '","gridy":"' + mymap.settings.gridy + '","zoomlevelClusterStop":"' + mymap.settings.zoomlevelClusterStop + '","sendid":"' + (++async.lastSendGetMarkers) + '"}';
 
             // http://stackoverflow.com/questions/3020351/javascript-jquery-ajax-post-error-driving-me-mad            
             $.ajax({
@@ -336,15 +341,22 @@ var mymap = {
                 success: function (data) {
                     var items = jQuery.parseJSON(data.d);
 
-                    var lastReceived = items.ReplyId;
-                    if (lastReceived <= async.lastReceived) {
+                    var lastReceivedGetMarkers = items.ReplyId;
+                    if (lastReceivedGetMarkers <= async.lastReceivedGetMarkers) {
                         // async mismatch, this is old reply, dont use it
-                        //console.log('async mismatch ' + lastReceived + ' ' + async.lastReceived);
+                        //console.log('async mismatch ' + lastReceivedGetMarkers + ' ' + async.lastReceivedGetMarkers);
                         return;
                     }
                     // update
-                    async.lastReceived = lastReceived;
+                    async.lastReceivedGetMarkers = lastReceivedGetMarkers;
 
+
+                    if (items.TokenValid === "0") {
+                        alert("Demo time is over, TokenValid is invalid, please relogin");
+                        return;
+                    }
+
+                    var success = items.Success;
 
                     if (debug.showGridLines) {
                         $.each(mymap.events.polys, function () {
@@ -465,7 +477,7 @@ var mymap = {
                                 iconImg = pinImg;
                             }
                         } else {
-                            iconImg = clusterImg;
+                            iconImg = clusterImg; //fallback
                         }
 
                         var marker = new google.maps.Marker({
@@ -516,6 +528,38 @@ var mymap = {
             });
 
         },
+        getAccessToken: function (username, password) {
+            var webMethod = mymap.settings.jsonGetAccessTokenUrl;
+            var parameters = '{' + '"username":"' + username + '","password":"' + password + '","sendid":"' + (++async.lastSendGetAccessToken) + '"}';
+            $.ajax({
+                type: 'POST',
+                url: webMethod,
+                data: parameters,
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (data) {
+                    var items = jQuery.parseJSON(data.d);
+
+                    var lastReceivedGetAccessToken = items.ReplyId;
+                    if (lastReceivedGetAccessToken <= async.lastReceivedGetAccessToken) {
+                        // async mismatch, this is old reply, dont use it
+                        //console.log('async mismatch ' + lastReceivedGetAccessToken + ' ' + async.lastReceivedGetAccessToken);
+                        return;
+                    }
+                    // update
+                    async.lastReceivedGetAccessToken = lastReceivedGetAccessToken;
+
+                    var success = items.Success;
+
+                    // update access token
+                    mymap.settings.access_token = items.AccessToken;
+                },
+                error: function (xhr, err) {
+                    alert("readyState: " + xhr.readyState + "\nstatus: " + xhr.status + "\nresponseText: " + xhr.responseText);
+                }
+
+            });
+        },
 
         setType: function (type, isChecked) {
             var webMethod = mymap.settings.jsonSetTypeUrl;
@@ -528,7 +572,7 @@ var mymap = {
                 dataType: 'json',
                 success: function (data) {
                     var items = jQuery.parseJSON(data.d);
-                    var success = items.Success;
+
                     var lastReceivedSetType = items.ReplyId;
                     if (lastReceivedSetType <= async.lastReceivedSetType) {
                         // async mismatch, this is old reply, dont use it
@@ -538,8 +582,15 @@ var mymap = {
                     // update
                     async.lastReceivedSetType = lastReceivedSetType;
 
+                    if (items.TokenValid === "0") {
+                        alert("Demo time is over, TokenValid is invalid, please relogin");
+                        return;
+                    }
+
+                    var success = items.Success;
+
                     // update screen
-                    mymap.events.getBounds(map,true);
+                    mymap.events.getBounds(map, true);
                 },
                 error: function (xhr, err) {
                     alert("readyState: " + xhr.readyState + "\nstatus: " + xhr.status + "\nresponseText: " + xhr.responseText);
@@ -570,6 +621,13 @@ var mymap = {
                     // update
                     async.lastReceivedMarkerDetail = lastReceivedMarkerDetail;
 
+                    if (items.TokenValid === "0") {
+                        alert("Demo time is over, TokenValid is invalid, please relogin");
+                        return;
+                    }
+
+                    var success = items.Success;
+
                     infowindow.setContent(items.Content);
                     infowindow.open(map, marker);
                 },
@@ -589,7 +647,7 @@ var getKey = function (x, y, c) {
 }
 
 google.maps.event.addDomListener(window, 'load', mymap.initialize); // load google map
-
+mymap.events.getAccessToken('username', 'password', async.lastSendGetAccessToken); // set access token
 
 var checkboxClicked = function (type, isChecked) {    
     mymap.events.setType(type, isChecked);

@@ -4,10 +4,9 @@ using System.Web.Script.Serialization;
 
 namespace Kunukn.GooglemapsClustering.Data
 {
-    public class JsonMarkerInfoReply
+    public class JsonMarkerInfoReply : JsonReply
     {
-        public string Content { get; set; }
-        public int ReplyId { get; set; }
+        public string Content { get; set; }        
 
         [ScriptIgnore]  //dont include in json reply
         public string Type  { get; set; }
@@ -17,8 +16,7 @@ namespace Kunukn.GooglemapsClustering.Data
         public JsonMarkerInfoReply()
         {
             Id = string.Empty;
-            Type = string.Empty;            
-            ReplyId = 1;
+            Type = string.Empty;                        
         }
 
         public void BuildContent()

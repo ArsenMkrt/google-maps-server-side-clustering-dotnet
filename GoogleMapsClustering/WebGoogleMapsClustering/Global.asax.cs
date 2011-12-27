@@ -40,6 +40,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering
         {
             // Code that runs when a new session is started
             Session[Names.Filter] = new HashSet<string>();
+            Session[Names.SessionStart] = DateTime.UtcNow as DateTime?;
         }
 
         void Session_End(object sender, EventArgs e)
