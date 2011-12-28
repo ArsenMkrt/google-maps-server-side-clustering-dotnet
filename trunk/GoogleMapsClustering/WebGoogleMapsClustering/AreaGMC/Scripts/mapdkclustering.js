@@ -335,7 +335,7 @@ var gmcKN = {
                         var lastReceivedGetMarkers = items.ReplyId;
                         if (lastReceivedGetMarkers <= gmcKN.async.lastReceivedGetMarkers) {
                             // async mismatch, this is old reply, dont use it
-                            //console.log('async mismatch ' + lastReceivedGetMarkers + ' ' + gmcKN.async.lastReceivedGetMarkers);
+                            console.log('async mismatch ' + lastReceivedGetMarkers + ' ' + gmcKN.async.lastReceivedGetMarkers);
                             return;
                         }
                         // update
