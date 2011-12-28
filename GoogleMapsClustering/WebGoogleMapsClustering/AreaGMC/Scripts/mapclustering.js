@@ -611,6 +611,13 @@ var gmcKN = {
     },
 
     checkboxClicked: function (type, isChecked) {
+        if (type === 'lines') {
+            gmcKN.debug.showGridLines = !gmcKN.debug.showGridLines;
+            // update screen
+            gmcKN.mymap.events.getBounds(gmcKN.map, true);
+            return;
+        }
+
         gmcKN.mymap.events.setType(type, isChecked);
     },
 
