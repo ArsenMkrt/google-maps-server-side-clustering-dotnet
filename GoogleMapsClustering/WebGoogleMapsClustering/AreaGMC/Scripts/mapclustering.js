@@ -369,8 +369,8 @@ var gmcKN = {
                             if (gmcKN.markers.hasOwnProperty(i)) {
                                 var m = gmcKN.markers[i];
                                 var key = m.get("key"); //key  
-                                if (key !== 0);
-                                pointsCacheOnMap[key] = 1;
+                                if (key !== 0)
+                                    pointsCacheOnMap[key] = 1;
                                 if (key === undefined) console.log("error key"); //catch error in code
                             }
                         }
@@ -380,7 +380,7 @@ var gmcKN = {
                             if (items.Points.hasOwnProperty(i)) {
                                 var p = items.Points[i];
                                 var key = gmcKN.getKey(p.X, p.Y, p.C); //key                            
-                                if (pointsCacheOnMap[key] === undefined && pointsCacheOnMap[key] !== 0) {
+                                if (pointsCacheOnMap[key] === undefined) {
                                     if (pointsCacheIncome[key] === undefined) console.log("error key2"); //catch error in code
 
                                     newmarkersTodo.push(pointsCacheIncome[key]);
