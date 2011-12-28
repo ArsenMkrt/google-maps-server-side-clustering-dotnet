@@ -22,5 +22,6 @@
         <input type="checkbox" id="gmcKN_Type1" name="Type" value="Type1" checked="checked" onclick="gmcKN.checkboxClicked('1',this.checked+'');" />Type1<br />
         <input type="checkbox" id="gmcKN_Type2" name="Type" value="Type2" checked="checked" onclick="gmcKN.checkboxClicked('2',this.checked+'');" />Type2<br />
         <input type="checkbox" id="gmcKN_Type3" name="Type" value="Type3" checked="checked" onclick="gmcKN.checkboxClicked('3',this.checked+'');" />Type3<br />
+        <input type="checkbox" id="gmcKN_Lines" name="Type" value="Lines" checked="checked" onclick="gmcKN.checkboxClicked('lines',this.checked+'');" />Toggle lines<br />
     </div>
 </div>
