@@ -398,9 +398,10 @@ var gmcKN = {
                             if (gmcKN.markers.hasOwnProperty(i)) {
                                 var m = gmcKN.markers[i];
                                 var key = m.get("key"); //key  
-                                if (key !== 0);
-                                pointsCacheOnMap[key] = 1;
-                                if (key === undefined) console.log("error key"); //catch error in code
+                                if (key !== 0) //0 is used as has been deleted
+                                    pointsCacheOnMap[key] = 1;
+
+                                if (key === undefined) console.log("error in code: key"); //catch error in code
                             }
                         }
 
@@ -409,8 +410,8 @@ var gmcKN = {
                             if (items.Points.hasOwnProperty(i)) {
                                 var p = items.Points[i];
                                 var key = gmcKN.getKey(p.X, p.Y, p.C); //key                            
-                                if (pointsCacheOnMap[key] === undefined && pointsCacheOnMap[key] !== 0) {
-                                    if (pointsCacheIncome[key] === undefined) console.log("error key2"); //catch error in code
+                                if (pointsCacheOnMap[key] === undefined) {
+                                    if (pointsCacheIncome[key] === undefined) console.log("error in code: key2"); //catch error in code
 
                                     newmarkersTodo.push(pointsCacheIncome[key]);
                                 }
@@ -424,7 +425,7 @@ var gmcKN = {
                                 var key = m.get("key"); //key                            
                                 if (key !== 0 && pointsCacheIncome[key] === undefined) {
                                     $(".countinfo_" + key).remove();
-                                    gmcKN.markers[i].set("key", 0);
+                                    gmcKN.markers[i].set("key", 0); //mark as deleted
                                     gmcKN.markers[i].setMap(null);
                                 }
                             }
