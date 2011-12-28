@@ -99,12 +99,12 @@ var mymap = {
 
         document.getElementById('search').focus();
         $('#latitude').keypress(function (e) {
-            if (e.which == 13) {
+            if (e.which === 13) {
                 mymap.latlonsearch();
             }
         });
         $('#longitude').keypress(function (e) {
-            if (e.which == 13) {
+            if (e.which === 13) {
                 mymap.latlonsearch();
             }
         });
