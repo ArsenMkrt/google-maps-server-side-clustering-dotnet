@@ -388,8 +388,8 @@ var mymap = {
                         });
                     }
 
-                    var pointsCacheIncome = []; //drawn points
-                    var pointsCacheOnMap = []; // points to be drawn  
+                    var pointsCacheIncome = []; // points to be drawn  
+                    var pointsCacheOnMap = []; // drawn points
                     var newmarkersTodo = [];
 
                     // store new points to be drawn                  
