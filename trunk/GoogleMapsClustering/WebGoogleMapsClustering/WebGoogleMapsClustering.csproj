@@ -56,6 +56,7 @@
     <Content Include="AreaGMC\Controls\MapDK.ascx" />
     <Content Include="AreaGMC\Documents\FAQ.txt" />
     <Content Include="AreaGMC\Images\clusteringpreview.gif" />
+    <Content Include="AreaGMC\Images\link.txt" />
     <Content Include="AreaGMC\Images\markers\court.png" />
     <Content Include="AreaGMC\Images\markers\firstaid.png" />
     <Content Include="AreaGMC\Images\markers\house.png" />
