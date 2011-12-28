@@ -13,6 +13,13 @@ For deployment the web.config is configured for IIS 7 or later.
 
 ---------------------------------
 
+*Q. Where is the latest version?*
+
+A. The latest version is in the SVN repository, the trunk.
+If you want the latest version you should do SVN checkout.
+
+---------------------------------
+
 *Q. How many points can I use?*
 
 A. With current implementation, the upper limit should be around 300.000 where the delay is below 1 sec. 
