@@ -17,7 +17,7 @@ var gmcKN = {
 
     geocoder: new google.maps.Geocoder(),
     debug: {
-        showGridLines: true,
+        showGridLines: false,
         showBoundaryMarker: false
     },
     //prevent async send/receive order problem by using counter ref in send/reply in webservice
@@ -184,9 +184,9 @@ var gmcKN = {
         settings: {
             gridx: 6,
             gridy: 5,
-            mapCenterLat: 56.1, //-40   56.1  0
-            mapCenterLon: 11, //180   11   0
-            zoomLevel: 7, //7  1
+            mapCenterLat: 0, //-40   56.1  0
+            mapCenterLon: 0, //180   11   0
+            zoomLevel: 1, //7  1
             zoomlevelClusterStop: 15,
             access_token: 'todo',
             jsonMarkerUrl: 'WebService/MapService.asmx/GetMarkers',
