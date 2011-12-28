@@ -14,8 +14,8 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.Business
             if (timeSpan.Minutes < 10)
                 return true; //demo time
 
-            return access_token != "todo"; // simple validate dummy test
-            return true; //not used, all has access
+            return true; //validation not used, all has access
+            return access_token != "todo"; // simple validate dummy test            
         }
 
     }
