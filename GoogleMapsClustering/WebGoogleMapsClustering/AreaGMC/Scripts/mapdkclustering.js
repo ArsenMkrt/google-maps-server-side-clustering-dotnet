@@ -474,10 +474,10 @@ var mymap = {
                             else if (item.T === '3') {
                                 iconImg = pinImg3;
                             } else {
-                                iconImg = pinImg;
+                                iconImg = pinImg; //fallback
                             }
                         } else {
-                            iconImg = clusterImg; //fallback
+                            iconImg = clusterImg; 
                         }
 
                         var marker = new google.maps.Marker({
