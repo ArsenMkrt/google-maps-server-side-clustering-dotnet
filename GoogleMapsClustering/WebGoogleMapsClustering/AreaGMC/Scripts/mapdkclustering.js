@@ -3,9 +3,9 @@
 var gmcKN = {
 
     markers: [],
-    map: undefined, 
-    infowindow: undefined, 
-    debugMarker: undefined, 
+    map: undefined,
+    infowindow: undefined,
+    debugMarker: undefined,
     debuginfo: undefined,
 
     searchInfo: {
@@ -95,7 +95,7 @@ var gmcKN = {
 
             // search -------------        
             // http://tech.cibul.net/geocode-with-google-maps-api-v3/
-            
+
             $('#gmcKN_search').focus();
             $('#gmcKN_latitude').keypress(function (e) {
                 if (e.which === 13) {
@@ -206,12 +206,14 @@ var gmcKN = {
                 offsetW: 30
             },
             pinImage: {
-                src: 'Images/pin24.png',
+                src: 'Images/pin24.png', //default unknown marker
                 height: 24,
                 width: 24,
                 offsetH: 0,
                 offsetW: 0
             },
+
+            // specific markers
             pinImage1: {
                 src: 'Images/markers/court.png',
                 height: 37,
@@ -237,31 +239,21 @@ var gmcKN = {
         },
 
 
-        clusterOptions: { styles: [
+        clusterOptions: { number: [
             {
-                url: "/Images/m1.png", //http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m1.png            
-                style: 'font-family: arial;display:block;position: relative; left: -26px;top: -26px;font-weight:bold;text-align:center;line-height:52px;font-size:12px;font-weight:bold;' +
-                          'white-space: nowrap;color:#fff;background:url(Images/m1.png) no-repeat 0 0;width:53px;height:52px;'
+                size: 1        
             },
             {
-                url: "/Images/m2.png",
-                style: 'font-family: arial;display:block;position: relative; left: -28px;top: -28px;font-weight:bold;text-align:center;line-height:55px;font-size:12px;font-weight:bold;' +
-                          'white-space: nowrap;color:#fff;background:url(Images/m2.png) no-repeat 0 0;width:56px;height:55px;'
+                size: 2
             },
             {
-                url: "/Images/m3.png",
-                style: 'font-family: arial;display:block;position: relative; left: -33px;top: -33px;font-weight:bold;text-align:center;line-height:65px;font-size:12px;font-weight:bold;' +
-                          'white-space: nowrap;color:#fff;background:url(Images/m3.png) no-repeat 0 0;width:66px;height:65px;'
+                size: 3
             },
             {
-                url: "/Images/m4.png",
-                style: 'font-family: arial;display:block;position: relative; left: -39px;top: -39px;font-weight:bold;text-align:center;line-height:77px;font-size:12px;font-weight:bold;' +
-                          'white-space: nowrap;color:#fff;background:url(Images/m4.png) no-repeat 0 0;width:78px;height:77px;'
+                size: 4
             },
             {
-                url: "/Images/m5.png",
-                style: 'font-family: arial;display:block;position: relative; left: -45px;top: -45px;font-weight:bold;text-align:center;line-height:89px;font-size:12px;font-weight:bold;' +
-                          'white-space: nowrap;color:#fff;background:url(Images/m5.png) no-repeat 0 0;width:90px;height:89px;'
+                size: 5
             }]
         },
 
@@ -293,7 +285,7 @@ var gmcKN = {
                             zIndex: 1
                         });
                     }
-                    if (!gmcKN.debuginfo || gmcKN.debuginfo===undefined) {
+                    if (!gmcKN.debuginfo || gmcKN.debuginfo === undefined) {
                         gmcKN.debuginfo = new google.maps.InfoWindow();
                     }
                     gmcKN.debugMarker.setPosition(center);
@@ -474,7 +466,7 @@ var gmcKN = {
                                     iconImg = pinImg; //fallback
                                 }
                             } else {
-                                iconImg = clusterImg; 
+                                iconImg = clusterImg;
                             }
 
                             var marker = new google.maps.Marker({
@@ -647,33 +639,34 @@ var gmcKN = {
         gmcKN.mymap.events.setType(type, isChecked);
     },
 
-    
+
     //COUNT LABELS ON CLUSTERS
     Label: function (opt_options, id, count) {
         this.setValues(opt_options);
         var span = this.span_ = document.createElement('span');
 
         if (count >= 10000) {
-            span.style.cssText = gmcKN.mymap.clusterOptions.styles[4].style;
+            span.className = "gmcKN_clustersize5";            
         }
         else if (count >= 1000) {
-            span.style.cssText = gmcKN.mymap.clusterOptions.styles[3].style;
+            span.className = "gmcKN_clustersize4";            
         }
         else if (count >= 100) {
-            span.style.cssText = gmcKN.mymap.clusterOptions.styles[2].style;
+            span.className = "gmcKN_clustersize3";            
         }
         else if (count >= 10) {
-            span.style.cssText = gmcKN.mymap.clusterOptions.styles[1].style;
+            span.className = "gmcKN_clustersize2";            
         }
         else {
-            span.style.cssText = gmcKN.mymap.clusterOptions.styles[0].style;
+            span.className = "gmcKN_clustersize1";            
         }
 
         var div = this.div_ = document.createElement('div');
         div.appendChild(span);
-        div.className = "countinfo_" + id;
+        div.className = "countinfo_" + id;        
         div.style.cssText = 'position: absolute; display: none;';
-    }   
+        
+    }
 };
 
 
