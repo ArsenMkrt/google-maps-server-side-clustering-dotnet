@@ -2,7 +2,7 @@
 
  <link type="text/css" href="Styles/Googlemap.css?<%= 0/*DateTime.UtcNow.ToString("yyyyMMdd-HHmmss")*/ %>" rel="stylesheet" /> 
  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/excite-bike/jquery-ui.css" type="text/css" />
- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+ <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script> 
  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
