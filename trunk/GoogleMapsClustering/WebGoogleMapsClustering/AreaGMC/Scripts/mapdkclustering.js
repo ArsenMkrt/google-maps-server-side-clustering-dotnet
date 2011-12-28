@@ -38,8 +38,12 @@ var gmcKN = {
             // parseFloat() .toFixed(gmcKN.searchInfo.round);    
             var lat = $('#gmcKN_latitude').val() + "";
             var lon = $('#gmcKN_longitude').val() + "";
-            if (lat.length > gmcKN.searchInfo.round + gmcKN.searchInfo.prefix) lat = lat.substring(0, gmcKN.searchInfo.round + 2 + gmcKN.searchInfo.prefix);
-            if (lon.length > gmcKN.searchInfo.round + gmcKN.searchInfo.prefix) lon = lon.substring(0, gmcKN.searchInfo.round + 2 + gmcKN.searchInfo.prefix);
+            if (lat.length > gmcKN.searchInfo.round + gmcKN.searchInfo.prefix)
+                lat = lat.substring(0, gmcKN.searchInfo.round + 2 + gmcKN.searchInfo.prefix);
+
+            if (lon.length > gmcKN.searchInfo.round + gmcKN.searchInfo.prefix)
+                lon = lon.substring(0, gmcKN.searchInfo.round + 2 + gmcKN.searchInfo.prefix);
+
             lat = parseFloat(lat).toFixed(gmcKN.searchInfo.round);
             lon = parseFloat(lon).toFixed(gmcKN.searchInfo.round);
             $('#gmcKN_latitude').val(lat); //update
@@ -127,8 +131,12 @@ var gmcKN = {
                             $('#gmcKN_search').val(addr);
                             var lat = gmcKN.searchInfo.searchMarker.getPosition().lat() + "";
                             var lon = gmcKN.searchInfo.searchMarker.getPosition().lng() + "";
-                            if (lat.length > gmcKN.searchInfo.round + gmcKN.searchInfo.prefix) lat = lat.substring(0, gmcKN.searchInfo.round + 2 + gmcKN.searchInfo.prefix);
-                            if (lon.length > gmcKN.searchInfo.round + gmcKN.searchInfo.prefix) lon = lon.substring(0, gmcKN.searchInfo.round + 2 + gmcKN.searchInfo.prefix);
+                            if (lat.length > gmcKN.searchInfo.round + gmcKN.searchInfo.prefix) 
+                                lat = lat.substring(0, gmcKN.searchInfo.round + 2 + gmcKN.searchInfo.prefix);
+
+                            if (lon.length > gmcKN.searchInfo.round + gmcKN.searchInfo.prefix) 
+                                lon = lon.substring(0, gmcKN.searchInfo.round + 2 + gmcKN.searchInfo.prefix);
+
                             lat = parseFloat(lat).toFixed(gmcKN.searchInfo.round);
                             lon = parseFloat(lon).toFixed(gmcKN.searchInfo.round);
                             $('#gmcKN_latitude').val(lat);
@@ -162,8 +170,10 @@ var gmcKN = {
                         //parseFloat()   
                         var lat = ui.item.latitude + "";
                         var lon = ui.item.longitude + "";
-                        if (lat.length > gmcKN.searchInfo.round + gmcKN.searchInfo.prefix) lat = lat.substring(0, gmcKN.searchInfo.round + 2 + gmcKN.searchInfo.prefix);
-                        if (lon.length > gmcKN.searchInfo.round + gmcKN.searchInfo.prefix) lon = lon.substring(0, gmcKN.searchInfo.round + 2 + gmcKN.searchInfo.prefix);
+                        if (lat.length > gmcKN.searchInfo.round + gmcKN.searchInfo.prefix) lat = lat.substring(0, gmcKN.searchInfo.round + 
+                            2 + gmcKN.searchInfo.prefix);
+                        if (lon.length > gmcKN.searchInfo.round + gmcKN.searchInfo.prefix) lon = lon.substring(0, gmcKN.searchInfo.round + 
+                            2 + gmcKN.searchInfo.prefix);
                         lat = parseFloat(lat).toFixed(gmcKN.searchInfo.round);
                         lon = parseFloat(lon).toFixed(gmcKN.searchInfo.round);
 
@@ -238,30 +248,10 @@ var gmcKN = {
             textErrorMessage: 'Error'
         },
 
-
-        clusterOptions: { number: [
-            {
-                size: 1        
-            },
-            {
-                size: 2
-            },
-            {
-                size: 3
-            },
-            {
-                size: 4
-            },
-            {
-                size: 5
-            }]
-        },
-
-
         events: {
             getBounds: function (argmap, forceUpdate) {
 
-                if (!gmcKN.infowindow || gmcKN.infowindow === undefined) {
+                if (gmcKN.infowindow === undefined) {
                     gmcKN.infowindow = new google.maps.InfoWindow();
                 }
 
@@ -289,7 +279,8 @@ var gmcKN = {
                         gmcKN.debuginfo = new google.maps.InfoWindow();
                     }
                     gmcKN.debugMarker.setPosition(center);
-                    var debugstr = center.lng() + '; ' + center.lat() + ' zoom: ' + gmcKN.map.getZoom() + '<br />SW: ' + SW.lng() + ' ; ' + SW.lat() + '<br/>NE: ' + NE.lng() + ' ; ' + NE.lat();
+                    var debugstr = center.lng() + '; ' + center.lat() + ' zoom: ' + gmcKN.map.getZoom() + '<br />SW: ' + SW.lng() + ' ; ' + SW.lat() + 
+                        '<br/>NE: ' + NE.lng() + ' ; ' + NE.lat();
                     gmcKN.debuginfo.setContent(debugstr);
                     gmcKN.debuginfo.open(gmcKN.map, gmcKN.debugMarker);
                 }
@@ -311,14 +302,19 @@ var gmcKN = {
             polys: [], //cache drawn grid lines        
             loadMarkers: function (mapData) {
 
-                var clusterImg = new google.maps.MarkerImage(gmcKN.mymap.settings.clusterImage.src, new google.maps.Size(gmcKN.mymap.settings.clusterImage.width, gmcKN.mymap.settings.clusterImage.height), null, new google.maps.Point(gmcKN.mymap.settings.clusterImage.offsetW, gmcKN.mymap.settings.clusterImage.offsetH));
+                var clusterImg = new google.maps.MarkerImage(gmcKN.mymap.settings.clusterImage.src, new google.maps.Size(gmcKN.mymap.settings.clusterImage.width, gmcKN.mymap.settings.clusterImage.height),
+                    null, new google.maps.Point(gmcKN.mymap.settings.clusterImage.offsetW, gmcKN.mymap.settings.clusterImage.offsetH));
+
                 var pinImg = new google.maps.MarkerImage(gmcKN.mymap.settings.pinImage.src, new google.maps.Size(gmcKN.mymap.settings.pinImage.width, gmcKN.mymap.settings.pinImage.height), null, null);
                 var pinImg1 = new google.maps.MarkerImage(gmcKN.mymap.settings.pinImage1.src, new google.maps.Size(gmcKN.mymap.settings.pinImage1.width, gmcKN.mymap.settings.pinImage1.height), null, null);
                 var pinImg2 = new google.maps.MarkerImage(gmcKN.mymap.settings.pinImage2.src, new google.maps.Size(gmcKN.mymap.settings.pinImage2.width, gmcKN.mymap.settings.pinImage2.height), null, null);
                 var pinImg3 = new google.maps.MarkerImage(gmcKN.mymap.settings.pinImage3.src, new google.maps.Size(gmcKN.mymap.settings.pinImage3.width, gmcKN.mymap.settings.pinImage3.height), null, null);
 
                 var webMethod = gmcKN.mymap.settings.jsonMarkerUrl;
-                var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","nelat":"' + mapData.neLat + '","nelon":"' + mapData.neLon + '","swlat":"' + mapData.swLat + '","swlon":"' + mapData.swLon + '","zoomlevel":"' + mapData.zoomLevel + '","gridx":"' + gmcKN.mymap.settings.gridx + '","gridy":"' + gmcKN.mymap.settings.gridy + '","zoomlevelClusterStop":"' + gmcKN.mymap.settings.zoomlevelClusterStop + '","sendid":"' + (++gmcKN.async.lastSendGetMarkers) + '"}';
+                var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","nelat":"' + mapData.neLat + '","nelon":"' +
+                    mapData.neLon + '","swlat":"' + mapData.swLat + '","swlon":"' + mapData.swLon + '","zoomlevel":"' + mapData.zoomLevel +
+                    '","gridx":"' + gmcKN.mymap.settings.gridx + '","gridy":"' + gmcKN.mymap.settings.gridy + '","zoomlevelClusterStop":"' + 
+                    gmcKN.mymap.settings.zoomlevelClusterStop + '","sendid":"' + (++gmcKN.async.lastSendGetMarkers) + '"}';
 
                 // http://stackoverflow.com/questions/3020351/javascript-jquery-ajax-post-error-driving-me-mad            
                 $.ajax({
@@ -347,13 +343,15 @@ var gmcKN = {
 
                         var success = items.Success;
 
-                        if (gmcKN.debug.showGridLines) {
-                            $.each(gmcKN.mymap.events.polys, function () {
-                                var item = this;
-                                item.setMap(null); // clear prev lines
-                            });
-                            gmcKN.mymap.events.polys.length = 0; // clear array                 
+                        // grid lines clear current
+                        $.each(gmcKN.mymap.events.polys, function () {
+                            var item = this;
+                            item.setMap(null); // clear prev lines
+                        });
+                        gmcKN.mymap.events.polys.length = 0; // clear array   
 
+
+                        if (gmcKN.debug.showGridLines === true) {                           
                             $.each(items.Polylines, function () {
                                 var item = this;
                                 var x = item.X;
@@ -519,7 +517,9 @@ var gmcKN = {
             },
             getAccessToken: function (username, password) {
                 var webMethod = gmcKN.mymap.settings.jsonGetAccessTokenUrl;
-                var parameters = '{' + '"username":"' + username + '","password":"' + password + '","sendid":"' + (++gmcKN.async.lastSendGetAccessToken) + '"}';
+                var parameters = '{' + '"username":"' + username + '","password":"' + password + '","sendid":"'
+                    + (++gmcKN.async.lastSendGetAccessToken) + '"}';
+
                 $.ajax({
                     type: 'POST',
                     url: webMethod,
@@ -552,7 +552,9 @@ var gmcKN = {
 
             setType: function (type, isChecked) {
                 var webMethod = gmcKN.mymap.settings.jsonSetTypeUrl;
-                var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","type":"' + type + '","isChecked":"' + isChecked + '","sendid":"' + (++gmcKN.async.lastSendSetType) + '"}';
+                var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","type":"' + type + '","isChecked":"'
+                    + isChecked + '","sendid":"' + (++gmcKN.async.lastSendSetType) + '"}';
+
                 $.ajax({
                     type: 'POST',
                     url: webMethod,
@@ -590,7 +592,8 @@ var gmcKN = {
 
             attachCallOut: function (marker, item) {
                 var webMethod = gmcKN.mymap.settings.jsonMarkerDetailUrl;
-                var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","id":"' + item.I + '","type":"' + item.T + '","sendid":"' + (++gmcKN.async.lastSendMarkerDetail) + '"}';
+                var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","id":"' + item.I + 
+                    '","type":"' + item.T + '","sendid":"' + (++gmcKN.async.lastSendMarkerDetail) + '"}';
 
                 $.ajax({
                     type: 'POST',
@@ -636,6 +639,13 @@ var gmcKN = {
     },
 
     checkboxClicked: function (type, isChecked) {
+        if (type === 'lines') {            
+            gmcKN.debug.showGridLines = !gmcKN.debug.showGridLines;
+            // update screen
+            gmcKN.mymap.events.getBounds(gmcKN.map, true);
+            return;
+        }
+
         gmcKN.mymap.events.setType(type, isChecked);
     },
 
@@ -646,26 +656,26 @@ var gmcKN = {
         var span = this.span_ = document.createElement('span');
 
         if (count >= 10000) {
-            span.className = "gmcKN_clustersize5";            
+            span.className = "gmcKN_clustersize5";
         }
         else if (count >= 1000) {
-            span.className = "gmcKN_clustersize4";            
+            span.className = "gmcKN_clustersize4";
         }
         else if (count >= 100) {
-            span.className = "gmcKN_clustersize3";            
+            span.className = "gmcKN_clustersize3";
         }
         else if (count >= 10) {
-            span.className = "gmcKN_clustersize2";            
+            span.className = "gmcKN_clustersize2";
         }
         else {
-            span.className = "gmcKN_clustersize1";            
+            span.className = "gmcKN_clustersize1";
         }
 
         var div = this.div_ = document.createElement('div');
         div.appendChild(span);
-        div.className = "countinfo_" + id;        
+        div.className = "countinfo_" + id;
         div.style.cssText = 'position: absolute; display: none;';
-        
+
     }
 };
 
