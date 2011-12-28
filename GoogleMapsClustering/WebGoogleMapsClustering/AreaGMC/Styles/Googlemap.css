@@ -29,11 +29,7 @@
     border: 1px #000 solid;
 }
 
-input.mono
-{
-    font-family:monospace;
-}
-span.mono
+.mono
 {
     font-family:monospace;
 }
