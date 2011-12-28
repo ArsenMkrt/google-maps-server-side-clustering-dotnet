@@ -13,25 +13,25 @@ var mymap = {
 
     latlonsearch: function () {
         // parseFloat() .toFixed(searchInfo.round);    
-        var lat = $('#latitude').val() + "";
-        var lon = $('#longitude').val() + "";
+        var lat = $('#gmcKN_latitude').val() + "";
+        var lon = $('#gmcKN_longitude').val() + "";
         if (lat.length > searchInfo.round + searchInfo.prefix) lat = lat.substring(0, searchInfo.round + 2 + searchInfo.prefix);
         if (lon.length > searchInfo.round + searchInfo.prefix) lon = lon.substring(0, searchInfo.round + 2 + searchInfo.prefix);
         lat = parseFloat(lat).toFixed(searchInfo.round);
         lon = parseFloat(lon).toFixed(searchInfo.round);
-        $('#latitude').val(lat); //update
-        $('#longitude').val(lon);
-        $('#lonlat').val(lon + ';' + lat);
+        $('#gmcKN_latitude').val(lat); //update
+        $('#gmcKN_longitude').val(lon);
+        $('#gmcKN_lonlat').val(lon + ';' + lat);
         var latlon = new google.maps.LatLng(lat, lon);
 
         geocoder.geocode({ 'latLng': latlon }, function (results, status) {
             if (status === google.maps.GeocoderStatus.OK) {
                 if (results[0]) {
-                    $('#search').val(results[0].formatted_address);
+                    $('#gmcKN_search').val(results[0].formatted_address);
                 }
             }
             else {
-                $('#search').val("");
+                $('#gmcKN_search').val("");
             }
 
             searchInfo.searchMarker.setPosition(latlon);
@@ -46,7 +46,7 @@ var mymap = {
 
         var center = new google.maps.LatLng(mymap.settings.mapCenterLat, mymap.settings.mapCenterLon, true);
 
-        map = new google.maps.Map(document.getElementById('map_canvas'), {
+        map = new google.maps.Map(document.getElementById('gmcKN_map_canvas'), {
             zoom: mymap.settings.zoomLevel,
             center: center,
             scrollwheel: true,
@@ -56,14 +56,14 @@ var mymap = {
             scaleControl: true,
             streetViewControl: false,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
-            backgroundColor: '#ffffff',
+            backgroundColor: '#fff',
             draggableCursor: 'move',
             minZoom: 1,
             maxZoom: 20
         });
 
         google.maps.event.addListener(map, 'zoom_changed', function () {
-            document.getElementById("zoomInfo").innerHTML = "zoom: " + map.getZoom() + ".  ";
+            document.getElementById("gmcKN_zoomInfo").innerHTML = "zoom: " + map.getZoom() + ".  ";
         });
         google.maps.event.trigger(map, 'zoom_changed');
 
@@ -71,14 +71,14 @@ var mymap = {
         // search -------------        
         // http://tech.cibul.net/geocode-with-google-maps-api-v3/
 
-        document.getElementById('search').focus();
-        $('#latitude').keypress(function (e) {
-            if (e.which == 13) {
+        document.getElementById('gmcKN_search').focus();
+        $('#gmcKN_latitude').keypress(function (e) {
+            if (e.which === 13) {
                 mymap.latlonsearch();
             }
         });
-        $('#longitude').keypress(function (e) {
-            if (e.which == 13) {
+        $('#gmcKN_longitude').keypress(function (e) {
+            if (e.which === 13) {
                 mymap.latlonsearch();
             }
         });
@@ -97,23 +97,23 @@ var mymap = {
             geocoder.geocode({ 'latLng': searchInfo.searchMarker.getPosition() }, function (results, status) {
                 if (status === google.maps.GeocoderStatus.OK) {
                     if (results[0]) {
-                        $('#search').val(results[0].formatted_address);
+                        $('#gmcKN_search').val(results[0].formatted_address);
                         var lat = searchInfo.searchMarker.getPosition().lat() + "";
                         var lon = searchInfo.searchMarker.getPosition().lng() + "";
                         if (lat.length > searchInfo.round + searchInfo.prefix) lat = lat.substring(0, searchInfo.round + 2 + searchInfo.prefix);
                         if (lon.length > searchInfo.round + searchInfo.prefix) lon = lon.substring(0, searchInfo.round + 2 + searchInfo.prefix);
                         lat = parseFloat(lat).toFixed(searchInfo.round);
-                        lon = parseFloat(lon).toFixed(searchInfo.round);     
-                        $('#latitude').val(lat);
-                        $('#longitude').val(lon);
-                        $('#lonlat').val(lon + ';' + lat);
+                        lon = parseFloat(lon).toFixed(searchInfo.round);
+                        $('#gmcKN_latitude').val(lat);
+                        $('#gmcKN_longitude').val(lon);
+                        $('#gmcKN_lonlat').val(lon + ';' + lat);
                     }
                 }
             });
         });
 
         $(function () {
-            $("#search").autocomplete({
+            $("#gmcKN_search").autocomplete({
                 //This bit uses the geocoder to fetch address values
                 source: function (request, response) {
                     geocoder.geocode({ "address": request.term }, function (results, status) {
@@ -135,11 +135,11 @@ var mymap = {
                     if (lat.length > searchInfo.round + searchInfo.prefix) lat = lat.substring(0, searchInfo.round + 2 + searchInfo.prefix);
                     if (lon.length > searchInfo.round + searchInfo.prefix) lon = lon.substring(0, searchInfo.round + 2 + searchInfo.prefix);
                     lat = parseFloat(lat).toFixed(searchInfo.round);
-                    lon = parseFloat(lon).toFixed(searchInfo.round);     
+                    lon = parseFloat(lon).toFixed(searchInfo.round);
 
-                    $("#latitude").val(lat);
-                    $("#longitude").val(lon);
-                    $('#lonlat').val(lon + ';' + lat);
+                    $("#gmcKN_latitude").val(lat);
+                    $("#gmcKN_longitude").val(lon);
+                    $('#gmcKN_lonlat').val(lon + ';' + lat);
                     var location = new google.maps.LatLng(lat, lon);
 
                     searchInfo.searchMarker.setPosition(location);

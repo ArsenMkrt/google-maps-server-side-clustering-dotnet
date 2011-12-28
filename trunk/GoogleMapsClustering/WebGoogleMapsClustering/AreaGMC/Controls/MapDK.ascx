@@ -8,15 +8,15 @@
 
 <script type="text/javascript" src="Scripts/mapdk.js?<%= DateTime.UtcNow.ToString("yyyyMMdd-HHmmss") %> "></script> <%-- no cache--%>
 
-<div id="map_container">
+<div id="gmcKN_map_container">
         
-    <label>Address: </label><input id="search"  size="40" type="text"/>      
+    <label>Address: </label><input id="gmcKN_search"  size="40" type="text"/>      
     Drag the search marker.
 
-    <div id="map_canvas"></div>    
+    <div id="gmcKN_map_canvas"></div>    
 
-    <label>latitude: </label><input id="latitude" class="mono" type="text" size="10" maxlength="20" /> <label>longitude: </label><input id="longitude" class="mono" size="10" maxlength="20" type="text" />
-    <input id="btnLatLonSearch" type="button" value="search" onclick="mymap.latlonsearch(); return false;"/>
-    <span id="zoomInfo" class="mono">zoom: </span> &nbsp;&nbsp;&nbsp;<input id="lonlat" class="mono" maxlength="20" onclick="document.getElementById('lonlat').select();" />
+    <label>latitude: </label><input id="gmcKN_latitude" class="mono" type="text" size="10" maxlength="20" /> <label>longitude: </label><input id="gmcKN_longitude" class="mono" size="10" maxlength="20" type="text" />
+    <input id="gmcKN_btnLatLonSearch" type="button" value="search" onclick="mymap.latlonsearch(); return false;"/>
+    <span id="gmcKN_zoomInfo" class="mono">zoom: </span> &nbsp;&nbsp;&nbsp;<input id="gmcKN_lonlat" class="mono" maxlength="20" onclick="this.select();" />
 
 </div>

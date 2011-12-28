@@ -1,4 +1,22 @@
-﻿.ui-autocomplete {
+﻿ul
+{
+    padding: 2px;
+    line-height: 22px;
+    text-align: left;
+    margin: 0;
+}
+a
+{
+    padding: 0px;
+    text-decoration: none;
+}
+li
+{
+    /* display: inline;*/
+}
+
+
+.ui-autocomplete {
 	background-color: #ffffff;
 	width: 410px;
 	border: 1px solid #cfcfcf;
@@ -6,13 +24,13 @@
 	padding-left: 0px;
 }
 
-#search
+#gmcKN_search
 {
     position: relative;
     width: 400px;    
 }
 
-#map_container
+#gmcKN_map_container
 {
     width: 1124px;
     margin: 10px;
@@ -20,7 +38,7 @@
     border: 0px #f00 solid;
 }
     
-#map_canvas
+#gmcKN_map_canvas
 {
     width: 800px; /* 640  1024 */
     height:   600px; /* 480 768 */
@@ -37,43 +55,43 @@ span.mono
     font-family:monospace;
 }
 
-#lonlat
+#gmcKN_lonlat
 {
     border: 1px #fff solid;
     border: none;
     background: transparent;
 }
 
-#longitude
+#gmcKN_longitude
 {
     
 }
 
-#latitude
+#gmcKN_latitude
 {
    
 }
 
-#btnLatLonSearch
+#gmcKN_btnLatLonSearch
 {
    
 }
 
 
-#zoomInfo
+#gmcKN_zoomInfo
 {
    
 }
 
-#checkboxContainer
+#gmcKN_checkboxContainer
 {
-    position: fixed;
+    position: absolute;
     width:140px;    
     height:200px;
     border: 1px #000 solid;
     background: #eee;
-    left:30px;
-    bottom:100px;
-    opacity: 0.7;
+    left:646px;
+    top:92px;
+    opacity: 0.76;
     z-index: 3;
 }

@@ -24,8 +24,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
     public class MapService : System.Web.Services.WebService
     {
         public const string _true = "true";
-        public const string _false = "false";
-        public const string _valid = "valid";
+        public const string _false = "false";        
         public const string _0 = "0";
         public const string _1 = "1";
 
@@ -129,7 +128,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
         {
             var jss = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
             // dummy set access token
-            var reply = new JsonGetAccessTokenReply {ReplyId = sendid, AccessToken = _valid, Success = _1};
+            var reply = new JsonGetAccessTokenReply {ReplyId = sendid, AccessToken = "dummyValidValue", Success = _1};
             return jss.Serialize(reply);
         }
 
