@@ -25,7 +25,7 @@ namespace Kunukn.GooglemapsClustering.Data
             sb.AppendLine("<div>");
             //sb.AppendLine("<b>todo implement marker info </b> ");
             sb.AppendFormat("Time: {0}<br/>",DateTime.Now);
-            sb.AppendFormat("Id: {0}<br/> Type: {1}", Id, Type);
+            sb.AppendFormat("Id: {0}<br /> Type: {1}", Id, Type);            
             sb.AppendLine("</div>");
 
             Content = sb.ToString();
