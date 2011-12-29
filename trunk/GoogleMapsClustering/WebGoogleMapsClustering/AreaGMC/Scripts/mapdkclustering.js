@@ -15,9 +15,10 @@ var gmcKN = {
         prefix: 4
     },
 
+    // http://code.google.com/intl/da-DK/apis/maps/documentation/javascript/reference.html
     geocoder: new google.maps.Geocoder(),
     debug: {
-        showGridLines: true,
+        showGridLines: false,
         showBoundaryMarker: false
     },
     //prevent async send/receive order problem by using counter ref in send/reply in webservice
@@ -200,7 +201,7 @@ var gmcKN = {
             gridy: 5,
             mapCenterLat: 56.1, //-40   56.1  0
             mapCenterLon: 11, //180   11   0
-            zoomLevel: 7, //7  1
+            zoomLevel: 4, //7  1
             zoomlevelClusterStop: 15,
             access_token: 'todo',
             jsonMarkerUrl: 'WebService/MapService.asmx/GetMarkers',
@@ -447,7 +448,7 @@ var gmcKN = {
                         for (i in temp) {
                             if (temp.hasOwnProperty(i)) {
                                 gmcKN.markers.push(temp[i]);
-                            } 
+                            }
                         }
 
                         $.each(newmarkersTodo, function () {
@@ -602,6 +603,8 @@ var gmcKN = {
                 var webMethod = gmcKN.mymap.settings.jsonMarkerDetailUrl;
                 var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","id":"' + item.I +
                     '","type":"' + item.T + '","sendid":"' + (++gmcKN.async.lastSendMarkerDetail) + '"}';
+
+                //alert("lat: "+marker.getPosition().lat() + " lon:" + marker.getPosition().lng());
 
                 $.ajax({
                     type: 'POST',
