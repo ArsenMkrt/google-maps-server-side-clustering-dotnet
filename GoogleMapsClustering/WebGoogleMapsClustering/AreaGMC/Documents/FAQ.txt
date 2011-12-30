@@ -68,7 +68,7 @@ to update information for how many points you want and in which area you want th
 
 *Q. How do I enable/disable the red gridlines?*
 
-A. In the file {{{mapdkclustering.js }}}
+A. In the file {{{mapclustering.js }}}
 set the showGridLines to false or disable it server-side
 setting {{{Kunukn.GooglemapsClustering.Clustering.Config.DoShowGridLinesInGoogleMap}}} to false. 
 
@@ -124,28 +124,6 @@ You are welcome to analyse it yourself :) I use hashset and hashmap to minimize 
 
 A. Yes I could but I want to spend my time on something else.
 
----------------------------------
-
-*Q. Who made this?*
-
-A. Kunuk Nykjaer spend the time in the weekends to make 
-a stationary grid-based clustering after preliminary research on different clustering approach. 
-On my time on the job I made a marker-clusterer version 
-which I later discontinued because I felt the grid-based worked better. 
-All the server-side clustering logic is made by Kunuk Nykjaer.
-The JS GUI-part is largely adapted and reworked by Kunuk Nykjaer and the inspiration came partly 
-from JS-implementation by Jonas Olsen, Lars Gundersen and misc. http://stackoverflow.com/ pages. 
-The server-side webservice definition are with inspiration from Lasse Rasch's implementations.
-The JS logic-part (cluster points updating, lines drawing) was made by Kunuk Nykjaer).
-The address search part done with inspiration 
-from http://tech.cibul.net/geocode-with-google-maps-api-v3/.
-The cluster images are taken from Google's example images.
-The marker images are taken from http://mapicons.nicolasmollet.com/
-
-  * Kunuk Nykjaer http://dk.linkedin.com/in/kunukn/
-  * Jonas Olsen http://dk.linkedin.com/in/joolz/
-  * Lars Gundersen http://dk.linkedin.com/in/larsgundersen/
-  * Lasse Rasch http://dk.linkedin.com/pub/lasse-rasch/7/991/a10/
 ---------------------------------
 
 *Q. What license type is this?*

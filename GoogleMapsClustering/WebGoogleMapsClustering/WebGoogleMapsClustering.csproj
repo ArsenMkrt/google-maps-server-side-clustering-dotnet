@@ -52,8 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AreaGMC\Controls\MapClustering.ascx" />
-    <Content Include="AreaGMC\Controls\MapWorld.ascx" />
-    <Content Include="AreaGMC\Controls\MapDK.ascx" />
     <Content Include="AreaGMC\Documents\FAQ.txt" />
     <Content Include="AreaGMC\Images\clusteringpreview.gif" />
     <Content Include="AreaGMC\Images\link.txt" />
@@ -67,10 +65,7 @@
     <Content Include="AreaGMC\Documents\License.txt" />
     <Content Include="AreaGMC\Documents\Readme.htm" />
     <Content Include="AreaGMC\Documents\TODO.txt" />
-    <Content Include="AreaGMC\MapDK.aspx" />
-    <Content Include="AreaGMC\Scripts\jquery.1.6.4.min.js" />
     <Content Include="AreaGMC\Scripts\mapclustering.js" />
-    <Content Include="AreaGMC\Scripts\mapdk.js" />
     <Content Include="AreaGMC\Styles\Default.css" />
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
@@ -83,8 +78,6 @@
     <Content Include="AreaGMC\Images\m5.png" />
     <Content Include="AreaGMC\Controls\MapDKClustering.ascx" />
     <Content Include="AreaGMC\Images\pin24.png" />
-    <Content Include="AreaGMC\MapWorld.aspx" />
-    <Content Include="AreaGMC\Scripts\mapworld.js" />
     <Content Include="AreaGMC\Scripts\mapdkclustering.js" />
     <Content Include="Global.asax" />
     <Content Include="AreaGMC\Styles\Googlemap.css" />
@@ -95,41 +88,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaGMC\Business\Validation.cs" />
-    <Compile Include="AreaGMC\MapClustering.aspx.cs">
-      <DependentUpon>MapClustering.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="AreaGMC\MapClustering.aspx.designer.cs">
-      <DependentUpon>MapClustering.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="AreaGMC\MapDK.aspx.cs">
-      <DependentUpon>MapDK.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="AreaGMC\MapDK.aspx.designer.cs">
-      <DependentUpon>MapDK.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="AreaGMC\MapDKClustering.aspx.cs">
-      <DependentUpon>MapDKClustering.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="AreaGMC\MapDKClustering.aspx.designer.cs">
-      <DependentUpon>MapDKClustering.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="AreaGMC\MapWorld.aspx.cs">
-      <DependentUpon>MapWorld.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="AreaGMC\MapWorld.aspx.designer.cs">
-      <DependentUpon>MapWorld.aspx</DependentUpon>
-    </Compile>
     <Compile Include="AreaGMC\WebService\MapService.asmx.cs">
       <DependentUpon>MapService.asmx</DependentUpon>
       <SubType>Component</SubType>

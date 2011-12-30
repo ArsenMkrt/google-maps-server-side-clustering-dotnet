@@ -197,9 +197,9 @@ var gmcKN = {
         settings: {
             gridx: 6,
             gridy: 5,
-            mapCenterLat: 50, //-40   56.1  0
+            mapCenterLat: 35, //-40   56.1  0
             mapCenterLon: 10, //180   11   0
-            zoomLevel: 4, //7  1
+            zoomLevel: 2, //7  1
             zoomlevelClusterStop: 15,
             access_token: 'todo',
             jsonMarkerUrl: 'WebService/MapService.asmx/GetMarkers',
