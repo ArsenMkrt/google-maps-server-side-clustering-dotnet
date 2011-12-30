@@ -13,6 +13,13 @@ For deployment the web.config is configured for IIS 7 or later.
 
 ---------------------------------
 
+*Q. Where is the latest version?*
+
+A. The latest version is in the SVN repository, the trunk.
+If you want the latest version you should do SVN checkout.
+
+---------------------------------
+
 *Q. How many points can I use?*
 
 A. With current implementation, the upper limit should be around 300.000 where the delay is below 1 sec. 
@@ -27,7 +34,7 @@ then you would have to rely on pre-clustering for time complexity improvement.
 
 *Q. How do I control the grid size?*
 
-A. In the file mapdkclustering.js
+A. In the file mapclustering.js
 specific values are set for gridx and gridy in the settings.
 
 ---------------------------------
@@ -54,7 +61,7 @@ Look in the code {{{Kunukn.GooglemapsClustering.DataUtility.Dataset.LoadDatasetF
 
 *Q. How do I set the initial zoom-level and position?*
 
-A. In the file mapdkclustering.js
+A. In the file mapclustering.js
 those values are set in the settings area.
 
 ---------------------------------
@@ -120,14 +127,42 @@ You are welcome to analyse it yourself :) I use hashset and hashmap to minimize 
 
 ---------------------------------
 
-*Q. Could you port this to Java?*
+*Q. Where did you get the points?*
 
-A. Yes I could but I want to spend my time on something else.
+A. The points are taken from the file cities5000 at http://download.geonames.org/export/dump/
 
+---------------------------------
+
+*Q. Who made this?*
+
+A. Kunuk Nykjaer spend the time in the weekends to make 
+a stationary grid-based clustering after preliminary research on different clustering approach. 
+On my time on the job I made a marker-clusterer version 
+which I later discontinued because I felt the grid-based worked better. 
+All the server-side clustering logic is made by Kunuk Nykjaer.
+The JS GUI-part is largely adapted and reworked by Kunuk Nykjaer and the inspiration came partly 
+from JS-implementation by Jonas Olsen, Lars Gundersen and misc. http://stackoverflow.com/ pages. 
+The server-side webservice definition are with inspiration from Lasse Rasch's implementations.
+The JS logic-part (cluster points updating, lines drawing) was made by Kunuk Nykjaer).
+The address search part done with inspiration 
+from http://tech.cibul.net/geocode-with-google-maps-api-v3/.
+The cluster images are taken from Google's example images.
+The marker images are taken from http://mapicons.nicolasmollet.com/
+
+  * Kunuk Nykjaer http://dk.linkedin.com/in/kunukn/
+  * Jonas Olsen http://dk.linkedin.com/in/joolz/
+  * Lars Gundersen http://dk.linkedin.com/in/larsgundersen/
+  * Lasse Rasch http://dk.linkedin.com/pub/lasse-rasch/7/991/a10/
 ---------------------------------
 
 *Q. What license type is this?*
 
 A. MIT License.
+
+---------------------------------
+
+*Q. Could you port this to Java?*
+
+A. Yes I could but I want to spend my time on something else.
 
 ---------------------------------
