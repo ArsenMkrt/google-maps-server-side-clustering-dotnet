@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="Kunukn.GooglemapsClustering.WebGoogleMapClustering._Default" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true"  %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -22,15 +22,7 @@
     <ul id="clustering">
         <li><a href="AreaGMC/MapClustering.aspx">Google Maps Server-side Clustering</a></li>
         <li><a href="AreaGMC/MapDKClustering.aspx">Google Maps Server-side Clustering Denmark with Search</a></li>               
-    </ul>    
-    
-    <br /><br />
-
-    <h3>Search</h3>
-     <ul id="search">
-        <li><a href="AreaGMC/MapWorld.aspx">Google Maps Search</a></li>
-        <li><a href="AreaGMC/MapDK.aspx">Google Maps Search Denmark</a></li>               
-    </ul>  
+    </ul>            
                 
     </div>    
     </form>

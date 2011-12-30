@@ -201,7 +201,7 @@ var gmcKN = {
             gridy: 5,
             mapCenterLat: 56.1, //-40   56.1  0
             mapCenterLon: 11, //180   11   0
-            zoomLevel: 5, //7  1
+            zoomLevel: 7, //7  1
             zoomlevelClusterStop: 15,
             access_token: 'todo',
             jsonMarkerUrl: 'WebService/MapService.asmx/GetMarkers',
@@ -668,7 +668,7 @@ var gmcKN = {
         var span = this.span_ = document.createElement('span');
 
         if (count >= 10000) {
-            span.className = "gmcKN_clustersize5";
+            span.className = "gmcKN_clustersize5"; //Googlemap.css
         }
         else if (count >= 1000) {
             span.className = "gmcKN_clustersize4";
