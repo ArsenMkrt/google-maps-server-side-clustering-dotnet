@@ -19,7 +19,8 @@ var gmcKN = {
     geocoder: new google.maps.Geocoder(),
     debug: {
         showGridLines: false,
-        showBoundaryMarker: false
+        showBoundaryMarker: false,
+        showCalloutLatLon: false
     },
     //prevent async send/receive order problem by using counter ref in send/reply in webservice
     async: {
@@ -246,7 +247,8 @@ var gmcKN = {
                 offsetH: 0,
                 offsetW: 0
             },
-            textErrorMessage: 'Error'
+            textErrorMessage: 'Error',
+            invalidToken: 'Demo time is over, TokenValid is invalid, please login'
         },
 
         events: {
@@ -316,8 +318,7 @@ var gmcKN = {
                     new google.maps.Size(gmcKN.mymap.settings.pinImage2.width, gmcKN.mymap.settings.pinImage2.height), null, null);
                 var pinImg3 = new google.maps.MarkerImage(gmcKN.mymap.settings.pinImage3.src,
                     new google.maps.Size(gmcKN.mymap.settings.pinImage3.width, gmcKN.mymap.settings.pinImage3.height), null, null);
-
-                var webMethod = gmcKN.mymap.settings.jsonMarkerUrl;
+                
                 var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","nelat":"' + mapData.neLat + '","nelon":"' +
                     mapData.neLon + '","swlat":"' + mapData.swLat + '","swlon":"' + mapData.swLon + '","zoomlevel":"' + mapData.zoomLevel +
                     '","gridx":"' + gmcKN.mymap.settings.gridx + '","gridy":"' + gmcKN.mymap.settings.gridy + '","zoomlevelClusterStop":"' +
@@ -326,7 +327,7 @@ var gmcKN = {
                 // http://stackoverflow.com/questions/3020351/javascript-jquery-ajax-post-error-driving-me-mad            
                 $.ajax({
                     type: 'POST',
-                    url: webMethod,
+                    url: gmcKN.mymap.settings.jsonMarkerUrl,
                     data: parameters,
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
@@ -344,7 +345,7 @@ var gmcKN = {
 
 
                         if (items.TokenValid === "0") {
-                            alert("Demo time is over, TokenValid is invalid, please relogin");
+                            alert(gmcKN.mymap.settings.invalidToken);
                             return;
                         }
 
@@ -524,14 +525,13 @@ var gmcKN = {
                 });
 
             },
-            getAccessToken: function (username, password) {
-                var webMethod = gmcKN.mymap.settings.jsonGetAccessTokenUrl;
+            getAccessToken: function (username, password) {                
                 var parameters = '{' + '"username":"' + username + '","password":"' + password + '","sendid":"'
                     + (++gmcKN.async.lastSendGetAccessToken) + '"}';
 
                 $.ajax({
                     type: 'POST',
-                    url: webMethod,
+                    url: gmcKN.mymap.settings.jsonGetAccessTokenUrl,
                     data: parameters,
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
@@ -559,14 +559,13 @@ var gmcKN = {
                 });
             },
 
-            setType: function (type, isChecked) {
-                var webMethod = gmcKN.mymap.settings.jsonSetTypeUrl;
+            setType: function (type, isChecked) {                
                 var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","type":"' + type + '","isChecked":"'
                     + isChecked + '","sendid":"' + (++gmcKN.async.lastSendSetType) + '"}';
 
                 $.ajax({
                     type: 'POST',
-                    url: webMethod,
+                    url: gmcKN.mymap.settings.jsonSetTypeUrl,
                     data: parameters,
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
@@ -583,7 +582,7 @@ var gmcKN = {
                         gmcKN.async.lastReceivedSetType = lastReceivedSetType;
 
                         if (items.TokenValid === "0") {
-                            alert("Demo time is over, TokenValid is invalid, please relogin");
+                            alert(gmcKN.mymap.settings.invalidToken);
                             return;
                         }
 
@@ -599,16 +598,16 @@ var gmcKN = {
                 });
             },
 
-            attachCallOut: function (marker, item) {
-                var webMethod = gmcKN.mymap.settings.jsonMarkerDetailUrl;
+            attachCallOut: function (marker, item) {                
                 var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","id":"' + item.I +
                     '","type":"' + item.T + '","sendid":"' + (++gmcKN.async.lastSendMarkerDetail) + '"}';
 
-                //alert("lat: "+marker.getPosition().lat() + " lon:" + marker.getPosition().lng());
+                if (gmcKN.debug.showCalloutLatLon===true)
+                    alert("lat: "+marker.getPosition().lat() + " lon:" + marker.getPosition().lng());
 
                 $.ajax({
                     type: 'POST',
-                    url: webMethod,
+                    url: gmcKN.mymap.settings.jsonMarkerDetailUrl,
                     data: parameters,
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
@@ -625,7 +624,7 @@ var gmcKN = {
                         gmcKN.async.lastReceivedMarkerDetail = lastReceivedMarkerDetail;
 
                         if (items.TokenValid === "0") {
-                            alert("Demo time is over, TokenValid is invalid, please relogin");
+                            alert(gmcKN.mymap.settings.invalidToken);
                             return;
                         }
 
