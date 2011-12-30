@@ -34,7 +34,7 @@ then you would have to rely on pre-clustering for time complexity improvement.
 
 *Q. How do I control the grid size?*
 
-A. In the file mapdkclustering.js
+A. In the file mapclustering.js
 specific values are set for gridx and gridy in the settings.
 
 ---------------------------------
@@ -61,7 +61,7 @@ Look in the code {{{Kunukn.GooglemapsClustering.DataUtility.Dataset.LoadDatasetF
 
 *Q. How do I set the initial zoom-level and position?*
 
-A. In the file mapdkclustering.js
+A. In the file mapclustering.js
 those values are set in the settings area.
 
 ---------------------------------
@@ -75,7 +75,7 @@ to update information for how many points you want and in which area you want th
 
 *Q. How do I enable/disable the red gridlines?*
 
-A. In the file {{{mapdkclustering.js }}}
+A. In the file {{{mapclustering.js }}}
 set the showGridLines to false or disable it server-side
 setting {{{Kunukn.GooglemapsClustering.Clustering.Config.DoShowGridLinesInGoogleMap}}} to false. 
 
@@ -127,9 +127,9 @@ You are welcome to analyse it yourself :) I use hashset and hashmap to minimize 
 
 ---------------------------------
 
-*Q. Could you port this to Java?*
+*Q. Where did you get the points?*
 
-A. Yes I could but I want to spend my time on something else.
+A. The points are taken from the file cities5000 at http://download.geonames.org/export/dump/
 
 ---------------------------------
 
@@ -158,5 +158,11 @@ The marker images are taken from http://mapicons.nicolasmollet.com/
 *Q. What license type is this?*
 
 A. MIT License.
+
+---------------------------------
+
+*Q. Could you port this to Java?*
+
+A. Yes I could but I want to spend my time on something else.
 
 ---------------------------------
