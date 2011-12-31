@@ -15,7 +15,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
     /// Summary description for MapService
     /// Author: Kunuk Nykjaer
     /// </summary>
-    [WebService(Namespace = "dk.jory.gmc.GooglemapClusteringDemo")]
+    [WebService(Namespace = "kunukn.gmc.GooglemapClusteringDemo")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
     [System.ComponentModel.ToolboxItem(false)]
 
