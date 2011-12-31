@@ -318,7 +318,7 @@ var gmcKN = {
                     new google.maps.Size(gmcKN.mymap.settings.pinImage2.width, gmcKN.mymap.settings.pinImage2.height), null, null);
                 var pinImg3 = new google.maps.MarkerImage(gmcKN.mymap.settings.pinImage3.src,
                     new google.maps.Size(gmcKN.mymap.settings.pinImage3.width, gmcKN.mymap.settings.pinImage3.height), null, null);
-                
+
                 var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","nelat":"' + mapData.neLat + '","nelon":"' +
                     mapData.neLon + '","swlat":"' + mapData.swLat + '","swlon":"' + mapData.swLon + '","zoomlevel":"' + mapData.zoomLevel +
                     '","gridx":"' + gmcKN.mymap.settings.gridx + '","gridy":"' + gmcKN.mymap.settings.gridy + '","zoomlevelClusterStop":"' +
@@ -452,6 +452,11 @@ var gmcKN = {
                             }
                         }
 
+                        // clear array
+                        pointsCacheIncome.length = 0;
+                        pointsCacheOnMap.length = 0;
+                        temp.length = 0;
+
                         $.each(newmarkersTodo, function () {
                             var item = this;
                             var lat = item.Y; //lat
@@ -517,6 +522,10 @@ var gmcKN = {
 
                             gmcKN.markers.push(marker);
                         });
+
+                        // clear array
+                        newmarkersTodo.length = 0;
+
                     },
                     error: function (xhr, err) {
                         //alert(gmcKN.mymap.settings.textErrorMessage);
@@ -525,7 +534,7 @@ var gmcKN = {
                 });
 
             },
-            getAccessToken: function (username, password) {                
+            getAccessToken: function (username, password) {
                 var parameters = '{' + '"username":"' + username + '","password":"' + password + '","sendid":"'
                     + (++gmcKN.async.lastSendGetAccessToken) + '"}';
 
@@ -559,7 +568,7 @@ var gmcKN = {
                 });
             },
 
-            setType: function (type, isChecked) {                
+            setType: function (type, isChecked) {
                 var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","type":"' + type + '","isChecked":"'
                     + isChecked + '","sendid":"' + (++gmcKN.async.lastSendSetType) + '"}';
 
@@ -598,12 +607,12 @@ var gmcKN = {
                 });
             },
 
-            attachCallOut: function (marker, item) {                
+            attachCallOut: function (marker, item) {
                 var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","id":"' + item.I +
                     '","type":"' + item.T + '","sendid":"' + (++gmcKN.async.lastSendMarkerDetail) + '"}';
 
-                if (gmcKN.debug.showCalloutLatLon===true)
-                    alert("lat: "+marker.getPosition().lat() + " lon:" + marker.getPosition().lng());
+                if (gmcKN.debug.showCalloutLatLon === true)
+                    alert("lat: " + marker.getPosition().lat() + " lon:" + marker.getPosition().lng());
 
                 $.ajax({
                     type: 'POST',
