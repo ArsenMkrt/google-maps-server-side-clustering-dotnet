@@ -127,7 +127,7 @@ var gmcKN = {
             google.maps.event.addListener(gmcKN.searchInfo.searchMarker, 'drag', function () {
                 gmcKN.geocoder.geocode({ 'latLng': gmcKN.searchInfo.searchMarker.getPosition() }, function (results, status) {
                     if (status === google.maps.GeocoderStatus.OK) {
-                        if (results[0]) {                            
+                        if (results[0]) {
                             var addr = results[0].formatted_address;
                             $('#gmcKN_search').val(addr);
                             var lat = gmcKN.searchInfo.searchMarker.getPosition().lat() + "";
@@ -151,17 +151,17 @@ var gmcKN = {
             $(function () {
                 $("#gmcKN_search").autocomplete({
                     //This uses the geocoder to fetch address values
-                    source: function (request, response) {                        
-                            gmcKN.geocoder.geocode({ 'address': request.term  }, function (results, status) { //WORLD
+                    source: function (request, response) {
+                        gmcKN.geocoder.geocode({ 'address': request.term }, function (results, status) { //WORLD
                             response($.map(results, function (item) {
-                                
-                                    return {
-                                        label: item.formatted_address,
-                                        value: item.formatted_address,
-                                        latitude: item.geometry.location.lat(),
-                                        longitude: item.geometry.location.lng()
-                                    }
-                                
+
+                                return {
+                                    label: item.formatted_address,
+                                    value: item.formatted_address,
+                                    latitude: item.geometry.location.lat(),
+                                    longitude: item.geometry.location.lng()
+                                }
+
                             }));
                         })
                     },
@@ -316,7 +316,7 @@ var gmcKN = {
                     new google.maps.Size(gmcKN.mymap.settings.pinImage2.width, gmcKN.mymap.settings.pinImage2.height), null, null);
                 var pinImg3 = new google.maps.MarkerImage(gmcKN.mymap.settings.pinImage3.src,
                     new google.maps.Size(gmcKN.mymap.settings.pinImage3.width, gmcKN.mymap.settings.pinImage3.height), null, null);
-                
+
                 var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","nelat":"' + mapData.neLat + '","nelon":"' +
                     mapData.neLon + '","swlat":"' + mapData.swLat + '","swlon":"' + mapData.swLon + '","zoomlevel":"' + mapData.zoomLevel +
                     '","gridx":"' + gmcKN.mymap.settings.gridx + '","gridy":"' + gmcKN.mymap.settings.gridy + '","zoomlevelClusterStop":"' +
@@ -450,6 +450,11 @@ var gmcKN = {
                             }
                         }
 
+                        // clear array
+                        pointsCacheIncome.length = 0;
+                        pointsCacheOnMap.length = 0;
+                        temp.length = 0;                        
+
                         $.each(newmarkersTodo, function () {
                             var item = this;
                             var lat = item.Y; //lat
@@ -515,6 +520,9 @@ var gmcKN = {
 
                             gmcKN.markers.push(marker);
                         });
+
+                        // clear array
+                        newmarkersTodo.length = 0;
                     },
                     error: function (xhr, err) {
                         //alert(gmcKN.mymap.settings.textErrorMessage);
@@ -523,7 +531,7 @@ var gmcKN = {
                 });
 
             },
-            getAccessToken: function (username, password) {                
+            getAccessToken: function (username, password) {
                 var parameters = '{' + '"username":"' + username + '","password":"' + password + '","sendid":"'
                     + (++gmcKN.async.lastSendGetAccessToken) + '"}';
 
@@ -557,7 +565,7 @@ var gmcKN = {
                 });
             },
 
-            setType: function (type, isChecked) {                
+            setType: function (type, isChecked) {
                 var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","type":"' + type + '","isChecked":"'
                     + isChecked + '","sendid":"' + (++gmcKN.async.lastSendSetType) + '"}';
 
@@ -596,7 +604,7 @@ var gmcKN = {
                 });
             },
 
-            attachCallOut: function (marker, item) {                
+            attachCallOut: function (marker, item) {
                 var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","id":"' + item.I +
                     '","type":"' + item.T + '","sendid":"' + (++gmcKN.async.lastSendMarkerDetail) + '"}';
 
