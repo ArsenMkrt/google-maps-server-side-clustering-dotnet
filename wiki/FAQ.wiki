@@ -105,9 +105,18 @@ A. Increase or decrease the value in
 *Q. Why do the red gridlines look wierd when zoomed far out?*
 
 A. The data for drawing the gridlines are assumed correct last time I checked. The Google API 
-for drawing red linens can't drawa all longitude value scenarious, 
+for drawing red linens can't draw all longitude value scenarious (I Assume), 
 e.g. from 60 to -100. I didn't want to spend more time on the value scenarious to make a fix 
 by splitting draw functions to something like e.g. 60 to 180 and then -180 to -100
+
+---------------------------------
+
+*Q. Is the clustering broken if I change the window size?*
+
+A. The clustering might behave buggy if you increase the window size. 
+A quick fix is to edit the property Kunukn.GooglemapsClustering.Data.ClusterInfo.IsFilterData
+increase to higher value e.g. ZoomLevel>=7. This property is also used for filtering data returned to client. 
+if set to never filter, then too much data will be send back to the client when zoomed far in.
 
 ---------------------------------
 
