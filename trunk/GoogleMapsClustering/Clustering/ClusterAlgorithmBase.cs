@@ -34,13 +34,23 @@ namespace Kunukn.GooglemapsClustering.Clustering
         {
             // collect used buckets and return the result
             var clusterPoints = new List<P>();
+            //O(m*n)
             foreach (var item in BucketsLookup)
             {
                 var bucket = item.Value;
                 if (bucket.IsUsed)
                 {
-                    bucket.Centroid.C = bucket.Points.Count;
-                    clusterPoints.Add(bucket.Centroid);
+                    if (bucket.Points.Count < Config.MinClusterSize)
+                    {
+                        foreach (var p in bucket.Points)
+                            clusterPoints.Add(p);
+                    }
+                    else
+                    {
+                        bucket.Centroid.C = bucket.Points.Count;
+                        clusterPoints.Add(bucket.Centroid);
+                    }
+
                 }
             }
 
@@ -80,7 +90,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
             if (count == 1)
                 return list.First();
 
-            
+
             //http://en.wikipedia.org/wiki/Circular_mean
             //http://stackoverflow.com/questions/491738/how-do-you-calculate-the-average-of-a-set-of-angles
             /*
@@ -115,7 +125,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
             var x = radx.RadianToLatLon();
             var y = rady.RadianToLatLon();
 
-            var centroid = new P(x, y) { C = count };            
+            var centroid = new P(x, y) { C = count };
             return centroid;
         }
 
@@ -125,7 +135,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
         {
             foreach (var item in buckets)
                 item.Centroid = GetCentroidFromClusterLatLon(item.Points);
-            
+
         }
 
         public P GetClosestPoint(P from, List<P> list) //O(n)
@@ -155,7 +165,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
             foreach (P p in Dataset)
             {
                 double minDist = Double.MaxValue;
-                string index = string.Empty;                
+                string index = string.Empty;
                 foreach (var i in BucketsLookup.Keys)
                 {
                     var bucket = BucketsLookup[i];

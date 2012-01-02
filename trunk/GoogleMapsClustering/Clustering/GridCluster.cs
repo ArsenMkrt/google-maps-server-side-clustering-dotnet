@@ -54,7 +54,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
 
             double x = MathTool.Half(xZoomLevel1, jsonReceive.Zoomlevel - 1) / gridScaleX;
             double y = MathTool.Half(yZoomLevel1, jsonReceive.Zoomlevel - 1) / gridScaleY;
-            return new double[] { x, y };
+            return new [] { x, y };
         }
 
 
@@ -78,7 +78,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
 
         void MakeLines()
         {
-            //obs, Google Maps does not draw every lines if zoomed far out and lines are wide
+            //obs, Google Maps does not seem to draw every lines if zoomed far out and lines are wide
 
             Lines = new List<Line>();
             var p2Lines = new List<Point2>();
@@ -140,7 +140,8 @@ namespace Kunukn.GooglemapsClustering.Clustering
             return idx + ";" + idy;
         }
 
-        // O(k*n)
+        // Average running time (m*n)
+        // worst case might actually be ~ O(n^2) if most of centroids are merged, due to centroid re-calculation, very very unlikely
         void MergeClustersGrid()
         {
             foreach (var key in BucketsLookup.Keys)

@@ -20,7 +20,7 @@ var gmcKN = {
     debug: {
         showGridLines: false,
         showBoundaryMarker: false,
-        showCalloutLatLon: false
+        showCalloutLatLon: true
     },
     //prevent async send/receive order problem by using counter ref in send/reply in webservice
     async: {
@@ -607,10 +607,7 @@ var gmcKN = {
             attachCallOut: function (marker, item) {
                 var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","id":"' + item.I +
                     '","type":"' + item.T + '","sendid":"' + (++gmcKN.async.lastSendMarkerDetail) + '"}';
-
-                if (gmcKN.debug.showCalloutLatLon === true)
-                    alert("lat: " + marker.getPosition().lat() + " lon:" + marker.getPosition().lng());
-
+                
                 $.ajax({
                     type: 'POST',
                     url: gmcKN.mymap.settings.jsonMarkerDetailUrl,
@@ -635,8 +632,10 @@ var gmcKN = {
                         }
 
                         var success = items.Success;
-
-                        gmcKN.infowindow.setContent(items.Content);
+                        var latlon = "";
+                        if (gmcKN.debug.showCalloutLatLon === true)
+                            latlon = "<br/>lat: " + marker.getPosition().lat() + " lon: " + marker.getPosition().lng();
+                        gmcKN.infowindow.setContent(items.Content + latlon);
                         gmcKN.infowindow.open(gmcKN.map, marker);
                     },
                     error: function (xhr, err) {
