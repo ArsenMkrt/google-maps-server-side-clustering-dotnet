@@ -30,7 +30,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
 
         public abstract List<P> GetCluster(ClusterInfo clusterInfo);
 
-        public List<P> GetClusterResult()
+        public List<P> GetClusterResult(Boundary grid)
         {
             // collect used buckets and return the result
             var clusterPoints = new List<P>();
@@ -54,7 +54,22 @@ namespace Kunukn.GooglemapsClustering.Clustering
                 }
             }
 
-            return clusterPoints;
+            //var filtered = FilterDataset(clusterPoints, grid); // post filter data for client viewport
+            //return filtered; //not working properly when zoomed far out.
+            return clusterPoints;  // return not post filtered
+        }
+
+        // O(n), could be O(logn-ish) using range search or similar, no problem when points are <500.000
+        public static List<P> FilterDataset(List<P> dataset, Boundary viewport)
+        {
+            //List<P> filtered = dataset.Where(p => MathTool.IsInsideWiden(viewport, p)).ToList();
+
+            var filtered = new List<P>();
+            foreach (var p in dataset)
+                if (MathTool.IsInside(viewport, p))
+                    filtered.Add(p);
+
+            return filtered;
         }
 
         /*

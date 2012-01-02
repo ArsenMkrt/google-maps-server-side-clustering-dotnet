@@ -11,7 +11,8 @@ namespace Kunukn.GooglemapsClustering.Data
 
         // dont filter when zoomed far out, because user json receive swlon and nelon values "jumps" to next overlapping lon point
         // and the program can't know from what to filter. 
-        // e.g. Is it from 160 to -160 or 160 to -160+360  ??  lon value 10 is filtered out in first case but should be included in 2nd case        
-        public bool IsFilterData { get { return ZoomLevel>=3;} } // heuristic and is based on html width value
+        // e.g. Is it from 160 to -160 or 160 to -160+360  ??  lon value 10 is filtered out in first case but should be included in 2nd case
+        // heuristic and is based on html width value, set higher value if you increase the html window size. 
+        public bool IsFilterData { get { return ZoomLevel>=3;} } 
     }
 }

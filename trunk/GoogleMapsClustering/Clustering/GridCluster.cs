@@ -196,21 +196,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
                 neighbor.IsUsed = false; //merged, then not used anymore
                 neighbor.Points.Clear(); //clear mem
             }
-        }
-
-
-        // O(n), could be O(logn-ish) using range search or similar, no problem when points are <500.000
-        public static List<P> FilterDataset(List<P> dataset, Boundary viewport)
-        {
-            //List<P> filtered = dataset.Where(p => MathTool.IsInsideWiden(viewport, p)).ToList();
-
-            var filtered = new List<P>();
-            foreach (var p in dataset)
-                if (MathTool.IsInside(viewport, p))
-                    filtered.Add(p);
-
-            return filtered;
-        }
+        }        
 
         // To work properly it requires the p is already normalized
         public static int[] GetPointMappedIds(P p, Boundary grid, double deltax, double deltay)
@@ -317,7 +303,7 @@ then the longitudes from 170 to -170 will be clustered together
                 UpdateAllCentroidsToNearestContainingPoint();
             }
 
-            return GetClusterResult();
+            return GetClusterResult(_grid);
         }
     }
 
