@@ -18,5 +18,8 @@
         public const bool DoUpdateAllCentroidsToNearestContainingPoint = false; // move centroid point to nearest existing point?
         public const bool DoMergeGridIfCentroidsAreCloseToEachOther = true; // merge clusterpoints if close to each other?
         public const double MergeWithin = 2.5; // if neighbor cluster is within 1/n dist then merge, heuristic, higher value gives less merging
+
+        // cluster decision
+        public const int MinClusterSize = 2; // only cluster if minimum this number of points
     }
 }
