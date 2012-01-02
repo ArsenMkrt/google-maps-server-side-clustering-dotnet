@@ -95,6 +95,13 @@ A. Increase or decrease the value in
 
 ---------------------------------
 
+*Q. How do I set the minimum count of points level before a cluster is made?*
+
+A. Increase or decrease the value in 
+{{{Kunukn.GooglemapsClustering.Clustering.Config.MinClusterSize}}}
+
+---------------------------------
+
 *Q. Why do the red gridlines look wierd when zoomed far out?*
 
 A. The data for drawing the gridlines are assumed correct last time I checked. The Google API 
@@ -121,10 +128,12 @@ http://tech.cibul.net/geocode-with-google-maps-api-v3/
 
 *Q. What is the complexity of time and space?*
 
-A. Time complexity is O(m*n) and space complexity is O(n) 
+A. Time complexity is on average(m*n) and space complexity is O(m*n)
 where n is the number of points used in total and m is the number of grids returned to the client. 
 You are welcome to analyse it yourself :) I use hashset and hashmap to minimize the time complexity.
 
+Time complexity is ~ O(n^2) on worst case but extremely unlikely, 
+happens if most centroids are merged with neighbor-centroids.
 ---------------------------------
 
 *Q. Where did you get the points?*
