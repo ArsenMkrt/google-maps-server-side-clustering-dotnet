@@ -114,7 +114,7 @@ by splitting draw functions to something like e.g. 60 to 180 and then -180 to -1
 *Q. Is the clustering broken if I change the window size?*
 
 A. The clustering might behave buggy if you increase the window size. 
-A quick fix is to edit the property Kunukn.GooglemapsClustering.Data.ClusterInfo.IsFilterData
+A quick fix is to edit the property {{{Kunukn.GooglemapsClustering.Data.ClusterInfo.IsFilterData}}}
 increase to higher value e.g. ZoomLevel>=7. This property is also used for filtering data returned to client. 
 if set to never filter, then too much data will be send back to the client when zoomed far in.
 
