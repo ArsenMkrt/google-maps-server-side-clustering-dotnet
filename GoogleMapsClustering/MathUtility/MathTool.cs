@@ -134,7 +134,7 @@ namespace Kunukn.GooglemapsClustering.MathUtility
             return IsInside(b.Minx, b.Miny, b.Maxx, b.Maxy, p.Lon, p.Lat, false, false);
         }
 
-        // widen the area, this avoids the lon lat isinside problem, not used
+        //NOT USED, widen the area, this avoids the lon lat isinside problem
         private static bool IsInsideWiden(Boundary b, P p)
         {
             var x = b.AbsX / 3; // value is heuristic, smaller divide, the larger the boundary
