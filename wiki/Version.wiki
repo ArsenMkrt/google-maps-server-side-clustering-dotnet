@@ -1,9 +1,5 @@
 = Version history =
 
-== Version 1 ==
-  * Server-side clustering which work globally
-  * Ability to cluster 100.000+ points within 1 second
-
 
 == Version 2 ==
   * Support for type filtering
@@ -11,3 +7,9 @@
   * Refactored javascript (one namespace only: gmcKN)
   * Support for access_token based service
   * Ability to defined minimum cluster size
+
+
+== Version 1 ==
+  * Server-side clustering which work globally
+  * Ability to cluster 100.000+ points within 1 second
+
