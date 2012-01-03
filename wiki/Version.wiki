@@ -1,5 +1,5 @@
 = Version history =
 
-  *v version 1: Server-side clustering which work globally. Ability to cluster 100.000+ points within 1 sec.
+  * version 1: Server-side clustering which work globally. Ability to cluster 100.000+ points within 1 sec.
 
-  *version 2: Support for type filtering, demo points that covers globally, refactor javascript to have only 1 global var.
+  * version 2: Support for type filtering, demo points that covers globally, refactor javascript to have only 1 global var.
