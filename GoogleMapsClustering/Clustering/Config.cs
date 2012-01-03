@@ -12,7 +12,7 @@
         // EDIT to extend to widen or shorten gridview for outside view, must be minimum 0
         // default value is 1 which returns same data as illustrated in the picture from my blog
         // (see googlemaps-clustering-viewport_ver1.png inside the Docements/Design folder)
-        public const int  OuterGridExtend = 1; 
+        public const int  OuterGridExtend = 1; //1
 
         // merge cluster points
         public const bool DoUpdateAllCentroidsToNearestContainingPoint = false; // move centroid point to nearest existing point?

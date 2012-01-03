@@ -10,7 +10,7 @@ var gmcKN = {
 
     searchInfo: {
         searchMarker: null,
-        zoomLevel: 13,
+        zoomLevel: 12,
         round: 6,
         prefix: 4
     },
@@ -359,7 +359,7 @@ var gmcKN = {
                         gmcKN.mymap.events.polys.length = 0; // clear array   
 
 
-                        if (gmcKN.debug.showGridLines === true) {
+                        if (gmcKN.debug.showGridLines === true && items.Polylines !== null) {
                             $.each(items.Polylines, function () {
                                 var item = this;
                                 var x = item.X;
