@@ -66,10 +66,9 @@ those values are set in the settings area.
 
 ---------------------------------
 
-*Q. How do I generate random data points?*
+*Q. When does the clustering stops?*
 
-A. Use the method: {{{Kunukn.GooglemapsClustering.TestConsole.Program.GenerateRandomDatasetToCSVFile()}}}
-to update information for how many points you want and in which area you want them.
+A. You can define at which zoom-level the clustering should stop. In the file mapclustering.js in the settings set a value for zoomlevelClusterStop.
 
 ---------------------------------
 
@@ -133,6 +132,13 @@ if set to never filter, then too much data will be send back to the client when 
 A. Inspiration from 
 http://www.crunchpanorama.com/ and 
 http://code.google.com/intl/da-DK/apis/maps/articles/toomanymarkers.html
+
+---------------------------------
+
+*Q. How do I generate random data points?*
+
+A. Use the method: {{{Kunukn.GooglemapsClustering.TestConsole.Program.GenerateRandomDatasetToCSVFile()}}}
+to update information for how many points you want and in which area you want them.
 
 ---------------------------------
 
