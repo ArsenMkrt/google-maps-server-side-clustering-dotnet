@@ -73,6 +73,13 @@ to update information for how many points you want and in which area you want th
 
 ---------------------------------
 
+*Q. What are the red grid lines used for?*
+
+A. I made them for debugging purpose, i.e. to make sure the clustering behaved as intented. 
+By default there can only be either one mark inside a grid. Either a cluster-point or non-cluster point.
+
+---------------------------------
+
 *Q. How do I enable/disable the red gridlines?*
 
 A. In the file {{{mapclustering.js }}}
