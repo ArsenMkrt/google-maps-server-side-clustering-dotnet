@@ -170,9 +170,9 @@ A. The points are taken from the file cities5000 at http://download.geonames.org
 
 A. 
 In the file: {{{Kunukn.GooglemapsClustering.Clustering.Config}}}. 
-Set OuterGridExtend to 0. 
-Set DoMergeGridIfCentroidsAreCloseToEachOther to false. 
-Set DoShowGridLinesInGoogleMap to false. 
+Set {{{OuterGridExtend}}} to 0. 
+Set {{{DoMergeGridIfCentroidsAreCloseToEachOther}}} to false. 
+Set {{{DoShowGridLinesInGoogleMap}}} to false. 
 
 
 In the mapclustering.js in the settings. 
