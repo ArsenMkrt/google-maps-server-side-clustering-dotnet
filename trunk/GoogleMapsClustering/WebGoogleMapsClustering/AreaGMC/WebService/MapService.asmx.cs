@@ -72,16 +72,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
                     if (typeFilter.Contains(p.T) == false)
                         dataset.Add(p);
             }
-
-
-            // too far out, world is showing countries multiple times
-            //if (jsonReceive.Zoomlevel <= 1)
-            //{
-            //    // no data
-            //    reply = new JsonGetMarkersReply { ReplyId = sendid, Success = _1};
-            //    return jss.Serialize(reply);
-            //}
-
+         
             // clustering within this zoom level)
             if (jsonReceive.Zoomlevel < jsonReceive.ZoomlevelClusterStop)
             {
@@ -95,7 +86,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
 
             // no clustering                             
             Boundary viewportExtended = GridCluster.GetBoundaryExtended(jsonReceive);
-            List<P> filteredDataset = GridCluster.FilterDataset(dataset, viewportExtended);
+            List<P> filteredDataset = ClusterAlgorithmBase.FilterDataset(dataset, viewportExtended);
 
             reply = new JsonGetMarkersReply {Points = filteredDataset, ReplyId = sendid, Success = _1};
             return jss.Serialize(reply);            
