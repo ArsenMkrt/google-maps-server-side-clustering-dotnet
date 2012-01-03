@@ -8,7 +8,7 @@ A. Read my blog http://kunuk.wordpress.com/2011/11/05/google-map-server-side-clu
 
 *Q. What do I need to run this?*
 
-A. Windows, Visual Studio 2010 or later, .Net v4.
+A. Visual Studio 2010 or later, .Net v4.
 For deployment the web.config is configured for IIS 7 or later.
 
 ---------------------------------
@@ -66,17 +66,17 @@ those values are set in the settings area.
 
 ---------------------------------
 
-*Q. How do I generate random data points?*
+*Q. When does the clustering stops?*
 
-A. Use the method: {{{Kunukn.GooglemapsClustering.TestConsole.Program.GenerateRandomDatasetToCSVFile()}}}
-to update information for how many points you want and in which area you want them.
+A. You can define at which zoom-level the clustering should stop. 
+In the file mapclustering.js in the settings set a value for zoomlevelClusterStop.
 
 ---------------------------------
 
 *Q. What are the red grid lines used for?*
 
 A. I made them for debugging purpose, i.e. to make sure the clustering behaved as intented. 
-By default there can only be either one mark inside a grid. Either a cluster-point or non-cluster point.
+By default there can only be either one mark inside a grid. Either a cluster-point or a single point.
 
 ---------------------------------
 
@@ -136,6 +136,13 @@ http://code.google.com/intl/da-DK/apis/maps/articles/toomanymarkers.html
 
 ---------------------------------
 
+*Q. How do I generate random data points?*
+
+A. Use the method: {{{Kunukn.GooglemapsClustering.TestConsole.Program.GenerateRandomDatasetToCSVFile()}}}
+to update information for how many points you want and in which area you want them.
+
+---------------------------------
+
 *Q. Who made the Google Maps search function in this example?*
 
 A. The example code is with inspiration from
@@ -157,6 +164,19 @@ happens if most centroids are merged with neighbor-centroids.
 
 A. The points are taken from the file cities5000 at http://download.geonames.org/export/dump/
 
+---------------------------------
+
+*Q. How can I customize this to use most points and keep fast performance?*
+
+A. 
+In the file: {{{Kunukn.GooglemapsClustering.Clustering.Config}}}.
+Set OuterGridExtend to 0.
+Set DoMergeGridIfCentroidsAreCloseToEachOther to false.
+Set DoShowGridLinesInGoogleMap to false.
+
+
+In the mapclustering.js in the settings. 
+set gridx and gridy to low numbers, e.g. 2 and 2.
 ---------------------------------
 
 *Q. Who made this?*
