@@ -64,7 +64,6 @@
     <Content Include="AreaGMC\Documents\Design\GoogleMapsClustering_SD_ver1.png" />
     <Content Include="AreaGMC\Documents\License.txt" />
     <Content Include="AreaGMC\Documents\Readme.htm" />
-    <Content Include="AreaGMC\Documents\TODO.txt" />
     <Content Include="AreaGMC\Scripts\mapclustering.js" />
     <Content Include="AreaGMC\Styles\Default.css" />
     <Content Include="Default.aspx" />
