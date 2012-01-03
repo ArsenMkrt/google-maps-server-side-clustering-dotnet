@@ -78,6 +78,7 @@ to update information for how many points you want and in which area you want th
 A. In the file {{{mapclustering.js }}}
 set the showGridLines to false or disable it server-side
 setting {{{Kunukn.GooglemapsClustering.Clustering.Config.DoShowGridLinesInGoogleMap}}} to false. 
+I recommend to disable it server-side which will reduce the json-data size for the webservice call.
 
 ---------------------------------
 
