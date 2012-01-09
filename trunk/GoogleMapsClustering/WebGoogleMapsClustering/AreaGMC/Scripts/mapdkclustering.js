@@ -391,7 +391,7 @@ var gmcKN = {
                         for (i in items.Points) {
                             if (items.Points.hasOwnProperty(i)) {
                                 var p = items.Points[i];
-                                var key = gmcKN.getKey(p.X, p.Y, p.C); //key                            
+                                var key = gmcKN.getKey(p); //key                            
                                 pointsCacheIncome[key] = p;
                             }
                         }
@@ -411,7 +411,7 @@ var gmcKN = {
                         for (i in items.Points) {
                             if (items.Points.hasOwnProperty(i)) {
                                 var p = items.Points[i];
-                                var key = gmcKN.getKey(p.X, p.Y, p.C); //key                            
+                                var key = gmcKN.getKey(p); //key                            
                                 if (pointsCacheOnMap[key] === undefined) {
                                     if (pointsCacheIncome[key] === undefined) console.log("error in code: key2"); //catch error in code
 
@@ -488,7 +488,7 @@ var gmcKN = {
                                 icon: iconImg,
                                 zIndex: 1
                             });
-                            var key = gmcKN.getKey(item.X, item.Y, item.C);
+                            var key = gmcKN.getKey(item);
                             marker.set("key", key); // used for next event, remove or keep the marker
 
 
@@ -650,9 +650,9 @@ var gmcKN = {
         }
     },
 
-    // lon, lat, count
-    getKey: function (x, y, c) {
-        var s = x + "__" + y + "__" + c;
+    // lon, lat, count, type
+    getKey: function (p) { //point
+        var s = p.X + "__" + p.Y + "__" + p.C + "__" + p.T;
         return s.replace(/\./g, "_"); //replace . with _
     },
 
