@@ -95,6 +95,12 @@ var gmcKN = {
             google.maps.event.addListener(gmcKN.map, 'idle', function () { gmcKN.mymap.events.getBounds(false); });
             google.maps.event.addListener(gmcKN.map, 'zoom_changed', function () {
                 document.getElementById("gmcKN_zoomInfo").innerHTML = "zoom: " + gmcKN.map.getZoom() + ".  ";
+                if (gmcKN.map.getZoom() < gmcKN.mymap.settings.alwaysClusteringEnabledWhenZoomLevelLess) {
+                    $('#gmcKN_Clustering_span').hide();
+                }
+                else {
+                    $('#gmcKN_Clustering_span').show();
+                }
             });
             google.maps.event.trigger(gmcKN.map, 'zoom_changed'); //trigger first time event
 
@@ -202,6 +208,7 @@ var gmcKN = {
             mapCenterLon: 10, //180   11   0
             zoomLevel: 2, //7  1
             zoomlevelClusterStop: 15,
+            alwaysClusteringEnabledWhenZoomLevelLess: 8,
             access_token: 'todo',
             jsonMarkerUrl: 'WebService/MapService.asmx/GetMarkers',
             jsonMarkerDetailUrl: 'WebService/MapService.asmx/GetMarkerDetail',
@@ -357,7 +364,7 @@ var gmcKN = {
                         gmcKN.mymap.events.polys.length = 0; // clear array   
 
 
-                        if (gmcKN.debug.showGridLines === true && items.Polylines!==null) {
+                        if (gmcKN.debug.showGridLines === true && items.Polylines !== null) {
                             $.each(items.Polylines, function () {
                                 var item = this;
                                 var x = item.X;
@@ -453,7 +460,7 @@ var gmcKN = {
                         // clear array
                         pointsCacheIncome.length = 0;
                         pointsCacheOnMap.length = 0;
-                        temp.length = 0;                        
+                        temp.length = 0;
 
                         $.each(newmarkersTodo, function () {
                             var item = this;
@@ -607,7 +614,7 @@ var gmcKN = {
             attachCallOut: function (marker, item) {
                 var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","id":"' + item.I +
                     '","type":"' + item.T + '","sendid":"' + (++gmcKN.async.lastSendMarkerDetail) + '"}';
-                
+
                 $.ajax({
                     type: 'POST',
                     url: gmcKN.mymap.settings.jsonMarkerDetailUrl,
@@ -654,15 +661,16 @@ var gmcKN = {
     },
 
     checkboxClicked: function (type, isChecked) {
-        if (type === 'lines') {
+        if (type === 'gmc_meta_lines') {
             gmcKN.debug.showGridLines = !gmcKN.debug.showGridLines;
 
             // force update screen
             gmcKN.mymap.events.getBounds(true);
-            return;
+        } else {
+            gmcKN.mymap.events.setType(type, isChecked);
         }
 
-        gmcKN.mymap.events.setType(type, isChecked);
+
     },
 
 
