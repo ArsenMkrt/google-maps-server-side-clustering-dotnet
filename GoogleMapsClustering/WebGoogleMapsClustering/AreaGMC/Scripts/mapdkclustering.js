@@ -95,6 +95,12 @@ var gmcKN = {
             google.maps.event.addListener(gmcKN.map, 'idle', function () { gmcKN.mymap.events.getBounds(false); });
             google.maps.event.addListener(gmcKN.map, 'zoom_changed', function () {
                 document.getElementById("gmcKN_zoomInfo").innerHTML = "zoom: " + gmcKN.map.getZoom() + ".  ";
+                if (gmcKN.map.getZoom() < gmcKN.mymap.settings.alwaysClusteringEnabledWhenZoomLevelLess) {
+                    $('#gmcKN_Clustering_span').hide();
+                }
+                else {                    
+                    $('#gmcKN_Clustering_span').show();
+                }
             });
             google.maps.event.trigger(gmcKN.map, 'zoom_changed'); //trigger first time event
 
@@ -204,6 +210,7 @@ var gmcKN = {
             mapCenterLon: 11, //180   11   0
             zoomLevel: 7, //7  1
             zoomlevelClusterStop: 15,
+            alwaysClusteringEnabledWhenZoomLevelLess: 8,
             access_token: 'todo',
             jsonMarkerUrl: 'WebService/MapService.asmx/GetMarkers',
             jsonMarkerDetailUrl: 'WebService/MapService.asmx/GetMarkerDetail',
@@ -657,15 +664,14 @@ var gmcKN = {
     },
 
     checkboxClicked: function (type, isChecked) {
-        if (type === 'lines') {
+        if (type === 'gmc_meta_lines') {
             gmcKN.debug.showGridLines = !gmcKN.debug.showGridLines;
 
             // force update screen
             gmcKN.mymap.events.getBounds(true);
-            return;
+        } else {
+            gmcKN.mymap.events.setType(type, isChecked);
         }
-
-        gmcKN.mymap.events.setType(type, isChecked);
     },
 
 

@@ -21,5 +21,10 @@
 
         // cluster decision
         public const int MinClusterSize = 2; // only cluster if minimum this number of points
+
+        public const int MaxMarkersReturned = 500; //if clustering is disabled, restrict number of markers returned
+        // always cluster if equal or below this zoom level
+        // to disable this effect set the value to -1
+        public const int AlwaysClusteringEnabledWhenZoomLevelLess = 8; // same value as in js-file: if (gmcKN.map.getZoom() < 7) {$('#gmcKN_Clustering_span').hide();
     }
 }
