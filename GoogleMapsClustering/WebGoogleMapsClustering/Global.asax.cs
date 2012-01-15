@@ -41,6 +41,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering
             // Code that runs when a new session is started
             Session[Names.GMC_Filter] = new HashSet<string>();
             Session[Names.GMC_SessionStart] = DateTime.UtcNow as DateTime?;
+            Session[Names.GMC_ClusteringEnabled] = "1";//gmc
         }
 
         void Session_End(object sender, EventArgs e)
