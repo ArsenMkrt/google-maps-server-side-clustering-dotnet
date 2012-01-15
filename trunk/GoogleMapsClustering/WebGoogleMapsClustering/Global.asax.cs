@@ -39,8 +39,8 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering
         void Session_Start(object sender, EventArgs e)
         {
             // Code that runs when a new session is started
-            Session[Names.Filter] = new HashSet<string>();
-            Session[Names.SessionStart] = DateTime.UtcNow as DateTime?;
+            Session[Names.GMC_Filter] = new HashSet<string>();
+            Session[Names.GMC_SessionStart] = DateTime.UtcNow as DateTime?;
         }
 
         void Session_End(object sender, EventArgs e)
