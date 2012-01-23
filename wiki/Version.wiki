@@ -6,10 +6,9 @@
   * Demo points that covers globally
   * Refactored javascript (one namespace only: gmcKN)
   * Support for access_token based service
-  * Ability to defined minimum cluster size
+  * Ability to set minimum cluster size
 
 
 == Version 1 ==
-  * Server-side clustering which work globally
+  * Server-side clustering which works globally
   * Ability to cluster 100.000+ points within 1 second
-
