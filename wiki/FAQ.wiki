@@ -209,6 +209,6 @@ A. MIT License.
 
 *Q. Could you port this to Java?*
 
-A. Yes I could but I want to spend my time on something else.
+A. Yes I was thinking about it, but decided I want to spend my time on other projects for the time being.
 
 ---------------------------------
