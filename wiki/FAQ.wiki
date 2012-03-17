@@ -28,7 +28,7 @@ The server running time with an average laptop was about 300 msec. for 300.000 p
 It should be possible to increase the number of points and keep a delay below 1 sec. 
 by implementing a spatial data structure such as range search but it would only help if you are zoomed in. 
 If you are zoomed all the way out you will have to iterate all the points  
-then you would have to rely on pre-clustering for time complexity improvement.
+then you would have to rely on pre-clustering (offline clustering) for fast runtime response.
 
 ---------------------------------
 
