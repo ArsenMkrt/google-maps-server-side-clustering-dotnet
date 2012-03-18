@@ -85,7 +85,7 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="AreaGMC\WebService\MapService.asmx" />
+    <None Include="AreaGMC\WebService\MapService.asmx.obsolete" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaGMC\Business\Validation.cs" />
@@ -94,7 +94,7 @@
     <Compile Include="AreaGMC\WebService\AjaxService.cs" />
     <Compile Include="AreaGMC\WebService\IAjaxService.cs" />
     <Compile Include="AreaGMC\WebService\MapService.asmx.cs">
-      <DependentUpon>MapService.asmx</DependentUpon>
+      <DependentUpon>MapService.asmx.obsolete</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Global.asax.cs">
