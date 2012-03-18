@@ -202,18 +202,27 @@ var gmcKN = {
 
         },
         settings: {
-            gridx: 6, // 6
-            gridy: 5, //5
-            mapCenterLat: 35, //-40   56.1  0
-            mapCenterLon: 10, //180   11   0
-            zoomLevel: 2, //7  1
+            gridx: 6,
+            gridy: 5,
+            mapCenterLat: 35,
+            mapCenterLon: 10,
+            zoomLevel: 2,
             zoomlevelClusterStop: 15,
             alwaysClusteringEnabledWhenZoomLevelLess: 8,
-            access_token: 'todo',
-            jsonMarkerUrl: 'WebService/MapService.asmx/GetMarkers',
-            jsonMarkerDetailUrl: 'WebService/MapService.asmx/GetMarkerDetail',
-            jsonSetTypeUrl: 'WebService/MapService.asmx/SetType',
-            jsonGetAccessTokenUrl: 'WebService/MapService.asmx/GetAccessToken',
+            access_token: 'dummyValue',
+
+            //jsonGetAccessTokenUrl: 'WebService/MapService.asmx/GetAccessToken', //asmx obsolete
+            jsonGetAccessTokenUrl: '/AreaGMC/AjaxService/GetAccessToken', //WCF
+
+            //jsonMarkerUrl: 'WebService/MapService.asmx/GetMarkers', //asmx obsolete
+            jsonMarkerUrl: '/AreaGMC/AjaxService/GetMarkers', //WCF            
+
+            //jsonMarkerDetailUrl: 'WebService/MapService.asmx/GetMarkerDetail', //asmx obsolete
+            jsonMarkerDetailUrl: '/AreaGMC/AjaxService/GetMarkerDetail', //WCF
+
+            //jsonSetTypeUrl: 'WebService/MapService.asmx/SetType', //asmx obsolete
+            jsonSetTypeUrl: '/AreaGMC/AjaxService/SetType', //WCF            
+
 
             clusterImage: {
                 src: 'Images/cluster2.png', //this is invisible img only used for click-event detecting
@@ -337,7 +346,8 @@ var gmcKN = {
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: function (data) {
-                        var items = jQuery.parseJSON(data.d);
+
+                        var items = (data.d === undefined) ? jQuery.parseJSON(data) : jQuery.parseJSON(data.d);
 
                         var lastReceivedGetMarkers = items.ReplyId;
                         if (lastReceivedGetMarkers <= gmcKN.async.lastReceivedGetMarkers) {
@@ -549,7 +559,8 @@ var gmcKN = {
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: function (data) {
-                        var items = jQuery.parseJSON(data.d);
+                        
+                        var items = (data.d === undefined) ? jQuery.parseJSON(data) : jQuery.parseJSON(data.d);
 
                         var lastReceivedGetAccessToken = items.ReplyId;
                         if (lastReceivedGetAccessToken <= gmcKN.async.lastReceivedGetAccessToken) {
@@ -583,7 +594,8 @@ var gmcKN = {
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: function (data) {
-                        var items = jQuery.parseJSON(data.d);
+
+                        var items = (data.d === undefined) ? jQuery.parseJSON(data) : jQuery.parseJSON(data.d);
 
                         var lastReceivedSetType = items.ReplyId;
                         if (lastReceivedSetType <= gmcKN.async.lastReceivedSetType) {
@@ -622,7 +634,8 @@ var gmcKN = {
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: function (data) {
-                        var items = jQuery.parseJSON(data.d);
+
+                        var items = (data.d === undefined) ? jQuery.parseJSON(data) : jQuery.parseJSON(data.d);
 
                         var lastReceivedMarkerDetail = items.ReplyId;
                         if (lastReceivedMarkerDetail <= gmcKN.async.lastReceivedMarkerDetail) {

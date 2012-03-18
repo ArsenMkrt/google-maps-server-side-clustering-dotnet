@@ -38,6 +38,11 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Routing" />
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
@@ -68,16 +73,13 @@
     <Content Include="AreaGMC\Styles\Default.css" />
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
-    <Content Include="AreaGMC\MapDKClustering.aspx" />
     <Content Include="AreaGMC\Images\cluster2.png" />
     <Content Include="AreaGMC\Images\m1.png" />
     <Content Include="AreaGMC\Images\m2.png" />
     <Content Include="AreaGMC\Images\m3.png" />
     <Content Include="AreaGMC\Images\m4.png" />
     <Content Include="AreaGMC\Images\m5.png" />
-    <Content Include="AreaGMC\Controls\MapDKClustering.ascx" />
     <Content Include="AreaGMC\Images\pin24.png" />
-    <Content Include="AreaGMC\Scripts\mapdkclustering.js" />
     <Content Include="Global.asax" />
     <Content Include="AreaGMC\Styles\Googlemap.css" />
     <Content Include="Web.config">
@@ -87,6 +89,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaGMC\Business\Validation.cs" />
+    <Compile Include="AreaGMC\Code\Helpers\SystemHelper.cs" />
+    <Compile Include="AreaGMC\Code\Helpers\SessionHelper.cs" />
+    <Compile Include="AreaGMC\WebService\AjaxService.cs" />
+    <Compile Include="AreaGMC\WebService\IAjaxService.cs" />
     <Compile Include="AreaGMC\WebService\MapService.asmx.cs">
       <DependentUpon>MapService.asmx</DependentUpon>
       <SubType>Component</SubType>
