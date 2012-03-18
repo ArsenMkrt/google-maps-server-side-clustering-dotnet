@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -87,10 +86,8 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
                 return json;
             }
 
-            /// No clustering                             
-
-            //Boundary viewportExtended = GridCluster.GetBoundaryExtended(jsonReceive);            
-            //List<P> filteredDataset = ClusterAlgorithmBase.FilterDataset(dataset, viewportExtended);
+            // No clustering                             
+            
             List<P> filteredDataset = ClusterAlgorithmBase.FilterDataset(dataset, jsonReceive.Viewport);
             List<P> filteredDatasetMaxPoints = filteredDataset.Take(Config.MaxMarkersReturned).ToList();
 
@@ -185,4 +182,3 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
         }
     }
 }
-
