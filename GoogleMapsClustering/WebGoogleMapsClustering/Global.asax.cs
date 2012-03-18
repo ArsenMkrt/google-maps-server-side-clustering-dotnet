@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ServiceModel.Activation;
 using System.Web;
+using System.Web.Routing;
 using Kunukn.GooglemapsClustering.Data;
 using Kunukn.GooglemapsClustering.DataUtility;
+using Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService;
 
 namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering
 {
@@ -21,36 +24,52 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering
             foreach (var p in points)            
                 p.Normalize();
 
-            Application[Names.Dataset] = points;            
+            Application[SessionKeys.GMC_Dataset] = points;
+
+
+            // Ajax Service Endpoint
+            RouteTable.Routes.Add(new System.ServiceModel.Activation.ServiceRoute("", new System.ServiceModel.Activation.WebServiceHostFactory(), typeof(AjaxService)));
         }
 
         void Application_End(object sender, EventArgs e)
         {
             //  Code that runs on application shutdown
-
         }
 
         void Application_Error(object sender, EventArgs e)
         {
             // Code that runs when an unhandled error occurs
-
         }
 
         void Session_Start(object sender, EventArgs e)
         {
             // Code that runs when a new session is started
-            Session[Names.GMC_Filter] = new HashSet<string>();
-            Session[Names.GMC_SessionStart] = DateTime.UtcNow as DateTime?;
-            Session[Names.GMC_ClusteringEnabled] = "1";//gmc
+            Session[SessionKeys.GMC_Filter] = new HashSet<string>();
+            Session[SessionKeys.GMC_SessionStart] = DateTime.UtcNow as DateTime?;
+            Session[SessionKeys.GMC_ClusteringEnabled] = "1";//gmc
         }
 
         void Session_End(object sender, EventArgs e)
-        {
-            // Code that runs when a session ends. 
-            // Note: The Session_End event is raised only when the sessionstate mode
-            // is set to InProc in the Web.config file. If session mode is set to StateServer 
-            // or SQLServer, the event is not raised.
+        {            
+        }
 
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+            //HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            //HttpContext.Current.Response.Cache.SetNoStore();
+            //EnableCrossDomainAjaxCall();
+        }
+
+        static void EnableCrossDomainAjaxCall()
+        {
+            HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", "*");
+            if (HttpContext.Current.Request.HttpMethod == "OPTIONS")
+            {
+                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Methods", "GET, POST");
+                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
+                HttpContext.Current.Response.AddHeader("Access-Control-Max-Age", "1728000");
+                HttpContext.Current.Response.End();
+            }
         }
 
     }

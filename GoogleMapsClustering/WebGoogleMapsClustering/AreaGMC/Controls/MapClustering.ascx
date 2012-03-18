@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true"  %>
  
- <link type="text/css" rel="stylesheet" href="Styles/Googlemap.css?<%= DateTime.UtcNow.ToString("yyyyMMdd-HHmmss") %>" /> <%-- no cache--%>
+ <link type="text/css" rel="stylesheet" href="Styles/Googlemap.css" />
  <link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/excite-bike/jquery-ui.css"  />
  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script> 
  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script> 
@@ -14,9 +14,9 @@
 
     <div id="gmcKN_map_canvas"></div>
 
-     <label>latitude: </label><input id="gmcKN_latitude" size="10" class="mono" maxlength="20"  type="text" /> <label>longitude: </label><input id="gmcKN_longitude" class="mono" size="10" maxlength="20"  type="text" />
+     <label>latitude: </label><input id="gmcKN_latitude" size="10" class="gmcKN_mono" maxlength="20"  type="text" /> <label>longitude: </label><input id="gmcKN_longitude" class="gmcKN_mono" size="10" maxlength="20"  type="text" />
      <input id="gmcKN_btnLatLonSearch" type="button" value="search" onclick="gmcKN.mymap.latlonsearch(); return false;"/>
-    <span id="gmcKN_zoomInfo" class="mono">zoom: </span> Drag the search marker  &nbsp;&nbsp;&nbsp;<input id="gmcKN_lonlat" class="mono" maxlength="20"  onclick="this.select();" />
+    <span id="gmcKN_zoomInfo" class="gmcKN_mono">zoom: </span> Drag the search marker  &nbsp;&nbsp;&nbsp;<input id="gmcKN_lonlat" class="gmcKN_mono" maxlength="20"  onclick="this.select();" />
 
      <div id="gmcKN_checkboxContainer">        
         <input type="checkbox" id="gmcKN_Type1" name="Type" value="Type1" checked="checked" onclick="gmcKN.checkboxClicked('1',this.checked+'');" />Type1<br />
