@@ -59,6 +59,12 @@ Look in the code {{{Kunukn.GooglemapsClustering.DataUtility.Dataset.LoadDatasetF
 
 ---------------------------------
 
+*Q. How many points are there in the demo example?*
+
+A. There are 45497 points.
+
+---------------------------------
+
 *Q. How do I set the initial zoom-level and position?*
 
 A. In the file mapclustering.js
@@ -204,6 +210,13 @@ The marker images are taken from http://mapicons.nicolasmollet.com/
 *Q. What license type is this?*
 
 A. MIT License.
+
+---------------------------------
+
+*Q. How much does it cost to use Google Maps?*
+
+A. Google knows the answer. Try this link
+https://developers.google.com/maps/faq
 
 ---------------------------------
 
