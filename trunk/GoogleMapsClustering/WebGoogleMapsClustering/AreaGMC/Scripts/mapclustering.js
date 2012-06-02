@@ -398,9 +398,9 @@ var gmcKN = {
                             });
                         }
 
-                        var pointsCacheIncome = []; // points to be drawn  
-                        var pointsCacheOnMap = []; // drawn points
-                        var newmarkersTodo = [];
+                        var pointsCacheIncome = []; // points to be drawn, new points received
+                        var pointsCacheOnMap = [];  // current drawn points
+                        var newmarkersTodo = [];    // points to be displayed
 
                         // store new points to be drawn                  
                         for (i in items.Points) {
@@ -442,8 +442,8 @@ var gmcKN = {
                                 var key = m.get("key"); //key                            
                                 if (key !== 0 && pointsCacheIncome[key] === undefined) {
                                     $(".countinfo_" + key).remove();
-                                    gmcKN.markers[i].set("key", 0); //mark as deleted
-                                    gmcKN.markers[i].setMap(null);
+                                    gmcKN.markers[i].set("key", 0); // mark as deleted
+                                    gmcKN.markers[i].setMap(null); // this removes the marker from the map
                                 }
                             }
                         }
@@ -518,6 +518,7 @@ var gmcKN = {
                                     //gmcKN.infowindow.close();
                                     var z = gmcKN.map.getZoom();
                                     var n;
+                                    // zoom in steps are depended on current zoom level
                                     if (z <= 8) { n = 3; }
                                     else if (z <= 12) { n = 2; }
                                     else { n = 1; }
@@ -542,7 +543,7 @@ var gmcKN = {
                         newmarkersTodo.length = 0;
                     },
                     error: function (xhr, err) {
-                        //alert(gmcKN.mymap.settings.textErrorMessage);
+                        //alert(gmcKN.mymap.settings.textErrorMessage); //friendly error msg
                         alert("readyState: " + xhr.readyState + "\nstatus: " + xhr.status + "\nresponseText: " + xhr.responseText);
                     }
                 });
@@ -623,6 +624,7 @@ var gmcKN = {
                 });
             },
 
+            // popup window
             attachCallOut: function (marker, item) {
                 var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","id":"' + item.I +
                     '","type":"' + item.T + '","sendid":"' + (++gmcKN.async.lastSendMarkerDetail) + '"}';
@@ -758,6 +760,7 @@ gmcKN.Label.prototype.draw = function () {
 
 google.maps.event.addDomListener(window, 'load', gmcKN.mymap.initialize); // load google map
 
-gmcKN.mymap.events.getAccessToken('username', 'password', gmcKN.async.lastSendGetAccessToken); // set access token
+// dummy request, access token is always valid in this example 
+gmcKN.mymap.events.getAccessToken('myusername', 'mypassword', gmcKN.async.lastSendGetAccessToken); // set access token
 
 
