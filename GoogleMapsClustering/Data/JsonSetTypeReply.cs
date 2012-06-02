@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Web.Script.Serialization;
+﻿using System.Web.Script.Serialization;
 
 namespace Kunukn.GooglemapsClustering.Data
 {
@@ -8,8 +6,7 @@ namespace Kunukn.GooglemapsClustering.Data
     {
         public string Content { get; set; }        
         
-
-        //dont include in json reply        
+        // Don't include in json reply        
         [ScriptIgnore]
         public string Type { get; set; }
         [ScriptIgnore]
@@ -19,8 +16,6 @@ namespace Kunukn.GooglemapsClustering.Data
         {            
             Type = string.Empty;
             IsChecked = string.Empty;                       
-        }
-
-      
+        }      
     }
 }

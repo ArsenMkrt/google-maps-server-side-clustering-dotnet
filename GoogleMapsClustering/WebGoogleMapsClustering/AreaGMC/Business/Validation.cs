@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Kunukn.GooglemapsClustering.Data;
 using Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.Code.Helpers;
 
 namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.Business
@@ -15,10 +11,11 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.Business
 
             var timeSpan = DateTime.UtcNow.Subtract(sessionStart);
             if (timeSpan.Minutes < 10)
-                return true; //demo time
-
-            return true; //validation not used, all has access            
+            {
+                return true; // demo time
+            }
+                
+            return true; // validation not used, all has access            
         }
-
     }
 }
