@@ -15,26 +15,29 @@ namespace Kunukn.GooglemapsClustering.DataUtility
     /// </summary>
     public class Dataset
     {        
-        // DATABASE SIMULATION
+        // Database simulation
         public static List<P> LoadDatasetFromDatabase(string websitepath, LoadType loadType)
         {            
             switch (loadType)
             {
-                case LoadType.Serialized: return LoadDatasetFromDatabaseSer(websitepath);                    
-                case LoadType.Csv: return LoadDatasetFromDatabaseCsv(websitepath);                    
+                case LoadType.Serialized: 
+                    return LoadDatasetFromDatabaseSer(websitepath);                    
+                case LoadType.Csv: 
+                    return LoadDatasetFromDatabaseCsv(websitepath);                    
                 default:
                     throw new ApplicationException("LoadDatasetFromDatabase unknown loadtype");
             }            
         }
-
 
          private static List<P> LoadDatasetFromDatabaseSer(string websitepath)
          {
              var filepath = websitepath;
              var fi = new FileInfo(websitepath);
              if (!fi.Exists)
+             {
                  throw new ApplicationException("File does not exists: " + fi.FullName);
-
+             }
+                 
              var fileinfoPath = new FileInfo(filepath);
 
              var dataset = FileUtil.LoadDataSetFromFile(fileinfoPath);
@@ -47,13 +50,14 @@ namespace Kunukn.GooglemapsClustering.DataUtility
              return dataset;
          }
 
-
          private  static List<P> LoadDatasetFromDatabaseCsv(string websitepath)
          {
              var filepath = websitepath;
              var fi = new FileInfo(websitepath);
              if (!fi.Exists)
-                 throw new ApplicationException("File does not exists: "+fi.FullName);
+             {
+                 throw new ApplicationException("File does not exists: " + fi.FullName);
+             }                 
        
              var list = FileUtil.ReadFile(filepath);
              var dataset = new List<P>();

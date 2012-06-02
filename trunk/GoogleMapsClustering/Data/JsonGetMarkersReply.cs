@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 
-
 namespace Kunukn.GooglemapsClustering.Data
 {
     public class JsonGetMarkersReply : JsonReply
@@ -13,6 +12,5 @@ namespace Kunukn.GooglemapsClustering.Data
             Points = new List<P>();
             Polylines = new List<Line>();            
         }
-
     }
 }

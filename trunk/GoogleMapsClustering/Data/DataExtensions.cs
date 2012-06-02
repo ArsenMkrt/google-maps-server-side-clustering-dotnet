@@ -8,7 +8,6 @@ namespace Kunukn.GooglemapsClustering.Data
         const double Pi2 = Math.PI * 2;
         public const int RoundConvertError = 5;
 
-
         public static double Round(this double d)
         {
             return Math.Round(d, Numbers.Round);
@@ -19,33 +18,40 @@ namespace Kunukn.GooglemapsClustering.Data
             foreach (var p in list) p.Normalize();
         }
 
-
-        // distance
+        // Distance
         public static double AbsLat(this double beg, double end)
         {
-            double b = beg; // < 0 ? beg + LatLonInfo.MaxLatLength : beg;
-            double e = end; // < 0 ? end + LatLonInfo.MaxLatLength : end;
+            double b = beg;
+            double e = end;
             if (b > e)
+            {
                 e += LatLonInfo.MaxLatLength;
-
+            }
+                
             double diff = e - b;
             if (diff < 0 || diff > LatLonInfo.MaxLatLength)
-                throw new ApplicationException(string.Format("Error AbsLat beg: {0} end: {1}",beg,end) );
-
+            {
+                throw new ApplicationException(string.Format("Error AbsLat beg: {0} end: {1}", beg, end));
+            }
+                
             return diff;
         }
 
-        // distance
+        // Distance
         public static double AbsLon(this double beg, double end)
         {
-            double b = beg;// < 0 ? beg + LatLonInfo.MaxLonLength : beg;
-            double e = end;// < 0 ? end + LatLonInfo.MaxLonLength : end;
+            double b = beg;
+            double e = end;
             if (b > e)
+            {
                 e += LatLonInfo.MaxLonLength;
+            }                
             double diff = e - b;
             if (diff < 0 || diff > LatLonInfo.MaxLonLength)
+            {
                 throw new ApplicationException(string.Format("Error AbsLon beg: {0} end: {1}", beg, end));
-
+            }
+                
             return diff;
         }
        
@@ -53,34 +59,46 @@ namespace Kunukn.GooglemapsClustering.Data
         public static double Pos(this double latlon)
         {
             if (latlon < LatLonInfo.MinLonValue || latlon > LatLonInfo.MaxLonValue)
+            {
                 throw new ApplicationException("Pos");
+            }
+                
+            if (latlon < 0)
+            {
+                return latlon + LatLonInfo.MaxWorldLength;
+            }
 
-            if (latlon < 0) return latlon + LatLonInfo.MaxWorldLength;
             return latlon;
         }
 
 
-        // lat or lon
+        // Lat or Lon
         public static double LatLonToDegree(this double latlon)
         {
             if (latlon < LatLonInfo.MinLonValue || latlon > LatLonInfo.MaxLonValue)
+            {
                 throw new ApplicationException("LatLonToDegree");
-
+            }
+                
             return (latlon + LatLonInfo.AngleConvert + LatLonInfo.MaxWorldLength) % LatLonInfo.MaxWorldLength;
         }
         public static double DegreeToLatLon(this double degree)
         {
             if (degree < 0 || degree > 360)
+            {
                 throw new ApplicationException("DegreeToLatLon");
-
+            }
+                
             return (degree - LatLonInfo.AngleConvert);
         }
 
         public static double LatLonToRadian(this double latlon)
         {
             if (latlon < LatLonInfo.MinLonValue || latlon > LatLonInfo.MaxLonValue)
+            {
                 throw new ApplicationException("LatLonToRadian");
-
+            }
+                
             var degree = LatLonToDegree(latlon);
             var radian = DegreeToRadian(degree);
             return radian;
@@ -89,22 +107,32 @@ namespace Kunukn.GooglemapsClustering.Data
         public static double RadianNormalize(this double r)
         {
             if (r < -Pi2 || r > Pi2)
+            {
                 throw new ApplicationException("RadianNormalize");
-
+            }
+                
             var radian = (r + Pi2) % Pi2;
             if (radian < 0 || radian > Pi2)
+            {
                 throw new ApplicationException("RadianNormalize");
+            }
+                
             return radian;
         }
 
         public static double DegreeNormalize(this double d)
         {
             if (d < -360 || d > 360)
+            {
                 throw new ApplicationException("DegreeNormalize");
-
+            }
+                
             var degree = (d + 360) % 360;
             if (degree < 0 || degree > 360)
+            {
                 throw new ApplicationException("DegreeNormalize");
+            }
+                
             return degree;
         }
 
@@ -113,8 +141,10 @@ namespace Kunukn.GooglemapsClustering.Data
         {
             var radian = RadianNormalize( r);
             if (radian < 0 || radian > Pi2)
+            {
                 throw new ApplicationException("RadianToLatLon");
-
+            }
+                
             var degree =  DegreeNormalize(RadianToDegree(radian) );
             var degreeRounded = Math.Round(degree, RoundConvertError);            
             var latlon = DegreeToLatLon(degreeRounded);
@@ -124,15 +154,19 @@ namespace Kunukn.GooglemapsClustering.Data
         public static double RadianToDegree(this double radian)
         {
             if (radian < 0 || radian > Pi2)
+            {
                 throw new ApplicationException("RadianToDegree");
-
+            }
+                
             return (radian / Math.PI) * 180.0;
         }
         public static double DegreeToRadian(this double degree)
         {
             if (degree < 0 || degree > 360)
+            {
                 throw new ApplicationException("DegreeToRadian");
-
+            }
+                
             return (degree * Math.PI) / 180.0;
         }
 

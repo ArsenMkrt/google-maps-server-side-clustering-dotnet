@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 
 namespace Kunukn.GooglemapsClustering.DataUtility
 {
@@ -25,9 +22,7 @@ namespace Kunukn.GooglemapsClustering.DataUtility
             }
             catch (Exception ex)
             {
-                throw ex;
-                Console.WriteLine(ex.StackTrace + "\nPress a key ... ");
-                Console.ReadKey();
+                throw ex;                
             }
         }
         public object DeSerializeObject(string filepath)
@@ -43,10 +38,9 @@ namespace Kunukn.GooglemapsClustering.DataUtility
             }
             catch (Exception ex)
             {
-                throw ex;
-                Console.WriteLine(ex.StackTrace + "\nPress a key ... ");
-                Console.ReadKey();
+                throw ex;                
             }
+
             return null;
         }
     }

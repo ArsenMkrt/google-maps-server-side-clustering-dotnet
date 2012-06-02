@@ -23,7 +23,7 @@ namespace Kunukn.GooglemapsClustering.MathUtility
                 Math.Pow(Math.Abs(absy), Exp), 1.0 / Exp);
         }
 
-        // O(1) while loop is max 2
+        // O(1) while loop is maximum 2
         public static double LatLonDiff(double from, double to)
         {
             double difference = to - from;
@@ -47,15 +47,15 @@ namespace Kunukn.GooglemapsClustering.MathUtility
 
         public static bool IsLowerThanLatMin(double d)
         {
-            return d < LatLonInfo.MinLatValue;// +Numbers.Epsilon;                
+            return d < LatLonInfo.MinLatValue;
         }
         public static bool IsGreaterThanLatMax(double d)
         {
-            return d > LatLonInfo.MaxLatValue; //-Numbers.Epsilon;
+            return d > LatLonInfo.MaxLatValue;
         }
 
         /// <summary>
-        /// lat lon specific rect boundary check, is x,y inside boundary?
+        /// Lat Lon specific rect boundary check, is x,y inside boundary?
         /// </summary>
         /// <param name="minx"></param>
         /// <param name="miny"></param>
@@ -66,7 +66,8 @@ namespace Kunukn.GooglemapsClustering.MathUtility
         /// <returns></returns>
         public static bool IsInside(double minx, double miny, double maxx, double maxy, double x, double y, bool isInsideDetectedX, bool isInsideDetectedY)
         {
-            // normalize because of widen function, world wrapping might have occured, calc in pos value range only, nb. lon -170 = 10, lat -80 = 10
+            // Normalize because of widen function, world wrapping might have occured
+            // calc in positive value range only, nb. lon -170 = 10, lat -80 = 10
             var nminx = minx.NormalizeLongitude();
             var nmaxx = maxx.NormalizeLongitude();
 
@@ -87,13 +88,19 @@ namespace Kunukn.GooglemapsClustering.MathUtility
                     //sign depended check, todo merge equal lines
                     // - -
                     if (nmaxy <= 0 && nminy <= 0)
+                    {
                         isY = nminy <= ny && ny <= LatLonInfo.MaxLatValue || LatLonInfo.MinLatValue <= ny && ny <= nmaxy;
+                    }                        
                     // + +
                     else if (nmaxy >= 0 && nminy >= 0)
+                    {
                         isY = nminy <= ny && ny <= LatLonInfo.MaxLatValue || LatLonInfo.MinLatValue <= ny && ny <= nmaxy;
+                    }                        
                     // + -
                     else
+                    {
                         isY = nminy <= ny && ny <= LatLonInfo.MaxLatValue || LatLonInfo.MinLatValue <= ny && ny <= nmaxy;
+                    }                        
                 }
 
                 else
@@ -111,13 +118,19 @@ namespace Kunukn.GooglemapsClustering.MathUtility
                     //sign depended check, todo merge equal lines
                     // - -
                     if (nmaxx <= 0 && nminx <= 0)
+                    {
                         isX = nminx <= nx && nx <= LatLonInfo.MaxLonValue || LatLonInfo.MinLonValue <= nx && nx <= nmaxx;
+                    }                        
                     // + +
                     else if (nmaxx >= 0 && nminx >= 0)
+                    {
                         isX = nminx <= nx && nx <= LatLonInfo.MaxLonValue || LatLonInfo.MinLonValue <= nx && nx <= nmaxx;
+                    }                        
                     // + -
                     else
+                    {
                         isX = nminx <= nx && nx <= LatLonInfo.MaxLonValue || LatLonInfo.MinLonValue <= nx && nx <= nmaxx;
+                    }                        
                 }
                 else
                 {
@@ -133,23 +146,7 @@ namespace Kunukn.GooglemapsClustering.MathUtility
         {
             return IsInside(b.Minx, b.Miny, b.Maxx, b.Maxy, p.Lon, p.Lat, false, false);
         }
-
-        //NOT USED, widen the area, this avoids the lon lat isinside problem
-        private static bool IsInsideWiden(Boundary b, P p)
-        {
-            var x = b.AbsX / 3; // value is heuristic, smaller divide, the larger the boundary
-            var y = b.AbsY / 3;
-
-            // all lat or lon is visible checking
-            var isInsideDetectedX = 2 * x + b.AbsX >= LatLonInfo.MaxLonLength;
-            var isInsideDetectedY = 2 * y + b.AbsY >= LatLonInfo.MaxLatLength;
-            if (isInsideDetectedX && isInsideDetectedY)
-                return true;
-
-            return IsInside(b.Minx - x, b.Miny - y, b.Maxx + x, b.Maxy + y, p.Lon, p.Lat, isInsideDetectedX, isInsideDetectedY);
-        }
-
-
+        
         // used by zoom level and deciding the grid size, O(halfSteps)
         // O(halfSteps) ~  O(maxzoom) ~  O(k) ~  O(1)
         // Google Maps doubles or halves the view for 1 step zoom level change
@@ -160,21 +157,23 @@ namespace Kunukn.GooglemapsClustering.MathUtility
 
             double half = d;
             for (int i = 0; i < halfSteps; i++)
+            {
                 half /= 2;
-
+            }
+                
             var halfRounded = Math.Round(half, 4);
             // avoid grid span less than this level
             return halfRounded < meter11 ? meter11 : halfRounded;
         }
 
-        // value x which is in range [a,b] is mapped to a new value in range [c;d]
+        // Value x which is in range [a,b] is mapped to a new value in range [c;d]
         public static double Map(double x, double a, double b, double c, double d)
         {
             var r = (x - a) / (b - a) * (d - c) + c;
             return r;
         }
 
-        // grid location are stationary, this gives first left or lower grid line from current latOrLon
+        // Grid location are stationary, this gives first left or lower grid line from current latOrLon
         public static double FloorLatLon(double latOrlon, double delta)
         {
             var floor = ((int)(latOrlon / delta)) * delta;
@@ -193,30 +192,42 @@ namespace Kunukn.GooglemapsClustering.MathUtility
             return LatLonInfo.MinLonValue <= d && d <= LatLonInfo.MaxLonValue;
         }
 
-        // value must be within a and b
+        // Value must be within a and b
         public static double Constrain(double x, double a, double b)
         {
             var r = Max(a, Min(x, b));
             return r;
         }
 
-        // value must be within latitude boundary        
+        // Value must be within latitude boundary        
         public static double ConstrainLatitude(double x, double offset = 0)
         {            
             var r = Max(LatLonInfo.MinLatValue + offset, Min(x, LatLonInfo.MaxLatValue - offset));
             return r;
         }
 
+        //NOT USED, widen the area, this avoids the lon lat isinside problem
+        //private static bool IsInsideWiden(Boundary b, P p)
+        //{
+        //    var x = b.AbsX / 3; // value is heuristic, smaller divide, the larger the boundary
+        //    var y = b.AbsY / 3;
 
-        /*
-        
+        //    // all lat or lon is visible checking
+        //    var isInsideDetectedX = 2 * x + b.AbsX >= LatLonInfo.MaxLonLength;
+        //    var isInsideDetectedY = 2 * y + b.AbsY >= LatLonInfo.MaxLatLength;
+        //    if (isInsideDetectedX && isInsideDetectedY)
+        //        return true;
+
+        //    return IsInside(b.Minx - x, b.Miny - y, b.Maxx + x, b.Maxy + y, p.Lon, p.Lat, isInsideDetectedX, isInsideDetectedY);
+        //}
+
+        /*        
         // normalize value in range [0;1]
         public static double Norm(double x, double a, double b)
         {
             var r = Map(x, a, b, 0, 1);
             return r;
         }   
-
          
         // anti normalize from [0;1]
         public static double Lerp(double x, double a, double b)

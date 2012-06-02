@@ -22,8 +22,10 @@ namespace Kunukn.GooglemapsClustering.Clustering
         protected ClusterAlgorithmBase(List<P> dataset)
         {
             if (dataset == null)
+            {
                 throw new ApplicationException(
                     string.Format("dataset is null"));
+            }                
 
             Dataset = dataset;
         }
@@ -32,7 +34,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
 
         public List<P> GetClusterResult(Boundary grid)
         {
-            // collect used buckets and return the result
+            // Collect used buckets and return the result
             var clusterPoints = new List<P>();
             //O(m*n)
             foreach (var item in BucketsLookup)
@@ -42,8 +44,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
                 {
                     if (bucket.Points.Count < Config.MinClusterSize)
                     {
-                        foreach (var p in bucket.Points)
-                            clusterPoints.Add(p);
+                        clusterPoints.AddRange(bucket.Points);
                     }
                     else
                     {
@@ -64,12 +65,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
         {
             //List<P> filtered = dataset.Where(p => MathTool.IsInsideWiden(viewport, p)).ToList();
 
-            var filtered = new List<P>();
-            foreach (var p in dataset)
-                if (MathTool.IsInside(viewport, p))
-                    filtered.Add(p);
-
-            return filtered;
+            return dataset.Where(p => MathTool.IsInside(viewport, p)).ToList();
         }
 
         /*
@@ -101,10 +97,13 @@ namespace Kunukn.GooglemapsClustering.Clustering
         {
             int count;
             if (list == null || (count = list.Count) == 0)
+            {
                 return null;
+            }                
             if (count == 1)
+            {
                 return list.First();
-
+            }                
 
             //http://en.wikipedia.org/wiki/Circular_mean
             //http://stackoverflow.com/questions/491738/how-do-you-calculate-the-average-of-a-set-of-angles
@@ -145,12 +144,13 @@ namespace Kunukn.GooglemapsClustering.Clustering
         }
 
 
-        //O(k*n)
+        // O(k*n)
         public static void SetCentroidForAllBuckets(IEnumerable<Bucket> buckets)
         {
             foreach (var item in buckets)
+            {
                 item.Centroid = GetCentroidFromClusterLatLon(item.Points);
-
+            }                
         }
 
         public P GetClosestPoint(P from, List<P> list) //O(n)
@@ -161,8 +161,10 @@ namespace Kunukn.GooglemapsClustering.Clustering
             {
                 var d = MathTool.Distance(from, p);
                 if (d >= min)
+                {
                     continue;
-
+                }
+                    
                 // update
                 min = d;
                 closests = p;
@@ -175,7 +177,9 @@ namespace Kunukn.GooglemapsClustering.Clustering
         {
             // clear points in the buckets, they will be re-inserted
             foreach (var bucket in BucketsLookup.Values)
+            {
                 bucket.Points.Clear();
+            }                
 
             foreach (P p in Dataset)
             {
@@ -185,8 +189,10 @@ namespace Kunukn.GooglemapsClustering.Clustering
                 {
                     var bucket = BucketsLookup[i];
                     if (bucket.IsUsed == false)
+                    {
                         continue;
-
+                    }
+                        
                     var centroid = bucket.Centroid;
                     var dist = MathTool.Distance(p, centroid);
                     if (dist < minDist)
@@ -219,7 +225,9 @@ namespace Kunukn.GooglemapsClustering.Clustering
         public void UpdateAllCentroidsToNearestContainingPoint()
         {
             foreach (var bucket in BucketsLookup.Values)
+            {
                 UpdateCentroidToNearestContainingPoint(bucket);
+            }                
         }
     }
 }

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Kunukn.GooglemapsClustering.Data;
 using Kunukn.GooglemapsClustering.MathUtility;
-
 
 namespace Kunukn.GooglemapsClustering.Clustering
 {
@@ -12,10 +10,10 @@ namespace Kunukn.GooglemapsClustering.Clustering
     /// </summary>
     public class GridCluster : ClusterAlgorithmBase
     {
-        // absolut pos                 
+        // Absolut position
         protected readonly Boundary _grid = new Boundary();
 
-        // for bucket placement calc, grid cluster algo
+        // Bucket placement calc, grid cluster algo
         protected readonly double _deltaX;
         protected readonly double _deltaY;
 
@@ -25,13 +23,13 @@ namespace Kunukn.GooglemapsClustering.Clustering
             double deltaX = deltas[0];
             double deltaY = deltas[1];
 
-            // grid with extended outer grid-area non-visible            
+            // Grid with extended outer grid-area non-visible            
             var a = MathTool.FloorLatLon(jsonReceive.Viewport.Minx, deltaX) - deltaX * Config.OuterGridExtend;
             var b = MathTool.FloorLatLon(jsonReceive.Viewport.Miny, deltaY) - deltaY * Config.OuterGridExtend;
             var a2 = MathTool.FloorLatLon(jsonReceive.Viewport.Maxx, deltaX) + deltaX * (1 + Config.OuterGridExtend);
             var b2 = MathTool.FloorLatLon(jsonReceive.Viewport.Maxy, deltaY) + deltaY * (1 + Config.OuterGridExtend);
 
-            // lat is special with Google Maps, they don't wrap around, then do constrain
+            // Latitude is special with Google Maps, they don't wrap around, then do constrain
             b = MathTool.ConstrainLatitude(b);
             b2 = MathTool.ConstrainLatitude(b2);
 
@@ -43,12 +41,17 @@ namespace Kunukn.GooglemapsClustering.Clustering
 
         public static double[] GetDelta(JsonReceive jsonReceive)
         {
-            // Heuristic specific values and grid size dependent, this might needs to be altered for diff window size
-            // used in combination with with zoom level
-            const int xZoomLevel1 = 480; //560
-            const int yZoomLevel1 = 240; //240
+            // Heuristic specific values and grid size dependent.
+            // used in combination with zoom level.
 
-            // relative values, used for adjusting grid size
+            // xZoomLevel1 and yZoomLevel1 is used to define the size of one grid-cell
+
+            // Absolute base value of longitude distance
+            const int xZoomLevel1 = 480;
+            // Absolute base value of latitude distance
+            const int yZoomLevel1 = 240;
+                       
+            // Relative values, used for adjusting grid size
             int gridScaleX = jsonReceive.Gridx;
             int gridScaleY = jsonReceive.Gridy;
 
@@ -56,8 +59,6 @@ namespace Kunukn.GooglemapsClustering.Clustering
             double y = MathTool.Half(yZoomLevel1, jsonReceive.Zoomlevel - 1) / gridScaleY;
             return new [] { x, y };
         }
-
-
 
         public List<Line> Lines { get; private set; }
 
@@ -71,14 +72,15 @@ namespace Kunukn.GooglemapsClustering.Clustering
             _grid = GetBoundaryExtended(jsonReceive);
 
             if (Config.DoShowGridLinesInGoogleMap)
+            {
                 MakeLines();
-
+            }
+                
         }
-
 
         void MakeLines()
         {
-            //obs, Google Maps does not seem to draw every lines if zoomed far out and lines are wide
+            //Note, Google Maps does not seem to draw every lines if zoomed far out and lines are wide
 
             Lines = new List<Line>();
             var p2Lines = new List<Point2>();
@@ -109,7 +111,9 @@ namespace Kunukn.GooglemapsClustering.Clustering
             {
                 var yy = b.Miny + i * _deltaY;
                 if (MathTool.IsLowerThanLatMin(yy) || MathTool.IsGreaterThanLatMax(yy))
+                {
                     continue;
+                }                    
 
                 double y = yy;
                 double y2 = yy;
@@ -148,7 +152,9 @@ namespace Kunukn.GooglemapsClustering.Clustering
             {
                 var bucket = BucketsLookup[key];
                 if (bucket.IsUsed == false)
+                {
                     continue;
+                }                    
 
                 var x = bucket.Idx;
                 var y = bucket.Idy;
@@ -177,17 +183,23 @@ namespace Kunukn.GooglemapsClustering.Clustering
             foreach (var neighborKey in neighborKeys)
             {
                 if (!BucketsLookup.ContainsKey(neighborKey))
+                {
                     continue;
+                }                    
 
                 var neighbor = BucketsLookup[neighborKey];
                 if (neighbor.IsUsed == false)
+                {
                     continue;
-
+                }
+                    
                 var current = BucketsLookup[currentKey];
                 var dist = MathTool.Distance(current.Centroid, neighbor.Centroid);
                 if (dist > withinDist)
+                {
                     continue;
-
+                }
+                    
                 current.Points.AddRange(neighbor.Points);//O(n)
 
                 // recalc centroid
@@ -272,8 +284,10 @@ then the longitudes from 170 to -170 will be clustered together
 
                 // bucket exists, add point
                 if (BucketsLookup.ContainsKey(id))
-                    BucketsLookup[id].Points.Add(p);
-
+                {
+                    BucketsLookup[id].Points.Add(p);   
+                }
+                    
                 // new bucket, create and add point
                 else
                 {
@@ -288,13 +302,17 @@ then the longitudes from 170 to -170 will be clustered together
 
             // merge if gridpoint is to close
             if (Config.DoMergeGridIfCentroidsAreCloseToEachOther)
+            {
                 MergeClustersGrid();
+            }                
 
             if (Config.DoUpdateAllCentroidsToNearestContainingPoint)
+            {
                 UpdateAllCentroidsToNearestContainingPoint();
-
-            // check again
-            // merge if gridpoint is to close
+            }
+                
+            // Check again
+            // Merge if gridpoint is to close
             if (Config.DoMergeGridIfCentroidsAreCloseToEachOther
                 && Config.DoUpdateAllCentroidsToNearestContainingPoint)
             {

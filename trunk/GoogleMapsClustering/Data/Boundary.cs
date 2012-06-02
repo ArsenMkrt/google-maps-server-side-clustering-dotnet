@@ -1,6 +1,7 @@
 ﻿using System;
 
 
+
 namespace Kunukn.GooglemapsClustering.Data
 {
     public class Boundary : Point2

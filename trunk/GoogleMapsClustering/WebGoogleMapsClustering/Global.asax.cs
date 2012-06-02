@@ -21,11 +21,12 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering
             // GOOGLEMAPS CLUSTERING DATABASE LOAD SIMULATION
             var websitepath = HttpContext.Current.Server.MapPath("~") + @"AreaGMC\Files\Points.csv";
             var points = Dataset.LoadDatasetFromDatabase(websitepath, DataUtility.LoadType.Csv);
-            foreach (var p in points)            
+            foreach (var p in points)
+            {
                 p.Normalize();
-
+            }
+                
             Application[SessionKeys.GMC_Dataset] = points;
-
 
             // Ajax Service Endpoint
             RouteTable.Routes.Add(new System.ServiceModel.Activation.ServiceRoute("", new System.ServiceModel.Activation.WebServiceHostFactory(), typeof(AjaxService)));
@@ -46,7 +47,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering
             // Code that runs when a new session is started
             Session[SessionKeys.GMC_Filter] = new HashSet<string>();
             Session[SessionKeys.GMC_SessionStart] = DateTime.UtcNow as DateTime?;
-            Session[SessionKeys.GMC_ClusteringEnabled] = "1";//gmc
+            Session[SessionKeys.GMC_ClusteringEnabled] = "1";
         }
 
         void Session_End(object sender, EventArgs e)
@@ -71,6 +72,5 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering
                 HttpContext.Current.Response.End();
             }
         }
-
     }
 }

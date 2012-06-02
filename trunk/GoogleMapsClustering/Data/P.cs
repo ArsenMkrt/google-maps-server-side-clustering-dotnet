@@ -2,8 +2,7 @@
 using System.Runtime.Serialization;
 using System.Web.Script.Serialization;
 
-
-namespace Kunukn.GooglemapsClustering.Data //Kunukn.GooglemapsClustering.Data
+namespace Kunukn.GooglemapsClustering.Data
 {
     /// <summary>
     /// Kunuk Nykjaer
@@ -15,7 +14,7 @@ namespace Kunukn.GooglemapsClustering.Data //Kunukn.GooglemapsClustering.Data
         public string Y // lat json
         {
             get { return ToStringEN(Lat); }
-            set { Lat = ToValue(value).Value; } //do throw exception if null
+            set { Lat = ToValue(value).Value; } // Do throw exception if null
         }
         public string X // lon json
         {
@@ -38,7 +37,7 @@ namespace Kunukn.GooglemapsClustering.Data //Kunukn.GooglemapsClustering.Data
         public string I { get; set; } // marker id           
         public string T { get; set; } // marker type
 
-        [ScriptIgnore] //  dont include in JSON data
+        [ScriptIgnore] //  don't include in JSON data
         public string Name { get; set; } // custom
 
             
@@ -62,24 +61,40 @@ namespace Kunukn.GooglemapsClustering.Data //Kunukn.GooglemapsClustering.Data
         public int CompareTo(object o) // if used in sorted list
         {
             if (o == null)
+            {
                 return -1;
+            }                
             var other = o as P;
             if (other == null)
+            {
                 return -1;
-
+            }
+                
             if (this.Equals(o))
+            {
                 return 0;
-
+            }
+                
             if (this.Lon > other.Lon)
+            {
                 return -1;
+            }
+                
             if (this.Lon < other.Lon)
+            {
                 return 1;
+            }                
 
             if (this.Lat > other.Lat)
+            {
                 return -1;
+            }
+                
             if (this.Lat < other.Lat)
+            {
                 return 1;
-
+            }
+                
             return 0;
         }
 
@@ -101,11 +116,16 @@ namespace Kunukn.GooglemapsClustering.Data //Kunukn.GooglemapsClustering.Data
         public override bool Equals(Object o)
         {
             if (o == null)
+            {
                 return false;
+            }
+                
             var other = o as P;
             if (other == null)
+            {
                 return false;
-
+            }
+                
             var x = this.Lon == other.Lon;
             var y = this.Lat == other.Lat;
             return x && y;

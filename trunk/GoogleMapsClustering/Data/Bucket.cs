@@ -1,26 +1,12 @@
 ﻿using System.Collections.Generic;
 
-
 namespace Kunukn.GooglemapsClustering.Data
 {
     public class Bucket
     {
         public string Id { get; private set; }
         public List<P> Points { get; private set; }
-
-        private P _Centroid;
-        public P Centroid
-        {
-            get { return _Centroid; }
-            set
-            {
-                _Centroid = value;
-                //if (_Centroid == null) return;
-                //_Centroid.Lon = _Centroid.Lon.NormalizeLongitude();
-                //_Centroid.Lat = _Centroid.Lat.NormalizeLatitude();
-            }
-        }
-
+        public P Centroid { get; set; }
         public int Idx { get; private set; }
         public int Idy { get; private set; }
         public double ErrorLevel { get; set; } // clusterpoint and points avg dist

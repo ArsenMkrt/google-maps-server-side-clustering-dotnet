@@ -30,7 +30,9 @@ namespace Kunukn.GooglemapsClustering.DataUtility
                 sb.Append(line);
                 i++;
                 if (i < len)
+                {
                     sb.Append(Environment.NewLine);
+                }                    
             }
             return WriteFile(sb.ToString(), fileInfo);
         }
@@ -40,14 +42,18 @@ namespace Kunukn.GooglemapsClustering.DataUtility
             try
             {
                 if (fileInfo == null)
+                {
                     return false;
+                }                    
 
                 //if (fileInfo.Exists)
                 //    fileInfo.Delete();
 
                 if (!fileInfo.Directory.Exists)
+                {
                     Directory.CreateDirectory(fileInfo.Directory.ToString());
-                
+                }
+                                    
                 using (StreamWriter streamWriter = fileInfo.CreateText() )
                 {
                     streamWriter.Write(data, _encodingWrite);
@@ -73,7 +79,9 @@ namespace Kunukn.GooglemapsClustering.DataUtility
             {
                 FileInfo fi = new FileInfo(filepath);
                 if (!fi.Directory.Exists)
+                {
                     Directory.CreateDirectory(fi.Directory.ToString());
+                }                    
                 success = true;
             }
             catch (Exception ex)
@@ -89,8 +97,10 @@ namespace Kunukn.GooglemapsClustering.DataUtility
         public static void SaveDataSetToFile(List<P> dataset, string filename = null)
         {
             if(filename==null)
+            {
                 SaveDataSetToFile(dataset, DatasetSerializeName);
-
+            }
+                
             var objectToSerialize = new DatasetToSerialize { Dataset = dataset };
             new Serializer().SerializeObject(FolderPath + filename, objectToSerialize);
         }
@@ -99,8 +109,10 @@ namespace Kunukn.GooglemapsClustering.DataUtility
         public static List<P> LoadDataSetFromFile(FileInfo filepath = null)
         {
             if(filepath==null)
-                return LoadDataSetFromFile(new FileInfo(FolderPath + DatasetSerializeName));
-
+            {
+                return LoadDataSetFromFile(new FileInfo(FolderPath + DatasetSerializeName));   
+            }
+                
             var objectToSerialize = (DatasetToSerialize)
                 (new Serializer().DeSerializeObject(filepath.FullName));
             return objectToSerialize.Dataset;
@@ -133,9 +145,6 @@ namespace Kunukn.GooglemapsClustering.DataUtility
             }
 
             return list;
-        }
-
-
-       
+        }       
     }
 }

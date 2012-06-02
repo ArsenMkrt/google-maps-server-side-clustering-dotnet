@@ -8,13 +8,17 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.Code.Helper
         public static void Assert(bool b, string s)
         {
             if (!b)
+            {
                 throw new ApplicationException(s);
+            }                
         }
 
         public static void AssertNotNullOrEmpty<T>(List<T> list, string s)
         {
             if (list==null || list.Count==0)
+            {
                 throw new ApplicationException(s);
+            }                
         }
     }
 }

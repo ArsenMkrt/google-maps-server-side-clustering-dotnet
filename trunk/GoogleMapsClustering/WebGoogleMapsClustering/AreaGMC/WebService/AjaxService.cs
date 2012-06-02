@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel.Activation;
 using System.Web;
@@ -29,7 +28,10 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
             SystemHelper.Assert(HttpContext.Current.Session != null, "Session is null");
 
             var isValid = Validation.ValidateAccessToken(access_token);
-            if (!isValid) return NotValidReply(sendid);
+            if (!isValid)
+            {
+                return NotValidReply(sendid);
+            }
             
             var jsonReceive = new JsonReceive(access_token, nelat, nelon, swlat, swlon, zoomlevel, gridx, gridy, zoomlevelClusterStop, sendid);
 
@@ -45,13 +47,11 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
             var allpoints = SessionHelper.GetDataset();
 
             var typeFilter = SessionHelper.GetTypeFilter();           
-            var dataset = allpoints; //unfiltered atm            
+            var dataset = allpoints; //unfiltered at the moment
             if (typeFilter.Count > 0)
             {
-                dataset = new List<P>();
-                foreach (var p in allpoints)
-                    if (typeFilter.Contains(p.T) == false)
-                        dataset.Add(p);
+                // filter data by typeFilter value
+                dataset = allpoints.Where(p => typeFilter.Contains(p.T) == false).ToList();
             }
 
             // Clustering
@@ -65,7 +65,8 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
                 return json;
             }
 
-            // No clustering but number of items returned is restricted
+            // If we are here then there are no clustering
+            // The number of items returned is restricted to avoid json data overflow
             List<P> filteredDataset = ClusterAlgorithmBase.FilterDataset(dataset, jsonReceive.Viewport);
             List<P> filteredDatasetMaxPoints = filteredDataset.Take(Config.MaxMarkersReturned).ToList();
 
@@ -78,7 +79,10 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
             SystemHelper.Assert(HttpContext.Current.Session != null, "Session is null");
             
             var isValid = Validation.ValidateAccessToken(access_token);
-            if (!isValid) return NotValidReply(sendid);
+            if (!isValid)
+            {
+                return NotValidReply(sendid);
+            }
 
             var jss = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
             var reply = new JsonMarkerInfoReply { Id = id, Type = type, ReplyId = sendid };
@@ -94,7 +98,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
             SystemHelper.Assert(HttpContext.Current.Session != null, "Session is null");
 
             var jss = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
-            // dummy set access token
+            // Dummy set access token
             var reply = new JsonGetAccessTokenReply { ReplyId = sendid, AccessToken = "dummyValidValue", Success = Names._1 };
             return jss.Serialize(reply);
         }
@@ -104,7 +108,10 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
             SystemHelper.Assert(HttpContext.Current.Session != null, "Session is null");
                
             var isValid = Validation.ValidateAccessToken(access_token);
-            if (!isValid) return NotValidReply(sendid);
+            if (!isValid)
+            {
+                return NotValidReply(sendid);
+            }
 
             var jss = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
             var reply = new JsonSetTypeReply { Type = type, IsChecked = isChecked, ReplyId = sendid };
@@ -129,12 +136,16 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
                     if (isChecked.ToLower() == Names._true)
                     {
                         if (typeFilter.Contains(type))
+                        {
                             typeFilter.Remove(type);
+                        }                            
                     }
                     else
                     {
                         if (typeFilter.Contains(type) == false)
+                        {
                             typeFilter.Add(type);
+                        }                            
                     }
 
                     SessionHelper.SetTypeFilter(typeFilter);                    
