@@ -24,7 +24,7 @@ namespace Kunukn.GooglemapsClustering.Data
 
         public P(double x, double y) : base(x, y) { I = string.Empty; T = string.Empty; C = 1; }
         public P() { I = string.Empty; T = string.Empty; C = 1; }
-        public P(P p)
+        public P(P p) 
         {
             this.Lon = p.Lon;
             this.Lat = p.Lat;
@@ -43,19 +43,24 @@ namespace Kunukn.GooglemapsClustering.Data
             
         public P(SerializationInfo info, StreamingContext ctxt)
         {
-            this.Lat = (double)info.GetValue("Lat", typeof(double));
-            this.Lon = (double)info.GetValue("Lon", typeof(double));
+            //this.Lat = (double)info.GetValue("Lat", typeof(double));
+            //this.Lon = (double)info.GetValue("Lon", typeof(double));
             this.C = 1;
             this.I = (string)info.GetValue("I", typeof(string));
             this.T = (string)info.GetValue("T", typeof(string));
+            this.X = (string)info.GetValue("X", typeof(string));
+            this.Y = (string)info.GetValue("Y", typeof(string));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
         {
-            info.AddValue("Lat", this.Lat);
-            info.AddValue("Lon", this.Lon);            
-            info.AddValue("I", this.I);
+            //info.AddValue("Lat", this.Lat);
+            //info.AddValue("Lon", this.Lon);
+            info.AddValue("I", this.I);            
             info.AddValue("T", this.T);
+            info.AddValue("X", this.X);
+            info.AddValue("Y", this.Y);
+            info.AddValue("C", this.C);
         }
 
         public int CompareTo(object o) // if used in sorted list

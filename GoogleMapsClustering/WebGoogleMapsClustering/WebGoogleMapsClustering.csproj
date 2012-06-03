@@ -71,6 +71,7 @@
     <Content Include="AreaGMC\Documents\Readme.htm" />
     <Content Include="AreaGMC\Scripts\mapclustering.js" />
     <Content Include="AreaGMC\Styles\Default.css" />
+    <Content Include="Index.htm" />
     <Content Include="Default.htm" />
     <Content Include="favicon.ico" />
     <Content Include="AreaGMC\Images\cluster2.png" />
@@ -85,7 +86,6 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="AreaGMC\WebService\MapService.asmx.obsolete" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaGMC\Business\Validation.cs" />
@@ -93,10 +93,6 @@
     <Compile Include="AreaGMC\Code\Helpers\SessionHelper.cs" />
     <Compile Include="AreaGMC\WebService\AjaxService.cs" />
     <Compile Include="AreaGMC\WebService\IAjaxService.cs" />
-    <Compile Include="AreaGMC\WebService\MapService.asmx.cs">
-      <DependentUpon>MapService.asmx.obsolete</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -136,12 +132,12 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>55810</DevelopmentServerPort>
+          <DevelopmentServerPort>4724</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:55810/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>http://localhost:55810/</CustomServerUrl>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://gmc.local</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

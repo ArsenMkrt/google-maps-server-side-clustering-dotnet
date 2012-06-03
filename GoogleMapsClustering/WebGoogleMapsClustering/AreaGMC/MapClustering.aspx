@@ -5,6 +5,7 @@
 <head runat="server">
     <title>Google Maps Server-side Clustering</title>
     <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
 <body>
     <gmc:MapClustering runat="server" />

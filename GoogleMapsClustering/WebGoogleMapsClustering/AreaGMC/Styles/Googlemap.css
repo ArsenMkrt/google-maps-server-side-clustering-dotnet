@@ -27,6 +27,7 @@
     height:   600px; /* 480 768 */
     overflow: hidden;
     border: 1px #000 solid;
+    position: relative;
 }
 
 .gmcKN_mono

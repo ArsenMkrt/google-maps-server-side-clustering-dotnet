@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Activation;
 using System.Web;
-using System.Web.Script.Serialization;
 using Kunukn.GooglemapsClustering.Clustering;
 using Kunukn.GooglemapsClustering.Data;
 using Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.Business;
@@ -15,30 +14,28 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
         = AspNetCompatibilityRequirementsMode.Allowed)]
     public class AjaxService : IAjaxService
     {
-        protected static string NotValidReply(int sendid)
-        {
-            var jss = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
-            var jsonReply = new JsonReply { ReplyId = sendid, TokenValid = Names._0, Success = Names._0 };
-            var json = jss.Serialize(jsonReply);
-            return json;
+        protected static JsonReply NotValidReply(int sendid)
+        {            
+            var jsonReply = new JsonReply { ReplyId = sendid, TokenValid = Names._0, Success = Names._0 };            
+            return jsonReply;
         }
 
-        public string GetMarkers(string access_token, double nelat, double nelon, double swlat, double swlon, int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, int sendid)
+        public JsonGetMarkersReply GetMarkers(string access_token, double nelat, double nelon, double swlat, double swlon, int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, int sendid)
         {
             SystemHelper.Assert(HttpContext.Current.Session != null, "Session is null");
 
             var isValid = Validation.ValidateAccessToken(access_token);
             if (!isValid)
             {
-                return NotValidReply(sendid);
+                var nvr = NotValidReply(sendid);
+                return new JsonGetMarkersReply { ReplyId = nvr.ReplyId, Success = nvr.Success, TokenValid = nvr.TokenValid};
             }
             
             var jsonReceive = new JsonReceive(access_token, nelat, nelon, swlat, swlon, zoomlevel, gridx, gridy, zoomlevelClusterStop, sendid);
 
             var GMC_ClusteringEnabled = SessionHelper.GetClusteringEnabled();
             var clusteringEnabled = GMC_ClusteringEnabled != Names._0 || Config.AlwaysClusteringEnabledWhenZoomLevelLess > jsonReceive.Zoomlevel;
-
-            var jss = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
+            
             JsonGetMarkersReply reply;
             
             jsonReceive.Viewport.ValidateLatLon(); // validate google map viewport input
@@ -60,9 +57,8 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
                 var clusterAlgo = new GridCluster(dataset, jsonReceive);
                 var clusterPoints = clusterAlgo.GetCluster(new ClusterInfo { ZoomLevel = jsonReceive.Zoomlevel });
 
-                reply = new JsonGetMarkersReply { Points = clusterPoints, ReplyId = sendid, Polylines = clusterAlgo.Lines };
-                string json = jss.Serialize(reply);
-                return json;
+                reply = new JsonGetMarkersReply { Points = clusterPoints, ReplyId = sendid, Polylines = clusterAlgo.Lines };                
+                return reply;
             }
 
             // If we are here then there are no clustering
@@ -70,50 +66,47 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
             List<P> filteredDataset = ClusterAlgorithmBase.FilterDataset(dataset, jsonReceive.Viewport);
             List<P> filteredDatasetMaxPoints = filteredDataset.Take(Config.MaxMarkersReturned).ToList();
 
-            reply = new JsonGetMarkersReply { Points = filteredDatasetMaxPoints, ReplyId = sendid, Success = Names._1 };
-            return jss.Serialize(reply);
+            reply = new JsonGetMarkersReply { Points = filteredDatasetMaxPoints, ReplyId = sendid, Success = Names._1 };            
+            return reply;
         }
 
-        public string GetMarkerDetail(string access_token, string id, string type, int sendid)
+        public JsonMarkerInfoReply GetMarkerDetail(string access_token, string id, string type, int sendid)
         {
             SystemHelper.Assert(HttpContext.Current.Session != null, "Session is null");
             
             var isValid = Validation.ValidateAccessToken(access_token);
             if (!isValid)
             {
-                return NotValidReply(sendid);
+                var nvr = NotValidReply(sendid);
+                return new JsonMarkerInfoReply { TokenValid = nvr.TokenValid, Success = nvr.Success, ReplyId = nvr.ReplyId };
             }
-
-            var jss = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
-            var reply = new JsonMarkerInfoReply { Id = id, Type = type, ReplyId = sendid };
-                        
+            
+            var reply = new JsonMarkerInfoReply { Id = id, Type = type, ReplyId = sendid };                        
             reply.BuildContent();
-
-            reply.Success = Names._1;
-            return jss.Serialize(reply);
+            reply.Success = Names._1;            
+            return reply;
         }
 
-        public string GetAccessToken(string username, string password, int sendid)
+        public JsonGetAccessTokenReply GetAccessToken(string username, string password, int sendid)
         {
             SystemHelper.Assert(HttpContext.Current.Session != null, "Session is null");
-
-            var jss = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
+            
             // Dummy set access token
             var reply = new JsonGetAccessTokenReply { ReplyId = sendid, AccessToken = "dummyValidValue", Success = Names._1 };
-            return jss.Serialize(reply);
+            return reply;            
         }
 
-        public string SetType(string access_token, string type, string isChecked, int sendid)
+        public JsonSetTypeReply SetType(string access_token, string type, string isChecked, int sendid)
         {
             SystemHelper.Assert(HttpContext.Current.Session != null, "Session is null");
-               
+            
             var isValid = Validation.ValidateAccessToken(access_token);
             if (!isValid)
             {
-                return NotValidReply(sendid);
+                var nvr = NotValidReply(sendid);
+                return new JsonSetTypeReply { TokenValid = nvr.TokenValid, Success = nvr.Success, ReplyId = nvr.ReplyId};
             }
-
-            var jss = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
+            
             var reply = new JsonSetTypeReply { Type = type, IsChecked = isChecked, ReplyId = sendid };
 
             // do something with the type, isChecked                        
@@ -152,11 +145,9 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
                 }
             }
 
-            reply.Success = Names._1;
-            return jss.Serialize(reply);
+            reply.Success = Names._1;            
+            return reply;
         }
-
-
 
         # region :: TEST WCF AJAX
 
