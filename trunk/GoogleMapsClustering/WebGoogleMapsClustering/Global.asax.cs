@@ -18,7 +18,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering
         {
             // Code that runs on application startup            
 
-            // GOOGLEMAPS CLUSTERING DATABASE LOAD SIMULATION
+            // Database load simulation
             var websitepath = HttpContext.Current.Server.MapPath("~") + @"AreaGMC\Files\Points.csv";
             var points = Dataset.LoadDatasetFromDatabase(websitepath, DataUtility.LoadType.Csv);
             foreach (var p in points)

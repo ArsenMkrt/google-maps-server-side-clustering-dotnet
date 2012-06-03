@@ -6,7 +6,7 @@
  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script> 
  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
-<script type="text/javascript" src="Scripts/mapclustering.js?<%= DateTime.UtcNow.ToString("yyyyMMdd-HHmmss") %> "></script> <%-- no cache--%>
+<script type="text/javascript" src="Scripts/mapclustering.js"></script>
 
 <div id="gmcKN_map_container">  
 

@@ -211,18 +211,13 @@ var gmcKN = {
             alwaysClusteringEnabledWhenZoomLevelLess: 8,
             access_token: 'dummyValue',
 
-            //jsonGetAccessTokenUrl: 'WebService/MapService.asmx/GetAccessToken', //asmx obsolete
             jsonGetAccessTokenUrl: '/AreaGMC/AjaxService/GetAccessToken', //WCF
 
-            //jsonMarkerUrl: 'WebService/MapService.asmx/GetMarkers', //asmx obsolete
-            jsonMarkerUrl: '/AreaGMC/AjaxService/GetMarkers', //WCF            
+            jsonMarkerUrl: '/AreaGMC/AjaxService/GetMarkers', //WCF
 
-            //jsonMarkerDetailUrl: 'WebService/MapService.asmx/GetMarkerDetail', //asmx obsolete
             jsonMarkerDetailUrl: '/AreaGMC/AjaxService/GetMarkerDetail', //WCF
 
-            //jsonSetTypeUrl: 'WebService/MapService.asmx/SetType', //asmx obsolete
-            jsonSetTypeUrl: '/AreaGMC/AjaxService/SetType', //WCF            
-
+            jsonSetTypeUrl: '/AreaGMC/AjaxService/SetType', //WCF
 
             clusterImage: {
                 src: 'Images/cluster2.png', //this is invisible img only used for click-event detecting
@@ -346,8 +341,7 @@ var gmcKN = {
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: function (data) {
-
-                        var items = (data.d === undefined) ? jQuery.parseJSON(data) : jQuery.parseJSON(data.d);
+                        var items = data;
 
                         var lastReceivedGetMarkers = items.ReplyId;
                         if (lastReceivedGetMarkers <= gmcKN.async.lastReceivedGetMarkers) {
@@ -357,7 +351,6 @@ var gmcKN = {
                         }
                         // update
                         gmcKN.async.lastReceivedGetMarkers = lastReceivedGetMarkers;
-
 
                         if (items.TokenValid === "0") {
                             alert(gmcKN.mymap.settings.invalidToken);
@@ -415,10 +408,13 @@ var gmcKN = {
                             if (gmcKN.markers.hasOwnProperty(i)) {
                                 var m = gmcKN.markers[i];
                                 var key = m.get("key"); //key  
-                                if (key !== 0) //0 is used as has been deleted
+                                if (key !== 0) {//0 is used as has been deleted
                                     pointsCacheOnMap[key] = 1;
+                                }
 
-                                if (key === undefined) console.log("error in code: key"); //catch error in code
+                                if (key === undefined) {
+                                    console.log("error in code: key"); //catch error in code
+                                }
                             }
                         }
 
@@ -428,9 +424,11 @@ var gmcKN = {
                                 var p = items.Points[i];
                                 var key = gmcKN.getKey(p); //key                            
                                 if (pointsCacheOnMap[key] === undefined) {
-                                    if (pointsCacheIncome[key] === undefined) console.log("error in code: key2"); //catch error in code
-
-                                    newmarkersTodo.push(pointsCacheIncome[key]);
+                                    if (pointsCacheIncome[key] === undefined) {
+                                        console.log("error in code: key2"); //catch error in code
+                                    }
+                                    var newmarker = pointsCacheIncome[key];
+                                    newmarkersTodo.push(newmarker);
                                 }
                             }
                         }
@@ -455,7 +453,8 @@ var gmcKN = {
                             if (gmcKN.markers.hasOwnProperty(i)) {
                                 var key = gmcKN.markers[i].get("key"); //key                            
                                 if (key !== 0) {
-                                    temp.push(gmcKN.markers[i]);
+                                    var tempItem = gmcKN.markers[i];
+                                    temp.push(tempItem);
                                 }
                             }
                         }
@@ -463,7 +462,8 @@ var gmcKN = {
                         gmcKN.markers.length = 0;
                         for (i in temp) {
                             if (temp.hasOwnProperty(i)) {
-                                gmcKN.markers.push(temp[i]);
+                                var tempItem = temp[i];
+                                gmcKN.markers.push(tempItem);
                             }
                         }
 
@@ -506,7 +506,6 @@ var gmcKN = {
                             var key = gmcKN.getKey(item);
                             marker.set("key", key); // used for next event, remove or keep the marker
 
-
                             if (item.C === 1) {
                                 //gmcKN.infowindow.close();
                                 google.maps.event.addListener(marker, 'click', function (event) {
@@ -533,7 +532,8 @@ var gmcKN = {
 
                                 label.bindTo('position', marker, 'position');
                                 label.bindTo('visible', marker, 'visible');
-                                label.set('text', item.C);
+                                var text = item.C === undefined ? "error" : item.C;
+                                label.set('text', text);
                             }
 
                             gmcKN.markers.push(marker);
@@ -560,8 +560,7 @@ var gmcKN = {
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: function (data) {
-                        
-                        var items = (data.d === undefined) ? jQuery.parseJSON(data) : jQuery.parseJSON(data.d);
+                        items = data;
 
                         var lastReceivedGetAccessToken = items.ReplyId;
                         if (lastReceivedGetAccessToken <= gmcKN.async.lastReceivedGetAccessToken) {
@@ -595,8 +594,7 @@ var gmcKN = {
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: function (data) {
-
-                        var items = (data.d === undefined) ? jQuery.parseJSON(data) : jQuery.parseJSON(data.d);
+                        items = data;
 
                         var lastReceivedSetType = items.ReplyId;
                         if (lastReceivedSetType <= gmcKN.async.lastReceivedSetType) {
@@ -636,8 +634,7 @@ var gmcKN = {
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: function (data) {
-
-                        var items = (data.d === undefined) ? jQuery.parseJSON(data) : jQuery.parseJSON(data.d);
+                        items = data;
 
                         var lastReceivedMarkerDetail = items.ReplyId;
                         if (lastReceivedMarkerDetail <= gmcKN.async.lastReceivedMarkerDetail) {
@@ -685,9 +682,7 @@ var gmcKN = {
             gmcKN.mymap.events.setType(type, isChecked);
         }
 
-
     },
-
 
     // set count labels, style and class for the clusters
     Label: function (opt_options, id, count) {
@@ -758,9 +753,7 @@ gmcKN.Label.prototype.draw = function () {
 };
 
 
-google.maps.event.addDomListener(window, 'load', gmcKN.mymap.initialize); // load google map
+google.maps.event.addDomListener(window, 'load', gmcKN.mymap.initialize); // load map
 
 // dummy request, access token is always valid in this example 
 gmcKN.mymap.events.getAccessToken('myusername', 'mypassword', gmcKN.async.lastSendGetAccessToken); // set access token
-
-

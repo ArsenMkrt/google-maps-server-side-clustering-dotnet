@@ -12,26 +12,26 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
         [WebMethod(EnableSession = true)]
         [WebInvoke(Method = "POST", UriTemplate = "AreaGMC/AjaxService/GetMarkers",
             BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
-        string GetMarkers(string access_token, double nelat, double nelon, double swlat, double swlon,
+        JsonGetMarkersReply GetMarkers(string access_token, double nelat, double nelon, double swlat, double swlon,
                                  int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, int sendid);
 
         [OperationContract]
         [WebMethod(EnableSession = true)]
         [WebInvoke(Method = "POST", UriTemplate = "AreaGMC/AjaxService/GetMarkerDetail",
             BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
-        string GetMarkerDetail(string access_token, string id, string type, int sendid);
+        JsonMarkerInfoReply GetMarkerDetail(string access_token, string id, string type, int sendid);
 
         [OperationContract]
         [WebMethod(EnableSession = true)]
         [WebInvoke(Method = "POST", UriTemplate = "AreaGMC/AjaxService/GetAccessToken",
             BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
-        string GetAccessToken(string username, string password, int sendid);
+        JsonGetAccessTokenReply GetAccessToken(string username, string password, int sendid);
 
         [OperationContract]
         [WebMethod(EnableSession = true)]
         [WebInvoke(Method = "POST", UriTemplate = "AreaGMC/AjaxService/SetType",
             BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
-        string SetType(string access_token, string type, string isChecked, int sendid);
+        JsonSetTypeReply SetType(string access_token, string type, string isChecked, int sendid);
 
 
 
