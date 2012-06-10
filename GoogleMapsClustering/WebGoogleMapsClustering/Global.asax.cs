@@ -27,6 +27,14 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering
             }
                 
             Application[SessionKeys.GMC_Dataset] = points;
+            
+            RegisterRoutes();
+        }
+
+        private static void RegisterRoutes()
+        {
+            // Default            
+            RouteTable.Routes.MapPageRoute("","", "~/Default.aspx");
 
             // Ajax Service Endpoint
             RouteTable.Routes.Add(new System.ServiceModel.Activation.ServiceRoute("", new System.ServiceModel.Activation.WebServiceHostFactory(), typeof(AjaxService)));
