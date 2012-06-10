@@ -71,8 +71,7 @@
     <Content Include="AreaGMC\Documents\Readme.htm" />
     <Content Include="AreaGMC\Scripts\mapclustering.js" />
     <Content Include="AreaGMC\Styles\Default.css" />
-    <Content Include="Index.htm" />
-    <Content Include="Default.htm" />
+    <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="AreaGMC\Images\cluster2.png" />
     <Content Include="AreaGMC\Images\m1.png" />
