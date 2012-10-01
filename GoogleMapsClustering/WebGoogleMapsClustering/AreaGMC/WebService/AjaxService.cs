@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Activation;
 using System.Web;
@@ -22,6 +21,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
 
         public JsonGetMarkersReply GetMarkers(string access_token, double nelat, double nelon, double swlat, double swlon, int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, int sendid)
         {
+            // Guard clause
             SystemHelper.Assert(HttpContext.Current.Session != null, "Session is null");
 
             var isValid = Validation.ValidateAccessToken(access_token);
@@ -41,23 +41,33 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
             jsonReceive.Viewport.ValidateLatLon(); // validate google map viewport input
             jsonReceive.Viewport.Normalize();
 
+            // Get all points from memory, application cache
             var allpoints = SessionHelper.GetDataset();
 
+            // Filter data is saved in user session
+            // todo This can be avoided by saving it in client area hidden fields
             var typeFilter = SessionHelper.GetTypeFilter();           
+
             var dataset = allpoints; //unfiltered at the moment
             if (typeFilter.Count > 0)
             {
-                // filter data by typeFilter value
+                // Filter data by typeFilter value
                 dataset = allpoints.Where(p => typeFilter.Contains(p.T) == false).ToList();
             }
 
             // Clustering
             if (clusteringEnabled && jsonReceive.Zoomlevel < jsonReceive.ZoomlevelClusterStop)
             {
+                // Create new instance for every ajax request with input all points and json data
                 var clusterAlgo = new GridCluster(dataset, jsonReceive);
+
+                // Calculate data to be displayed
                 var clusterPoints = clusterAlgo.GetCluster(new ClusterInfo { ZoomLevel = jsonReceive.Zoomlevel });
 
+                // Prepare data to the client
                 reply = new JsonGetMarkersReply { Points = clusterPoints, ReplyId = sendid, Polylines = clusterAlgo.Lines };                
+
+                // Return client data
                 return reply;
             }
 
@@ -72,6 +82,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
 
         public JsonMarkerInfoReply GetMarkerDetail(string access_token, string id, string type, int sendid)
         {
+            // Guard clause
             SystemHelper.Assert(HttpContext.Current.Session != null, "Session is null");
             
             var isValid = Validation.ValidateAccessToken(access_token);
@@ -89,6 +100,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
 
         public JsonGetAccessTokenReply GetAccessToken(string username, string password, int sendid)
         {
+            // Guard clause
             SystemHelper.Assert(HttpContext.Current.Session != null, "Session is null");
             
             // Dummy set access token
@@ -98,6 +110,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
 
         public JsonSetTypeReply SetType(string access_token, string type, string isChecked, int sendid)
         {
+            // Guard clause
             SystemHelper.Assert(HttpContext.Current.Session != null, "Session is null");
             
             var isValid = Validation.ValidateAccessToken(access_token);

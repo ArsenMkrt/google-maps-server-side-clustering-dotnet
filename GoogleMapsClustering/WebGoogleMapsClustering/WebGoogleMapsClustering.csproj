@@ -56,7 +56,7 @@
     <Reference Include="System.Web.ApplicationServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AreaGMC\Controls\MapClustering.ascx" />
+    <Content Include="AreaGMC\MapClustering.html" />
     <Content Include="AreaGMC\Documents\FAQ.txt" />
     <Content Include="AreaGMC\Images\clusteringpreview.gif" />
     <Content Include="AreaGMC\Images\link.txt" />
@@ -64,7 +64,6 @@
     <Content Include="AreaGMC\Images\markers\firstaid.png" />
     <Content Include="AreaGMC\Images\markers\house.png" />
     <Content Include="AreaGMC\Images\markers\link.txt" />
-    <Content Include="AreaGMC\MapClustering.aspx" />
     <Content Include="AreaGMC\Documents\Design\googlemaps-clustering-viewport_ver1.png" />
     <Content Include="AreaGMC\Documents\Design\GoogleMapsClustering_SD_ver1.png" />
     <Content Include="AreaGMC\Documents\License.txt" />
@@ -99,6 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="AreaGMC\Controls\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Clustering\Clustering.csproj">
