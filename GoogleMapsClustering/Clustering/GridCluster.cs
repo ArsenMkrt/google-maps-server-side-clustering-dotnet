@@ -65,7 +65,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
         public GridCluster(List<P> dataset, JsonGetMarkersReceive jsonReceive)
             : base(dataset)
         {
-            //important, set _delta and _grid values in constructor as first step
+            // important, set _delta and _grid values in constructor as first step
             double[] deltas = GetDelta(jsonReceive);
             _deltaX = deltas[0];
             _deltaY = deltas[1];
@@ -80,7 +80,8 @@ namespace Kunukn.GooglemapsClustering.Clustering
 
         void MakeLines()
         {
-            //Note, Google Maps does not seem to draw every lines if zoomed far out and lines are wide
+            // Note, Google Maps does not seem to draw every lines if zoomed far out using this approach
+            // a fix could be to split up the lines based on the coordinate values
 
             Lines = new List<Line>();
             var p2Lines = new List<Point2>();
@@ -173,11 +174,11 @@ namespace Kunukn.GooglemapsClustering.Clustering
                 MergeClustersGridHelper(key, neighbors);
             }
         }
-        void MergeClustersGridHelper(string currentKey, string[] neighborKeys)
+        void MergeClustersGridHelper(string currentKey, IEnumerable<string> neighborKeys)
         {
             double minDistX = _deltaX / Config.MergeWithin;
             double minDistY = _deltaY / Config.MergeWithin;
-            //if clusters in grid are too close to each other, merge them
+            // If clusters in grid are too close to each other, merge them
             double withinDist = MathTool.Max(minDistX, minDistY);
 
             foreach (var neighborKey in neighborKeys)
@@ -205,8 +206,8 @@ namespace Kunukn.GooglemapsClustering.Clustering
                 // recalc centroid
                 var cp = GetCentroidFromClusterLatLon(current.Points);
                 current.Centroid = cp;
-                neighbor.IsUsed = false; //merged, then not used anymore
-                neighbor.Points.Clear(); //clear mem
+                neighbor.IsUsed = false; // merged, then not used anymore
+                neighbor.Points.Clear(); // clear mem
             }
         }        
 
@@ -220,7 +221,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
             // Naive version, lon points near 180 and lat points near 90 are not clustered together
             //idx = (int)(relativeX / deltax);
             //idy = (int)(relativeY / deltay);
-
+            // end Naive version
 
             /*
             You have to draw a line with longitude values 180, -180 on papir to understand this            
@@ -241,7 +242,9 @@ then the longitudes from 170 to -170 will be clustered together
             int overlapMapMaxX = (int)(LatLonInfo.MaxLonValue / deltax);
 
             // the deltaX = 20 example scenario, then set the value 9 to 8 and -10 to -9            
-            if (LatLonInfo.MaxLonValue % deltax == 0)
+
+            // similar to if (LatLonInfo.MaxLonValue % deltax == 0) without floating presicion issue
+            if (Math.Abs(LatLonInfo.MaxLonValue % deltax - 0) < Numbers.Epsilon)            
             {
                 overlapMapMaxX--;
                 overlapMapMinX++;
@@ -250,7 +253,7 @@ then the longitudes from 170 to -170 will be clustered together
             int idxx = (int)(p.Lon / deltax);
             if (p.Lon < 0) idxx--;
             
-            if (LatLonInfo.MaxLonValue % p.Lon == 0)
+            if (Math.Abs(LatLonInfo.MaxLonValue % p.Lon - 0) < Numbers.Epsilon)
             {
                 if (p.Lon < 0) idxx++;
                 else idxx--;
@@ -291,13 +294,13 @@ then the longitudes from 170 to -170 will be clustered together
                 // new bucket, create and add point
                 else
                 {
-                    Bucket bucket = new Bucket(idx, idy, id);
+                    var bucket = new Bucket(idx, idy, id);
                     bucket.Points.Add(p);
                     BucketsLookup.Add(id, bucket);
                 }
             }
 
-            // calc centrod for all buckets
+            // calculate centroid for all buckets
             SetCentroidForAllBuckets(BucketsLookup.Values);
 
             // merge if gridpoint is to close
@@ -324,5 +327,4 @@ then the longitudes from 170 to -170 will be clustered together
             return GetClusterResult(_grid);
         }
     }
-
 }

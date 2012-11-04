@@ -16,7 +16,7 @@ namespace Kunukn.GooglemapsClustering.DataUtility
                 FileUtil.CreateFilePath(filepath); // create folder if not exists
                 using (Stream stream = File.Open(filepath, FileMode.Create))
                 {
-                    BinaryFormatter bFormatter = new BinaryFormatter();
+                    var bFormatter = new BinaryFormatter();
                     bFormatter.Serialize(stream, objectToSerialize);
                 }
             }
@@ -31,7 +31,7 @@ namespace Kunukn.GooglemapsClustering.DataUtility
             {
                 using (Stream stream = File.Open(filepath, FileMode.Open, FileAccess.Read))
                 {
-                    BinaryFormatter bFormatter = new BinaryFormatter();
+                    var bFormatter = new BinaryFormatter();
                     var objectToSerialize = bFormatter.Deserialize(stream);
                     return objectToSerialize;
                 }
@@ -39,9 +39,7 @@ namespace Kunukn.GooglemapsClustering.DataUtility
             catch (Exception ex)
             {
                 throw ex;                
-            }
-
-            return null;
+            }            
         }
     }
 }

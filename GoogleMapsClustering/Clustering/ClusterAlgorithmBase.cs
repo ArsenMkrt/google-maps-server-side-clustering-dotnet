@@ -4,7 +4,6 @@ using System.Linq;
 using Kunukn.GooglemapsClustering.Data;
 using Kunukn.GooglemapsClustering.MathUtility;
 
-
 namespace Kunukn.GooglemapsClustering.Clustering
 {
     /// <summary>
@@ -23,10 +22,8 @@ namespace Kunukn.GooglemapsClustering.Clustering
         {
             if (dataset == null)
             {
-                throw new ApplicationException(
-                    string.Format("dataset is null"));
+                throw new ApplicationException(string.Format("dataset is null"));
             }                
-
             Dataset = dataset;
         }
 
@@ -105,8 +102,8 @@ namespace Kunukn.GooglemapsClustering.Clustering
                 return list.First();
             }                
 
-            //http://en.wikipedia.org/wiki/Circular_mean
-            //http://stackoverflow.com/questions/491738/how-do-you-calculate-the-average-of-a-set-of-angles
+            // http://en.wikipedia.org/wiki/Circular_mean
+            // http://stackoverflow.com/questions/491738/how-do-you-calculate-the-average-of-a-set-of-angles
             /*
                                   1/N*  sum_i_from_1_to_N sin(a[i])
                 a = atan2      ---------------------------
@@ -131,7 +128,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
             double radx = 0;
             double rady = 0;
 
-            if (lonSin != 0 && lonCos != 0)
+            if (Math.Abs(lonSin - 0) > Numbers.Epsilon && Math.Abs(lonCos - 0) > Numbers.Epsilon)
             {
                 radx = Math.Atan2(lonSin, lonCos);
                 rady = Math.Atan2(latSin, latCos);
@@ -153,7 +150,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
             }                
         }
 
-        public P GetClosestPoint(P from, List<P> list) //O(n)
+        public P GetClosestPoint(P from, List<P> list) // O(n)
         {
             double min = double.MaxValue;
             P closests = null;
@@ -172,10 +169,10 @@ namespace Kunukn.GooglemapsClustering.Clustering
             return closests;
         }
 
-        // assign all points to nearest cluster
-        public void UpdatePointsByCentroid()//O(n*k)
+        // Assign all points to nearest cluster
+        public void UpdatePointsByCentroid() // O(n*k)
         {
-            // clear points in the buckets, they will be re-inserted
+            // Clear points in the buckets, they will be re-inserted
             foreach (var bucket in BucketsLookup.Values)
             {
                 bucket.Points.Clear();
@@ -210,7 +207,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
 
         // update centroid location to nearest point, 
         // e.g. if you want to show cluster point on a real existing point area
-        //O(n)
+        // O(n)
         public void UpdateCentroidToNearestContainingPoint(Bucket bucket)
         {
             if (bucket == null || bucket.Centroid == null ||
@@ -221,7 +218,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
             bucket.Centroid.Lon = closest.Lon; // no normalize, points are already normalized by default
             bucket.Centroid.Lat = closest.Lat;
         }
-        //O(k*n)
+        // O(k*n)
         public void UpdateAllCentroidsToNearestContainingPoint()
         {
             foreach (var bucket in BucketsLookup.Values)

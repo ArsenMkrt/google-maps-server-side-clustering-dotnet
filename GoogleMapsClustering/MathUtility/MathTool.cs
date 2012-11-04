@@ -206,7 +206,7 @@ namespace Kunukn.GooglemapsClustering.MathUtility
             return r;
         }
 
-        //NOT USED, widen the area, this avoids the lon lat isinside problem
+        // NOT USED, widen the area, this avoids the lon lat isinside problem
         //private static bool IsInsideWiden(Boundary b, P p)
         //{
         //    var x = b.AbsX / 3; // value is heuristic, smaller divide, the larger the boundary
@@ -220,6 +220,8 @@ namespace Kunukn.GooglemapsClustering.MathUtility
 
         //    return IsInside(b.Minx - x, b.Miny - y, b.Maxx + x, b.Maxy + y, p.Lon, p.Lat, isInsideDetectedX, isInsideDetectedY);
         //}
+
+
 
         /*        
         // normalize value in range [0;1]

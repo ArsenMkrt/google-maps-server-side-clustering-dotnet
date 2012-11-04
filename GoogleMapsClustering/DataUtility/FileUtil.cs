@@ -77,7 +77,7 @@ namespace Kunukn.GooglemapsClustering.DataUtility
             bool success = false;
             try
             {
-                FileInfo fi = new FileInfo(filepath);
+                var fi = new FileInfo(filepath);
                 if (!fi.Directory.Exists)
                 {
                     Directory.CreateDirectory(fi.Directory.ToString());
