@@ -54,7 +54,6 @@
     <Compile Include="LatLonInfo.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="JsonGetMarkersReceive.cs" />
-    <Compile Include="Names.cs" />
     <Compile Include="Numbers.cs" />
     <Compile Include="PBase.cs" />
     <Compile Include="DatasetToSerialize.cs" />

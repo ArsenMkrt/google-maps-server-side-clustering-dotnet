@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Activation;
-using System.Web;
 using Kunukn.GooglemapsClustering.Clustering;
 using Kunukn.GooglemapsClustering.Data;
 using Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.Business;
-using Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.Code.Helpers;
 
 namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
 {
@@ -16,7 +13,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
     {
         protected static JsonReplyBase NotValidReply(int sendid)
         {            
-            var jsonReply = new JsonReplyBase { ReplyId = sendid, TokenValid = Names._0, Success = Names._0 };            
+            var jsonReply = new JsonReplyBase { ReplyId = sendid, TokenValid = "0", Success = "0" };            
             return jsonReply;
         }
 
@@ -69,15 +66,12 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
             List<P> filteredDataset = ClusterAlgorithmBase.FilterDataset(dataset, jsonReceive.Viewport);
             List<P> filteredDatasetMaxPoints = filteredDataset.Take(Config.MaxMarkersReturned).ToList();
 
-            reply = new JsonGetMarkersReply { Points = filteredDatasetMaxPoints, ReplyId = sendid, Success = Names._1 };            
+            reply = new JsonGetMarkersReply { Points = filteredDatasetMaxPoints, ReplyId = sendid, Success = "1" };            
             return reply;
         }
 
         public JsonMarkerInfoReply GetMarkerDetail(string access_token, string id, string type, int sendid)
-        {
-            // Guard clause
-            SystemHelper.Assert(HttpContext.Current.Session != null, "Session is null");
-            
+        {                        
             var isValid = Validation.ValidateAccessToken(access_token);
             if (!isValid)
             {
@@ -87,17 +81,14 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
             
             var reply = new JsonMarkerInfoReply { Id = id, Type = type, ReplyId = sendid };                        
             reply.BuildContent();
-            reply.Success = Names._1;            
+            reply.Success = "1";
             return reply;
         }
 
         public JsonGetAccessTokenReply GetAccessToken(string username, string password, int sendid)
-        {
-            // Guard clause
-            SystemHelper.Assert(HttpContext.Current.Session != null, "Session is null");
-            
+        {                        
             // Dummy set access token
-            var reply = new JsonGetAccessTokenReply { ReplyId = sendid, AccessToken = "dummyValidValue", Success = Names._1 };
+            var reply = new JsonGetAccessTokenReply { ReplyId = sendid, AccessToken = "dummyValidValue", Success = "1" };
             return reply;            
         }        
     }
