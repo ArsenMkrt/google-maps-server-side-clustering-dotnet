@@ -1,9 +1,14 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+
 namespace Kunukn.GooglemapsClustering.Data
 {
-    public class JsonReceive
+    /// <summary>
+    /// Parse json receive data
+    /// </summary>
+    public class JsonGetMarkersReceive
     {
-        // Don't trust user input, data range is restricted if user abuse or hack the javascript.
+        // Don't trust user input, data range is restricted if user abuse or hacks client side
         private const int ZoomLevelMax = 30;
         private const int GridMax = 20;
         
@@ -91,9 +96,13 @@ namespace Kunukn.GooglemapsClustering.Data
                     _gridy = GridMax;
                 }
             }
-        }                                
-        
-        public JsonReceive(string accessToken, double nelat, double nelon, double swlat, double swlon, int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, int sendid)
+        }
+
+        public bool IsClusteringEnabled { get; private set; }
+        public bool IsDebugLinesEnabled { get; private set; }
+        public HashSet<string> TypeFilter { get; private set; }
+
+        public JsonGetMarkersReceive(string accessToken, double nelat, double nelon, double swlat, double swlon, int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, string filter, int sendid)
         {
             AccessToken = accessToken;
             Zoomlevel = zoomlevel;
@@ -101,7 +110,42 @@ namespace Kunukn.GooglemapsClustering.Data
             Gridx = gridx;
             Gridy = gridy;
             Sendid = sendid;
-            Viewport = new Boundary { Minx = swlon, Maxx =  nelon, Miny = swlat, Maxy = nelat };                        
-        }        
+
+            Viewport = new Boundary { Minx = swlon, Maxx = nelon, Miny = swlat, Maxy = nelat };
+
+            // Parse filter
+            int binarySum = 0;
+            int.TryParse(filter, out binarySum);
+            string binary = Convert.ToString(binarySum, 2);
+            binary = Reverse(binary); // more easy to take index of when reversed
+
+            IsClusteringEnabled = binary.Length >= 1 && binary[0] == '1';
+            IsDebugLinesEnabled = binary.Length >= 2 && binary[1] == '1';
+
+            var typeFilter = new HashSet<string>();
+            var type1 = binary.Length >= 3 && binary[2] == '1';
+            var type2 = binary.Length >= 4 && binary[3] == '1';
+            var type3 = binary.Length >= 5 && binary[4] == '1';                       
+            if (!type1)
+            {
+                typeFilter.Add("1");
+            }
+            if (!type2)
+            {
+                typeFilter.Add("2");
+            }
+            if (!type3)
+            {
+                typeFilter.Add("3");
+            }
+            TypeFilter = typeFilter;
+        }
+
+        static string Reverse(string s)
+        {
+            char[] charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
+        }
     }
 }

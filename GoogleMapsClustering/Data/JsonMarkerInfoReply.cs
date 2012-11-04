@@ -4,7 +4,7 @@ using System.Web.Script.Serialization;
 
 namespace Kunukn.GooglemapsClustering.Data
 {
-    public class JsonMarkerInfoReply : JsonReply
+    public class JsonMarkerInfoReply : JsonReplyBase
     {
         public string Content { get; set; }        
 

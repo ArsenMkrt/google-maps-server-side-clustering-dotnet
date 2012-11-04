@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Activation;
 using System.Web;
@@ -13,46 +14,38 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
         = AspNetCompatibilityRequirementsMode.Allowed)]
     public class AjaxService : IAjaxService
     {
-        protected static JsonReply NotValidReply(int sendid)
+        protected static JsonReplyBase NotValidReply(int sendid)
         {            
-            var jsonReply = new JsonReply { ReplyId = sendid, TokenValid = Names._0, Success = Names._0 };            
+            var jsonReply = new JsonReplyBase { ReplyId = sendid, TokenValid = Names._0, Success = Names._0 };            
             return jsonReply;
         }
 
-        public JsonGetMarkersReply GetMarkers(string access_token, double nelat, double nelon, double swlat, double swlon, int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, int sendid)
-        {
-            // Guard clause
-            SystemHelper.Assert(HttpContext.Current.Session != null, "Session is null");
-
+        public JsonGetMarkersReply GetMarkers(string access_token, double nelat, double nelon, double swlat, double swlon, int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, string filter, int sendid)
+        {            
             var isValid = Validation.ValidateAccessToken(access_token);
             if (!isValid)
             {
-                var nvr = NotValidReply(sendid);
+                JsonReplyBase nvr = NotValidReply(sendid);
                 return new JsonGetMarkersReply { ReplyId = nvr.ReplyId, Success = nvr.Success, TokenValid = nvr.TokenValid};
             }
             
-            var jsonReceive = new JsonReceive(access_token, nelat, nelon, swlat, swlon, zoomlevel, gridx, gridy, zoomlevelClusterStop, sendid);
-
-            var GMC_ClusteringEnabled = SessionHelper.GetClusteringEnabled();
-            var clusteringEnabled = GMC_ClusteringEnabled != Names._0 || Config.AlwaysClusteringEnabledWhenZoomLevelLess > jsonReceive.Zoomlevel;
+            var jsonReceive = new JsonGetMarkersReceive(access_token, nelat, nelon, swlat, swlon, zoomlevel, gridx, gridy, zoomlevelClusterStop, filter, sendid);
+            
+            var clusteringEnabled = jsonReceive.IsClusteringEnabled || Config.AlwaysClusteringEnabledWhenZoomLevelLess > jsonReceive.Zoomlevel;
             
             JsonGetMarkersReply reply;
             
-            jsonReceive.Viewport.ValidateLatLon(); // validate google map viewport input
+            jsonReceive.Viewport.ValidateLatLon(); // Validate google map viewport input
             jsonReceive.Viewport.Normalize();
 
             // Get all points from memory, application cache
-            var allpoints = SessionHelper.GetDataset();
-
-            // Filter data is saved in user session
-            // todo This can be avoided by saving it in client area hidden fields
-            var typeFilter = SessionHelper.GetTypeFilter();           
-
-            var dataset = allpoints; //unfiltered at the moment
-            if (typeFilter.Count > 0)
+            var allpoints = MemoryDatabase.Points;
+                                        
+            var dataset = allpoints; // unfiltered at the moment
+            if (jsonReceive.TypeFilter.Count > 0)
             {
                 // Filter data by typeFilter value
-                dataset = allpoints.Where(p => typeFilter.Contains(p.T) == false).ToList();
+                dataset = allpoints.Where(p => jsonReceive.TypeFilter.Contains(p.T) == false).ToList();
             }
 
             // Clustering
@@ -88,7 +81,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
             var isValid = Validation.ValidateAccessToken(access_token);
             if (!isValid)
             {
-                var nvr = NotValidReply(sendid);
+                JsonReplyBase nvr = NotValidReply(sendid);
                 return new JsonMarkerInfoReply { TokenValid = nvr.TokenValid, Success = nvr.Success, ReplyId = nvr.ReplyId };
             }
             
@@ -106,82 +99,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
             // Dummy set access token
             var reply = new JsonGetAccessTokenReply { ReplyId = sendid, AccessToken = "dummyValidValue", Success = Names._1 };
             return reply;            
-        }
-
-        public JsonSetTypeReply SetType(string access_token, string type, string isChecked, int sendid)
-        {
-            // Guard clause
-            SystemHelper.Assert(HttpContext.Current.Session != null, "Session is null");
-            
-            var isValid = Validation.ValidateAccessToken(access_token);
-            if (!isValid)
-            {
-                var nvr = NotValidReply(sendid);
-                return new JsonSetTypeReply { TokenValid = nvr.TokenValid, Success = nvr.Success, ReplyId = nvr.ReplyId};
-            }
-            
-            var reply = new JsonSetTypeReply { Type = type, IsChecked = isChecked, ReplyId = sendid };
-
-            // do something with the type, isChecked                        
-            if (string.IsNullOrWhiteSpace(type) == false)
-            {
-                // is meta type?
-                if (type.StartsWith(Names.gmc_meta))
-                {
-                    if (type == Names.gmc_meta_clustering) // toggle clustering
-                    {
-                        string isEnabled = isChecked.ToLower() == Names._true ? Names._1 : Names._0;
-                        SessionHelper.SetClusteringEnabled(isEnabled);                        
-                    }
-                }
-                // marker type filtering
-                else
-                {
-                    var typeFilter = SessionHelper.GetTypeFilter();
-
-                    if (isChecked.ToLower() == Names._true)
-                    {
-                        if (typeFilter.Contains(type))
-                        {
-                            typeFilter.Remove(type);
-                        }                            
-                    }
-                    else
-                    {
-                        if (typeFilter.Contains(type) == false)
-                        {
-                            typeFilter.Add(type);
-                        }                            
-                    }
-
-                    SessionHelper.SetTypeFilter(typeFilter);                    
-                }
-            }
-
-            reply.Success = Names._1;            
-            return reply;
-        }
-
-        # region :: TEST WCF AJAX
-
-        public AjaxDataTest GetData()
-        {
-            var data = new AjaxDataTest { Value = " WCF Ajax get ok", };
-            return data;
-        }
-        public AjaxDataTest DoPost(string input)
-        {
-            var data = new AjaxDataTest { Value = input + " reply", };
-            return data;
-        }
-        public AjaxDataTest GetDataByArg(string arg)
-        {
-            var data = new AjaxDataTest { Value = arg, };
-            return data;
-        }
-        # endregion :: TEST WCF AJAX
-
-
+        }        
     }
 
 }

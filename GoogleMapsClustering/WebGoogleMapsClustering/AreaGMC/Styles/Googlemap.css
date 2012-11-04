@@ -1,5 +1,4 @@
-﻿
-.ui-autocomplete {
+﻿.ui-autocomplete {
 	background-color: #ffffff;
 	width: 410px;
 	border: 1px solid #cfcfcf;
@@ -106,4 +105,8 @@
 {
     font-family: arial;display:block;position: relative; left: -45px;top: -45px;font-weight:bold;text-align:center;line-height:89px;font-size:12px;font-weight:bold;
     white-space: nowrap;color:#fff;background:url(../Images/m5.png) no-repeat 0 0;width:90px;height:89px;
+}
+
+#gmcKN_Clustering_span {
+    display: none;
 }

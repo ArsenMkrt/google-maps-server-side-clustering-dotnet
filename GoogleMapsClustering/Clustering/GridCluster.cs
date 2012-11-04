@@ -17,7 +17,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
         protected readonly double _deltaX;
         protected readonly double _deltaY;
 
-        public static Boundary GetBoundaryExtended(JsonReceive jsonReceive)
+        public static Boundary GetBoundaryExtended(JsonGetMarkersReceive jsonReceive)
         {
             double[] deltas = GetDelta(jsonReceive);
             double deltaX = deltas[0];
@@ -39,7 +39,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
         }
 
 
-        public static double[] GetDelta(JsonReceive jsonReceive)
+        public static double[] GetDelta(JsonGetMarkersReceive jsonReceive)
         {
             // Heuristic specific values and grid size dependent.
             // used in combination with zoom level.
@@ -62,7 +62,7 @@ namespace Kunukn.GooglemapsClustering.Clustering
 
         public List<Line> Lines { get; private set; }
 
-        public GridCluster(List<P> dataset, JsonReceive jsonReceive)
+        public GridCluster(List<P> dataset, JsonGetMarkersReceive jsonReceive)
             : base(dataset)
         {
             //important, set _delta and _grid values in constructor as first step
