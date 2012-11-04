@@ -22,14 +22,12 @@ var gmcKN = {
         showBoundaryMarker: false,
         showCalloutLatLon: true
     },
-    //prevent async send/receive order problem by using counter ref in send/reply in webservice
+    // prevent async send/receive order problem by using counter ref in send/reply in webservice
     async: {
         lastSendGetMarkers: 0, //get markers
         lastReceivedGetMarkers: 0,
         lastSendMarkerDetail: 0,
         lastReceivedMarkerDetail: 0,
-        lastSendSetType: 0,
-        lastReceivedSetType: 0,
         lastSendGetAccessToken: 0,
         lastReceivedGetAccessToken: 0,
         lastCache: ""
@@ -37,14 +35,15 @@ var gmcKN = {
 
     mymap: {
         latlonsearch: function () {
-            // parseFloat() .toFixed(gmcKN.searchInfo.round);    
             var lat = $('#gmcKN_latitude').val() + "";
             var lon = $('#gmcKN_longitude').val() + "";
-            if (lat.length > gmcKN.searchInfo.round + gmcKN.searchInfo.prefix)
+            if (lat.length > gmcKN.searchInfo.round + gmcKN.searchInfo.prefix) {
                 lat = lat.substring(0, gmcKN.searchInfo.round + 2 + gmcKN.searchInfo.prefix);
+            }
 
-            if (lon.length > gmcKN.searchInfo.round + gmcKN.searchInfo.prefix)
+            if (lon.length > gmcKN.searchInfo.round + gmcKN.searchInfo.prefix) {
                 lon = lon.substring(0, gmcKN.searchInfo.round + 2 + gmcKN.searchInfo.prefix);
+            }
 
             lat = parseFloat(lat).toFixed(gmcKN.searchInfo.round);
             lon = parseFloat(lon).toFixed(gmcKN.searchInfo.round);
@@ -72,7 +71,7 @@ var gmcKN = {
         },
 
         initialize: function () {
-            // initialize is exec as $(document).ready(function()
+            // this initialize is executed as $(document).ready(function()
 
             var center = new google.maps.LatLng(gmcKN.mymap.settings.mapCenterLat, gmcKN.mymap.settings.mapCenterLon, true);
 
@@ -211,13 +210,11 @@ var gmcKN = {
             alwaysClusteringEnabledWhenZoomLevelLess: 8,
             access_token: 'dummyValue',
 
-            jsonGetAccessTokenUrl: '/AreaGMC/AjaxService/GetAccessToken', //WCF
+            jsonGetAccessTokenUrl: '/AreaGMC/AjaxService/GetAccessToken',
 
-            jsonMarkerUrl: '/AreaGMC/AjaxService/GetMarkers', //WCF
+            jsonMarkerUrl: '/AreaGMC/AjaxService/GetMarkers',
 
-            jsonMarkerDetailUrl: '/AreaGMC/AjaxService/GetMarkerDetail', //WCF
-
-            jsonSetTypeUrl: '/AreaGMC/AjaxService/SetType', //WCF
+            jsonMarkerDetailUrl: '/AreaGMC/AjaxService/GetMarkerDetail',
 
             clusterImage: {
                 src: 'Images/cluster2.png', //this is invisible img only used for click-event detecting
@@ -328,12 +325,19 @@ var gmcKN = {
                 var pinImg3 = new google.maps.MarkerImage(gmcKN.mymap.settings.pinImage3.src,
                     new google.maps.Size(gmcKN.mymap.settings.pinImage3.width, gmcKN.mymap.settings.pinImage3.height), null, null);
 
-                var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","nelat":"' + mapData.neLat + '","nelon":"' +
-                    mapData.neLon + '","swlat":"' + mapData.swLat + '","swlon":"' + mapData.swLon + '","zoomlevel":"' + mapData.zoomLevel +
-                    '","gridx":"' + gmcKN.mymap.settings.gridx + '","gridy":"' + gmcKN.mymap.settings.gridy + '","zoomlevelClusterStop":"' +
-                    gmcKN.mymap.settings.zoomlevelClusterStop + '","sendid":"' + (++gmcKN.async.lastSendGetMarkers) + '"}';
+                var parameters = '{' +
+                    '"access_token":"' + gmcKN.mymap.settings.access_token +
+                    '","nelat":"' + mapData.neLat +
+                    '","nelon":"' + mapData.neLon +
+                    '","swlat":"' + mapData.swLat +
+                    '","swlon":"' + mapData.swLon +
+                    '","zoomlevel":"' + mapData.zoomLevel +
+                    '","gridx":"' + gmcKN.mymap.settings.gridx +
+                    '","gridy":"' + gmcKN.mymap.settings.gridy +
+                    '","zoomlevelClusterStop":"' + gmcKN.mymap.settings.zoomlevelClusterStop +
+                    '","filter":"' + gmcKN.getFilterValues() +
+                    '","sendid":"' + (++gmcKN.async.lastSendGetMarkers) + '"}';
 
-                // http://stackoverflow.com/questions/3020351/javascript-jquery-ajax-post-error-driving-me-mad            
                 $.ajax({
                     type: 'POST',
                     url: gmcKN.mymap.settings.jsonMarkerUrl,
@@ -356,8 +360,6 @@ var gmcKN = {
                             alert(gmcKN.mymap.settings.invalidToken);
                             return;
                         }
-
-                        var success = items.Success;
 
                         // grid lines clear current
                         $.each(gmcKN.mymap.events.polys, function () {
@@ -476,7 +478,6 @@ var gmcKN = {
                             var item = this;
                             var lat = item.Y; //lat
                             var lon = item.X; //lon
-                            var index = item.I; //id
 
                             var latLng = new google.maps.LatLng(lat, lon, true);
 
@@ -571,49 +572,8 @@ var gmcKN = {
                         // update
                         gmcKN.async.lastReceivedGetAccessToken = lastReceivedGetAccessToken;
 
-                        var success = items.Success;
-
                         // update access token
                         gmcKN.mymap.settings.access_token = items.AccessToken;
-                    },
-                    error: function (xhr, err) {
-                        alert("readyState: " + xhr.readyState + "\nstatus: " + xhr.status + "\nresponseText: " + xhr.responseText);
-                    }
-
-                });
-            },
-
-            setType: function (type, isChecked) {
-                var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","type":"' + type + '","isChecked":"'
-                    + isChecked + '","sendid":"' + (++gmcKN.async.lastSendSetType) + '"}';
-
-                $.ajax({
-                    type: 'POST',
-                    url: gmcKN.mymap.settings.jsonSetTypeUrl,
-                    data: parameters,
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'json',
-                    success: function (data) {
-                        items = data;
-
-                        var lastReceivedSetType = items.ReplyId;
-                        if (lastReceivedSetType <= gmcKN.async.lastReceivedSetType) {
-                            // async mismatch, this is old reply, dont use it
-                            console.log('async mismatch ' + lastReceivedSetType + ' ' + gmcKN.async.lastReceivedSetType);
-                            return;
-                        }
-                        // update
-                        gmcKN.async.lastReceivedSetType = lastReceivedSetType;
-
-                        if (items.TokenValid === "0") {
-                            alert(gmcKN.mymap.settings.invalidToken);
-                            return;
-                        }
-
-                        var success = items.Success;
-
-                        // force update screen
-                        gmcKN.mymap.events.getBounds(true);
                     },
                     error: function (xhr, err) {
                         alert("readyState: " + xhr.readyState + "\nstatus: " + xhr.status + "\nresponseText: " + xhr.responseText);
@@ -650,7 +610,6 @@ var gmcKN = {
                             return;
                         }
 
-                        var success = items.Success;
                         var latlon = "";
                         if (gmcKN.debug.showCalloutLatLon === true)
                             latlon = "<br/>lat: " + marker.getPosition().lat() + " lon: " + marker.getPosition().lng();
@@ -672,16 +631,26 @@ var gmcKN = {
         return s.replace(/\./g, "_"); //replace . with _
     },
 
+    // Checkbox values as binary sum
+    getFilterValues: function () {
+        var cb1 = $('#gmcKN_Clustering').attr('checked') === 'checked' ? 1 : 0;
+        var cb2 = $('#gmcKN_Lines').attr('checked') === 'checked' ? 1 : 0;
+
+        var cb3 = $('#gmcKN_Type1').attr('checked') === 'checked' ? 1 : 0;
+        var cb4 = $('#gmcKN_Type2').attr('checked') === 'checked' ? 1 : 0;
+        var cb5 = $('#gmcKN_Type3').attr('checked') === 'checked' ? 1 : 0;
+        
+        var filter = cb1 * 1 + cb2 * 2 + cb3 * 4 + cb4 * 8 + cb5 * 16; // binary sum
+        return filter + '';
+    },
+
     checkboxClicked: function (type, isChecked) {
         if (type === 'gmc_meta_lines') {
             gmcKN.debug.showGridLines = !gmcKN.debug.showGridLines;
-
-            // force update screen
-            gmcKN.mymap.events.getBounds(true);
-        } else {
-            gmcKN.mymap.events.setType(type, isChecked);
         }
 
+        // force update screen
+        gmcKN.mymap.events.getBounds(true);
     },
 
     // set count labels, style and class for the clusters
@@ -709,7 +678,6 @@ var gmcKN = {
         div.appendChild(span);
         div.className = "countinfo_" + id;
         div.style.cssText = 'position: absolute; display: none;';
-
     }
 };
 
@@ -721,14 +689,10 @@ gmcKN.Label.prototype.onAdd = function () {
 
     var that = this;
     this.listeners_ = [
-        google.maps.event.addListener(this, 'idle',
-            function () { that.draw(); }),
-        google.maps.event.addListener(this, 'visible_changed',
-            function () { that.draw(); }),
-        google.maps.event.addListener(this, 'position_changed',
-            function () { that.draw(); }),
-        google.maps.event.addListener(this, 'text_changed',
-            function () { that.draw(); })
+        google.maps.event.addListener(this, 'idle', function () { that.draw(); }),
+        google.maps.event.addListener(this, 'visible_changed', function () { that.draw(); }),
+        google.maps.event.addListener(this, 'position_changed', function () { that.draw(); }),
+        google.maps.event.addListener(this, 'text_changed', function () { that.draw(); })
     ];
 };
 gmcKN.Label.prototype.onRemove = function () {

@@ -42,12 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AjaxDataTest.cs" />
     <Compile Include="ClusterInfo.cs" />
-    <Compile Include="SessionKeys.cs" />
+    <Compile Include="MemoryDatabase.cs" />
     <Compile Include="JsonGetAccessTokenReply.cs" />
-    <Compile Include="JsonReply.cs" />
-    <Compile Include="JsonSetTypeReply.cs" />
+    <Compile Include="JsonReplyBase.cs" />
     <Compile Include="Point2.cs" />
     <Compile Include="Bucket.cs" />
     <Compile Include="Boundary.cs" />
@@ -55,7 +53,7 @@
     <Compile Include="JsonMarkerInfoReply.cs" />
     <Compile Include="LatLonInfo.cs" />
     <Compile Include="Line.cs" />
-    <Compile Include="JsonReceive.cs" />
+    <Compile Include="JsonGetMarkersReceive.cs" />
     <Compile Include="Names.cs" />
     <Compile Include="Numbers.cs" />
     <Compile Include="PBase.cs" />

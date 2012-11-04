@@ -19,15 +19,15 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering
             // Code that runs on application startup            
 
             // Database load simulation
-            var websitepath = HttpContext.Current.Server.MapPath("~") + @"AreaGMC\Files\Points.csv";
-            var points = Dataset.LoadDatasetFromDatabase(websitepath, DataUtility.LoadType.Csv);
+            string websitepath = HttpContext.Current.Server.MapPath("~") + @"AreaGMC\Files\Points.csv";
+            List<P> points = Dataset.LoadDatasetFromDatabase(websitepath, DataUtility.LoadType.Csv);
             foreach (var p in points)
             {
                 p.Normalize();
             }
                 
-            Application[SessionKeys.GMC_Dataset] = points;
-            
+            MemoryDatabase.SetPoints(points);
+                        
             RegisterRoutes();
         }
 
@@ -52,10 +52,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering
 
         void Session_Start(object sender, EventArgs e)
         {
-            // Code that runs when a new session is started
-            Session[SessionKeys.GMC_Filter] = new HashSet<string>();
-            Session[SessionKeys.GMC_SessionStart] = DateTime.UtcNow as DateTime?;
-            Session[SessionKeys.GMC_ClusteringEnabled] = "1";
+            // Code that runs when a new session is started                        
         }
 
         void Session_End(object sender, EventArgs e)

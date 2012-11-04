@@ -91,7 +91,6 @@
   <ItemGroup>
     <Compile Include="AreaGMC\Business\Validation.cs" />
     <Compile Include="AreaGMC\Code\Helpers\SystemHelper.cs" />
-    <Compile Include="AreaGMC\Code\Helpers\SessionHelper.cs" />
     <Compile Include="AreaGMC\WebService\AjaxService.cs" />
     <Compile Include="AreaGMC\WebService\IAjaxService.cs" />
     <Compile Include="Global.asax.cs">
