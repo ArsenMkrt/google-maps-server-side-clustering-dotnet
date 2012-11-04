@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.Mime;
-using System.Text;
 using Kunukn.GooglemapsClustering.Data;
 
 namespace Kunukn.GooglemapsClustering.DataUtility
