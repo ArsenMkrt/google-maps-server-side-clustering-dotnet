@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.0\lib\net40-client\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -73,7 +77,7 @@
     <Content Include="AreaGMC\Scripts\mapclustering.js" />
     <Content Include="AreaGMC\Styles\Default.css" />
     <Content Include="AreaGMC\Styles\jquery-ui.css" />
-    <Content Include="Default.aspx" />
+    <Content Include="Default.html" />
     <Content Include="favicon.ico" />
     <Content Include="AreaGMC\Images\cluster2.png" />
     <Content Include="AreaGMC\Images\m1.png" />
@@ -84,15 +88,15 @@
     <Content Include="AreaGMC\Images\pin24.png" />
     <Content Include="Global.asax" />
     <Content Include="AreaGMC\Styles\Googlemap.css" />
+    <Content Include="AreaGMC\Service.svc" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AreaGMC\Business\Validation.cs" />
+    <Compile Include="AreaGMC\Code\Contract\ILog2.cs" />
     <Compile Include="AreaGMC\Code\Helpers\SystemHelper.cs" />
-    <Compile Include="AreaGMC\WebService\AjaxService.cs" />
-    <Compile Include="AreaGMC\WebService\IAjaxService.cs" />
+    <Compile Include="AreaGMC\Code\Logging\Log4Net.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -100,24 +104,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="AreaGMC\Controls\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Clustering\Clustering.csproj">
       <Project>{BB8882F0-08A3-47D9-B4C2-31F60CD39F45}</Project>
       <Name>Clustering</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DataUtility\DataUtility.csproj">
-      <Project>{4D93D086-EBA0-4B5A-A0F4-B750F518E7D5}</Project>
-      <Name>DataUtility</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Data\Data.csproj">
-      <Project>{3CEFD945-5981-4336-9F66-C901EA68E3B8}</Project>
-      <Name>Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MathUtility\MathUtility.csproj">
-      <Project>{D6D2AAD6-B7BB-4E01-AA4A-C20E6BF50A95}</Project>
-      <Name>MathUtility</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -42,25 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClusterInfo.cs" />
-    <Compile Include="MemoryDatabase.cs" />
-    <Compile Include="JsonGetAccessTokenReply.cs" />
-    <Compile Include="JsonReplyBase.cs" />
-    <Compile Include="Point2.cs" />
-    <Compile Include="Bucket.cs" />
-    <Compile Include="Boundary.cs" />
-    <Compile Include="DataExtensions.cs" />
-    <Compile Include="JsonMarkerInfoReply.cs" />
-    <Compile Include="LatLonInfo.cs" />
-    <Compile Include="Line.cs" />
-    <Compile Include="JsonGetMarkersReceive.cs" />
-    <Compile Include="Numbers.cs" />
-    <Compile Include="PBase.cs" />
-    <Compile Include="DatasetToSerialize.cs" />
-    <Compile Include="JsonGetMarkersReply.cs" />
-    <Compile Include="P.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,6 +1,4 @@
-﻿
-
-namespace Kunukn.GooglemapsClustering.Data
+﻿namespace Kunukn.GooglemapsClustering.Clustering.Data
 {
     public static class Numbers
     {

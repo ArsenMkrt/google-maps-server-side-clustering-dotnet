@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Kunukn.GooglemapsClustering.Data
+namespace Kunukn.GooglemapsClustering.Clustering.Data
 {
     /// <summary>
     /// Parse json receive data
@@ -11,8 +11,7 @@ namespace Kunukn.GooglemapsClustering.Data
         // Don't trust user input, data range is restricted if user abuse or hacks client side
         private const int ZoomLevelMax = 30;
         private const int GridMax = 20;
-        
-        public string AccessToken { get; set; }
+                
         public int Sendid { get; private set; }
         public Boundary Viewport { get; private set; }
 
@@ -102,9 +101,8 @@ namespace Kunukn.GooglemapsClustering.Data
         public bool IsDebugLinesEnabled { get; private set; }
         public HashSet<string> TypeFilter { get; private set; }
 
-        public JsonGetMarkersReceive(string accessToken, double nelat, double nelon, double swlat, double swlon, int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, string filter, int sendid)
-        {
-            AccessToken = accessToken;
+        public JsonGetMarkersReceive(double nelat, double nelon, double swlat, double swlon, int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, string filter, int sendid)
+        {            
             Zoomlevel = zoomlevel;
             ZoomlevelClusterStop = zoomlevelClusterStop;
             Gridx = gridx;

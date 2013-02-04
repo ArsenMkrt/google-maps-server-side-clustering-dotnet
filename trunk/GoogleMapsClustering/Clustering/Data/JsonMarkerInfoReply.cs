@@ -2,7 +2,7 @@
 using System.Text;
 using System.Web.Script.Serialization;
 
-namespace Kunukn.GooglemapsClustering.Data
+namespace Kunukn.GooglemapsClustering.Clustering.Data
 {
     public class JsonMarkerInfoReply : JsonReplyBase
     {
@@ -28,17 +28,6 @@ namespace Kunukn.GooglemapsClustering.Data
             sb.AppendLine("</div>");
 
             Content = sb.ToString();
-        }
-
-        public void BuildInvalidAccessTokenContent()
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine("<div>");
-            sb.AppendLine("<b>You have an invalid token, please relogin</b> ");
-            sb.AppendFormat("Time: {0}<br/>", DateTime.Now);            
-            sb.AppendLine("</div>");
-
-            Content = sb.ToString();
-        }
+        }        
     }
 }

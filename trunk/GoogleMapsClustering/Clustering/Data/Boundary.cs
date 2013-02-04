@@ -1,17 +1,14 @@
 ﻿using System;
 
-
-
-namespace Kunukn.GooglemapsClustering.Data
+namespace Kunukn.GooglemapsClustering.Clustering.Data
 {
     public class Boundary : Point2
-    {        
-        public Boundary()
-        {
-        }
-
+    {
+        private readonly Boundary _b;
+        public Boundary(){}
         public Boundary(Boundary b)
         {
+            _b = b;
             Minx = b.Minx;
             Miny = b.Miny;
             Maxx = b.Maxx;

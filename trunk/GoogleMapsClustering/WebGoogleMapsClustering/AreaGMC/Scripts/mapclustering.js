@@ -27,10 +27,12 @@ var gmcKN = {
         lastSendGetMarkers: 0, //get markers
         lastReceivedGetMarkers: 0,
         lastSendMarkerDetail: 0,
-        lastReceivedMarkerDetail: 0,
-        lastSendGetAccessToken: 0,
-        lastReceivedGetAccessToken: 0,
+        lastReceivedMarkerDetail: 0,        
         lastCache: ""
+    },
+
+    log: function (s) {
+        console.log(s);
     },
 
     mymap: {
@@ -69,10 +71,8 @@ var gmcKN = {
                 });
             });
         },
-
-        initialize: function () {
-            // this initialize is executed as $(document).ready(function()
-
+        
+        initialize: function () {            
             var center = new google.maps.LatLng(gmcKN.mymap.settings.mapCenterLat, gmcKN.mymap.settings.mapCenterLon, true);
 
             gmcKN.map = new google.maps.Map(document.getElementById('gmcKN_map_canvas'), {
@@ -208,10 +208,7 @@ var gmcKN = {
             zoomLevel: 2,
             zoomlevelClusterStop: 15,
             alwaysClusteringEnabledWhenZoomLevelLess: 8,
-            access_token: 'dummyValue',
-
-            jsonGetAccessTokenUrl: '/AreaGMC/AjaxService/GetAccessToken',
-
+                        
             jsonMarkerUrl: '/AreaGMC/AjaxService/GetMarkers',
 
             jsonMarkerDetailUrl: '/AreaGMC/AjaxService/GetMarkerDetail',
@@ -253,8 +250,7 @@ var gmcKN = {
                 offsetH: 0,
                 offsetW: 0
             },
-            textErrorMessage: 'Error',
-            invalidToken: 'Demo time is over, TokenValid is invalid, please login'
+            textErrorMessage: 'Error'            
         },
 
         events: {
@@ -326,8 +322,7 @@ var gmcKN = {
                     new google.maps.Size(gmcKN.mymap.settings.pinImage3.width, gmcKN.mymap.settings.pinImage3.height), null, null);
 
                 var parameters = '{' +
-                    '"access_token":"' + gmcKN.mymap.settings.access_token +
-                    '","nelat":"' + mapData.neLat +
+                    '"nelat":"' + mapData.neLat +
                     '","nelon":"' + mapData.neLon +
                     '","swlat":"' + mapData.swLat +
                     '","swlon":"' + mapData.swLon +
@@ -350,16 +345,11 @@ var gmcKN = {
                         var lastReceivedGetMarkers = items.ReplyId;
                         if (lastReceivedGetMarkers <= gmcKN.async.lastReceivedGetMarkers) {
                             // async mismatch, this is old reply, dont use it
-                            console.log('async mismatch ' + lastReceivedGetMarkers + ' ' + gmcKN.async.lastReceivedGetMarkers);
+                            gmcKN.log('async mismatch ' + lastReceivedGetMarkers + ' ' + gmcKN.async.lastReceivedGetMarkers);
                             return;
                         }
                         // update
                         gmcKN.async.lastReceivedGetMarkers = lastReceivedGetMarkers;
-
-                        if (items.TokenValid === "0") {
-                            alert(gmcKN.mymap.settings.invalidToken);
-                            return;
-                        }
 
                         // grid lines clear current
                         $.each(gmcKN.mymap.events.polys, function () {
@@ -415,7 +405,7 @@ var gmcKN = {
                                 }
 
                                 if (key === undefined) {
-                                    console.log("error in code: key"); //catch error in code
+                                    gmcKN.log("error in code: key"); //catch error in code
                                 }
                             }
                         }
@@ -427,7 +417,7 @@ var gmcKN = {
                                 var key = gmcKN.getKey(p); //key                            
                                 if (pointsCacheOnMap[key] === undefined) {
                                     if (pointsCacheIncome[key] === undefined) {
-                                        console.log("error in code: key2"); //catch error in code
+                                        gmcKN.log("error in code: key2"); //catch error in code
                                     }
                                     var newmarker = pointsCacheIncome[key];
                                     newmarkersTodo.push(newmarker);
@@ -550,42 +540,13 @@ var gmcKN = {
                 });
 
             },
-            getAccessToken: function (username, password) {
-                var parameters = '{' + '"username":"' + username + '","password":"' + password + '","sendid":"'
-                    + (++gmcKN.async.lastSendGetAccessToken) + '"}';
-
-                $.ajax({
-                    type: 'POST',
-                    url: gmcKN.mymap.settings.jsonGetAccessTokenUrl,
-                    data: parameters,
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'json',
-                    success: function (data) {
-                        items = data;
-
-                        var lastReceivedGetAccessToken = items.ReplyId;
-                        if (lastReceivedGetAccessToken <= gmcKN.async.lastReceivedGetAccessToken) {
-                            // async mismatch, this is old reply, dont use it
-                            console.log('async mismatch ' + lastReceivedGetAccessToken + ' ' + gmcKN.async.lastReceivedGetAccessToken);
-                            return;
-                        }
-                        // update
-                        gmcKN.async.lastReceivedGetAccessToken = lastReceivedGetAccessToken;
-
-                        // update access token
-                        gmcKN.mymap.settings.access_token = items.AccessToken;
-                    },
-                    error: function (xhr, err) {
-                        alert("readyState: " + xhr.readyState + "\nstatus: " + xhr.status + "\nresponseText: " + xhr.responseText);
-                    }
-
-                });
-            },
 
             // popup window
             attachCallOut: function (marker, item) {
-                var parameters = '{' + '"access_token":"' + gmcKN.mymap.settings.access_token + '","id":"' + item.I +
-                    '","type":"' + item.T + '","sendid":"' + (++gmcKN.async.lastSendMarkerDetail) + '"}';
+                var parameters = '{"id":"' + item.I +
+                    '","type":"' + item.T +
+                    '","sendid":"' + (++gmcKN.async.lastSendMarkerDetail) +
+                    '"}';
 
                 $.ajax({
                     type: 'POST',
@@ -599,16 +560,11 @@ var gmcKN = {
                         var lastReceivedMarkerDetail = items.ReplyId;
                         if (lastReceivedMarkerDetail <= gmcKN.async.lastReceivedMarkerDetail) {
                             // async mismatch, this is old reply, dont use it
-                            console.log('async mismatch ' + lastReceivedMarkerDetail + ' ' + gmcKN.async.lastReceivedMarkerDetail);
+                            gmcKN.log('async mismatch ' + lastReceivedMarkerDetail + ' ' + gmcKN.async.lastReceivedMarkerDetail);
                             return;
                         }
                         // update
                         gmcKN.async.lastReceivedMarkerDetail = lastReceivedMarkerDetail;
-
-                        if (items.TokenValid === "0") {
-                            alert(gmcKN.mymap.settings.invalidToken);
-                            return;
-                        }
 
                         var latlon = "";
                         if (gmcKN.debug.showCalloutLatLon === true)
@@ -639,7 +595,7 @@ var gmcKN = {
         var cb3 = $('#gmcKN_Type1').attr('checked') === 'checked' ? 1 : 0;
         var cb4 = $('#gmcKN_Type2').attr('checked') === 'checked' ? 1 : 0;
         var cb5 = $('#gmcKN_Type3').attr('checked') === 'checked' ? 1 : 0;
-        
+
         var filter = cb1 * 1 + cb2 * 2 + cb3 * 4 + cb4 * 8 + cb5 * 16; // binary sum
         return filter + '';
     },
@@ -716,8 +672,4 @@ gmcKN.Label.prototype.draw = function () {
     this.span_.innerHTML = this.get('text').toString();
 };
 
-
 google.maps.event.addDomListener(window, 'load', gmcKN.mymap.initialize); // load map
-
-// dummy request, access token is always valid in this example 
-gmcKN.mymap.events.getAccessToken('myusername', 'mypassword', gmcKN.async.lastSendGetAccessToken); // set access token

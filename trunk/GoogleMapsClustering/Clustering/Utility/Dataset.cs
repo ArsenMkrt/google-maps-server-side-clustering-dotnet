@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Kunukn.GooglemapsClustering.Data;
+using Kunukn.GooglemapsClustering.Clustering.Data;
 
-namespace Kunukn.GooglemapsClustering.DataUtility
-{
-    public enum LoadType { Unknown = -1, Serialized, Csv } ;
-
+namespace Kunukn.GooglemapsClustering.Clustering.Utility
+{   
     /// <summary>
     /// Author: Kunuk Nykjaer
     /// </summary>
@@ -32,7 +30,8 @@ namespace Kunukn.GooglemapsClustering.DataUtility
              var fi = new FileInfo(websitepath);
              if (!fi.Exists)
              {
-                 throw new ApplicationException("File does not exists: " + fi.FullName);
+                 throw new ApplicationException(
+                     string.Format("File does not exists: {0}",fi.FullName));
              }
                  
              var fileinfoPath = new FileInfo(filepath);
@@ -61,7 +60,7 @@ namespace Kunukn.GooglemapsClustering.DataUtility
 
              foreach (var s in list)
              {
-                 string[] arr = s.Split(';');
+                 var arr = s.Split(new []{";"}, StringSplitOptions.RemoveEmptyEntries);
                  if (arr.Length == 4)
                  {
                      double x = PBase.ToValue(arr[0]).Value;

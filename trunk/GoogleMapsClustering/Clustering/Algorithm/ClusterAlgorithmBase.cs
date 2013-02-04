@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kunukn.GooglemapsClustering.Data;
-using Kunukn.GooglemapsClustering.MathUtility;
+using Kunukn.GooglemapsClustering.Clustering.Data;
+using Kunukn.GooglemapsClustering.Clustering.Utility;
 
-namespace Kunukn.GooglemapsClustering.Clustering
+namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
 {
     /// <summary>
     /// /// Author: Kunuk Nykjaer

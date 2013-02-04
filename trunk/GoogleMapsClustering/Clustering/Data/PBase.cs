@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Web.Script.Serialization;
 
-namespace Kunukn.GooglemapsClustering.Data
+namespace Kunukn.GooglemapsClustering.Clustering.Data
 {
     [Serializable]
     public class PBase

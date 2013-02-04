@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Activation;
-using Kunukn.GooglemapsClustering.Clustering;
-using Kunukn.GooglemapsClustering.Data;
-using Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.Business;
+using Kunukn.GooglemapsClustering.Clustering.Algorithm;
+using Kunukn.GooglemapsClustering.Clustering.Data;
 
-namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
+namespace Kunukn.GooglemapsClustering.Clustering.WebService
 {
     [AspNetCompatibilityRequirements(RequirementsMode
         = AspNetCompatibilityRequirementsMode.Allowed)]
@@ -13,20 +12,13 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
     {
         protected static JsonReplyBase NotValidReply(int sendid)
         {            
-            var jsonReply = new JsonReplyBase { ReplyId = sendid, TokenValid = "0", Success = "0" };            
+            var jsonReply = new JsonReplyBase { ReplyId = sendid, Success = "0" };            
             return jsonReply;
         }
 
-        public JsonGetMarkersReply GetMarkers(string access_token, double nelat, double nelon, double swlat, double swlon, int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, string filter, int sendid)
-        {            
-            var isValid = Validation.ValidateAccessToken(access_token);
-            if (!isValid)
-            {
-                JsonReplyBase nvr = NotValidReply(sendid);
-                return new JsonGetMarkersReply { ReplyId = nvr.ReplyId, Success = nvr.Success, TokenValid = nvr.TokenValid};
-            }
-            
-            var jsonReceive = new JsonGetMarkersReceive(access_token, nelat, nelon, swlat, swlon, zoomlevel, gridx, gridy, zoomlevelClusterStop, filter, sendid);
+        public JsonGetMarkersReply GetMarkers(double nelat, double nelon, double swlat, double swlon, int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, string filter, int sendid)
+        {                                    
+            var jsonReceive = new JsonGetMarkersReceive(nelat, nelon, swlat, swlon, zoomlevel, gridx, gridy, zoomlevelClusterStop, filter, sendid);
             
             var clusteringEnabled = jsonReceive.IsClusteringEnabled || Config.AlwaysClusteringEnabledWhenZoomLevelLess > jsonReceive.Zoomlevel;
             
@@ -70,27 +62,18 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.WebService
             return reply;
         }
 
-        public JsonMarkerInfoReply GetMarkerDetail(string access_token, string id, string type, int sendid)
-        {                        
-            var isValid = Validation.ValidateAccessToken(access_token);
-            if (!isValid)
-            {
-                JsonReplyBase nvr = NotValidReply(sendid);
-                return new JsonMarkerInfoReply { TokenValid = nvr.TokenValid, Success = nvr.Success, ReplyId = nvr.ReplyId };
-            }
-            
+        public JsonMarkerInfoReply GetMarkerDetail(string id, string type, int sendid)
+        {                                                
             var reply = new JsonMarkerInfoReply { Id = id, Type = type, ReplyId = sendid };                        
             reply.BuildContent();
             reply.Success = "1";
             return reply;
         }
-
-        public JsonGetAccessTokenReply GetAccessToken(string username, string password, int sendid)
-        {                        
-            // Dummy set access token
-            var reply = new JsonGetAccessTokenReply { ReplyId = sendid, AccessToken = "dummyValidValue", Success = "1" };
-            return reply;            
-        }        
+        
+        public string Hey()
+        {
+            return "hey";
+        }
     }
 
 }
