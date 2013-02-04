@@ -9,24 +9,25 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
     /// </summary>
     [ServiceContract]    
     public interface IAjaxService
-    {
+    {        
         [OperationContract]
-        [WebInvoke(Method = "POST", UriTemplate = "AreaGMC/AjaxService/GetMarkers",
+        [WebInvoke(Method = "POST", UriTemplate = "GMC/GetMarkers",
             BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
         JsonGetMarkersReply GetMarkers(double nelat, double nelon, double swlat, double swlon,
                                  int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, string filter, int sendid);
-        
-        [OperationContract]        
-        [WebInvoke(Method = "POST", UriTemplate = "AreaGMC/AjaxService/GetMarkerDetail",
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "GMC/GetMarkerDetail",
             BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
         JsonMarkerInfoReply GetMarkerDetail(string id, string type, int sendid);
-        
+
         
         [OperationContract]
         [WebGet(
-            UriTemplate = "hey",
+            UriTemplate = "test",
             ResponseFormat = WebMessageFormat.Json)
         ]
-        string Hey();
+        string Test();
     }
+
 }

@@ -4,7 +4,6 @@ using System.Web;
 using System.Web.Routing;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 using Kunukn.GooglemapsClustering.Clustering.Utility;
-using Kunukn.GooglemapsClustering.Clustering.WebService;
 using Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.Code.Logging;
 
 namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering
@@ -17,9 +16,9 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering
         private static Log4Net _log;
 
         void Application_Start(object sender, EventArgs e)
-        {            
-            // Code that runs on application startup            
+        {                               
            _log = new Log4Net();
+           //_log.Info(MethodBase.GetCurrentMethod(), "Init");
 
             // Database load simulation
             var websitepath = HttpContext.Current.Server.MapPath("~") + @"AreaGMC\Files\Points.csv";
@@ -32,12 +31,8 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering
 
         private static void RegisterRoutes()
         {
-            // Default            
-            RouteTable.Routes.MapPageRoute("", "", "~/Default.html");
-         
-            // Ajax Service Endpoint
-            RouteTable.Routes.Add(new System.ServiceModel.Activation.ServiceRoute("", 
-                new System.ServiceModel.Activation.WebServiceHostFactory(), typeof(AjaxService)));
+            // Default
+            RouteTable.Routes.MapPageRoute("", "", "~/Default.html");                    
         }
 
         void Application_End(object sender, EventArgs e)
@@ -47,17 +42,18 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering
         void Application_Error(object sender, EventArgs e)
         {
             var ex = this.Server.GetLastError();
-            _log.Error(MethodBase.GetCurrentMethod(), ex);
-        }
 
-        void Session_Start(object sender, EventArgs e)
-        {            
+            if (ex.Message == "File does not exist.")
+            {
+                var msg = string.Format("{0} {1} {2}", ex.Message, HttpContext.Current.Request.Url, ex.StackTrace);
+                _log.Error(MethodBase.GetCurrentMethod(), msg);                
+            }
+            else
+            {
+                _log.Error(MethodBase.GetCurrentMethod(), ex);
+            }            
         }
-
-        void Session_End(object sender, EventArgs e)
-        {            
-        }
-
+    
         protected void Application_BeginRequest(object sender, EventArgs e)
         {            
         }        

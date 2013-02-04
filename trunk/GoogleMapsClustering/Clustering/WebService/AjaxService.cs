@@ -70,9 +70,9 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             return reply;
         }
         
-        public string Hey()
+        public string Test()
         {
-            return "hey";
+            return "test";
         }
     }
 
