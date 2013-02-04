@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Kunukn.GooglemapsClustering.Data
+namespace Kunukn.GooglemapsClustering.Clustering.Data
 {
     public class Bucket
     {

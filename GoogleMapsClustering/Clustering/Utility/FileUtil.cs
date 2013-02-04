@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using Kunukn.GooglemapsClustering.Data;
+using Kunukn.GooglemapsClustering.Clustering.Data;
 
-
-namespace Kunukn.GooglemapsClustering.DataUtility
+namespace Kunukn.GooglemapsClustering.Clustering.Utility
 {
     /// <summary>
     /// Author: Kunuk Nykjaer
     /// </summary>
     public static class FileUtil
     {
+        private static Action<object> WL = Console.WriteLine;
+
         public const string FolderPath = @"c:\temp\";
-        private static Encoding _encodingRead = Encoding.Default; // Encoding.Default  Encoding.UTF8  Encoding.Unicode      
-        private static Encoding _encodingWrite = Encoding.Unicode; //Encoding.Default  Encoding.UTF8  Encoding.Unicode
+        private static readonly Encoding _encodingRead = Encoding.Default; // Encoding.Default  Encoding.UTF8  Encoding.Unicode      
+        private static readonly Encoding _encodingWrite = Encoding.Unicode; //Encoding.Default  Encoding.UTF8  Encoding.Unicode
 
         /// <summary>        
         /// folder path is created if not exists
@@ -23,16 +23,13 @@ namespace Kunukn.GooglemapsClustering.DataUtility
         public static bool WriteFile(List<string> data, FileInfo fileInfo)
         {
             var sb = new StringBuilder();
-            int i = 0;
-            int len = data.Count;
+            var i = 0;
+            var len = data.Count;
             foreach (var line in data)
             {
                 sb.Append(line);
                 i++;
-                if (i < len)
-                {
-                    sb.Append(Environment.NewLine);
-                }                    
+                if (i < len) sb.Append(Environment.NewLine);                    
             }
             return WriteFile(sb.ToString(), fileInfo);
         }
@@ -41,20 +38,14 @@ namespace Kunukn.GooglemapsClustering.DataUtility
             bool success = false;
             try
             {
-                if (fileInfo == null)
-                {
-                    return false;
-                }                    
-
-                //if (fileInfo.Exists)
-                //    fileInfo.Delete();
-
+                if (fileInfo == null) return false;
+                                                  
                 if (!fileInfo.Directory.Exists)
                 {
                     Directory.CreateDirectory(fileInfo.Directory.ToString());
                 }
                                     
-                using (StreamWriter streamWriter = fileInfo.CreateText() )
+                using (var streamWriter = fileInfo.CreateText() )
                 {
                     streamWriter.Write(data, _encodingWrite);
                     success = true;
@@ -62,7 +53,8 @@ namespace Kunukn.GooglemapsClustering.DataUtility
             }
             catch (Exception ex)
             {
-                Console.WriteLine( Util.GetException(ex) + "\nPress a key ... ");
+                WL(ExceptionUtil.GetException(ex));
+                WL("\nPress a key ... ");
                 Console.ReadKey();
             }
 
@@ -86,13 +78,14 @@ namespace Kunukn.GooglemapsClustering.DataUtility
             }
             catch (Exception ex)
             {
-                Console.WriteLine(Util.GetException(ex) + "\nPress a key ... ");
+                WL(ExceptionUtil.GetException(ex));
+                WL("\nPress a key ... ");
                 Console.ReadKey();
             }
             return success;
         }
 
-        // save points from mem to file
+        // Save points from mem to file
         public const string DatasetSerializeName = "datasetGridcluster.ser";
         public static void SaveDataSetToFile(List<P> dataset, string filename = null)
         {
@@ -105,7 +98,7 @@ namespace Kunukn.GooglemapsClustering.DataUtility
             new Serializer().SerializeObject(FolderPath + filename, objectToSerialize);
         }
        
-        // load points from file to mem        
+        // Load points from file to mem        
         public static List<P> LoadDataSetFromFile(FileInfo filepath = null)
         {
             if(filepath==null)
@@ -130,7 +123,7 @@ namespace Kunukn.GooglemapsClustering.DataUtility
             {                
                 using (var reader = new StreamReader(path, _encodingRead, true))
                 {
-                    string line = reader.ReadLine();
+                    var line = reader.ReadLine();
                     while (line != null)
                     {
                         list.Add(line);
@@ -140,7 +133,8 @@ namespace Kunukn.GooglemapsClustering.DataUtility
             }
             catch (Exception ex)
             {
-                //Console.WriteLine( Util.GetException(ex) );
+                WL(ExceptionUtil.GetException(ex));
+                WL("\nPress a key ... ");
                 throw ex;
             }
 

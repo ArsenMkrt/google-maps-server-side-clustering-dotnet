@@ -55,18 +55,6 @@
       <Project>{BB8882F0-08A3-47D9-B4C2-31F60CD39F45}</Project>
       <Name>Clustering</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DataUtility\DataUtility.csproj">
-      <Project>{4D93D086-EBA0-4B5A-A0F4-B750F518E7D5}</Project>
-      <Name>DataUtility</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Data\Data.csproj">
-      <Project>{3CEFD945-5981-4336-9F66-C901EA68E3B8}</Project>
-      <Name>Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MathUtility\MathUtility.csproj">
-      <Project>{D6D2AAD6-B7BB-4E01-AA4A-C20E6BF50A95}</Project>
-      <Name>MathUtility</Name>
-    </ProjectReference>
     <ProjectReference Include="..\WebGoogleMapsClustering\WebGoogleMapsClustering.csproj">
       <Project>{58F81B8D-2A6C-40C3-90A3-D03C470D361D}</Project>
       <Name>WebGoogleMapClustering</Name>

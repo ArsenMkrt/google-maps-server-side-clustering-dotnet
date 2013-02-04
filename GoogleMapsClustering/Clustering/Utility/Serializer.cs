@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Kunukn.GooglemapsClustering.DataUtility
+namespace Kunukn.GooglemapsClustering.Clustering.Utility
 {
     /// <summary>
     /// Author: Kunuk Nykjaer

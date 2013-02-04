@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using System.Web.Script.Serialization;
 
-namespace Kunukn.GooglemapsClustering.Data
+namespace Kunukn.GooglemapsClustering.Clustering.Data
 {
     /// <summary>
     /// Kunuk Nykjaer
