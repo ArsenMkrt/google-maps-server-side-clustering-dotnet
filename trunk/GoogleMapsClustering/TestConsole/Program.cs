@@ -20,7 +20,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
     /// </summary>
     class Program
     {
-        private static Action<object> WL = Console.WriteLine;
+        private static readonly Action<object> WL = Console.WriteLine;
 
         static readonly Random Rand = new Random();
         public static DateTime Starttime;
@@ -104,7 +104,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
         static void GenerateRandomDatasetToCsvFile()
         {
             string execfolder = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
-            var path = execfolder + @"\..\..\..\WebGoogleMapsClustering\AreaGMC\Files\PointsNZ.csv";
+            var path = execfolder + @"\..\..\..\Kunukn.GooglemapsClustering.Web\AreaGMC\Files\PointsNZ.csv";
             var fi = new FileInfo(path);
             if (fi.Directory != null && fi.Directory.Exists)
             {
@@ -173,8 +173,8 @@ namespace Kunukn.GooglemapsClustering.TestConsole
         static void MergeDataset(string ds1, string ds2, string name)
         {
             string execfolder = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
-            var path1 = execfolder + @"\..\..\..\WebGoogleMapsClustering\AreaGMC\Files\" + ds1;
-            var path2 = execfolder + @"\..\..\..\WebGoogleMapsClustering\AreaGMC\Files\" + ds2;
+            var path1 = execfolder + @"\..\..\..\Kunukn.GooglemapsClustering.Web\AreaGMC\Files\" + ds1;
+            var path2 = execfolder + @"\..\..\..\Kunukn.GooglemapsClustering.Web\AreaGMC\Files\" + ds2;
 
             var fi1 = new FileInfo(path1);
             if (fi1.Directory == null || !fi1.Directory.Exists)
@@ -193,14 +193,14 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             var points2 = Dataset.LoadDatasetFromDatabase(path2, LoadType.Csv);
             all.AddRange(points2);
 
-            var path = execfolder + @"\..\..\..\WebGoogleMapsClustering\AreaGMC\Files\" + name;
+            var path = execfolder + @"\..\..\..\Kunukn.GooglemapsClustering.Web\AreaGMC\Files\" + name;
             SaveCsvData(all, new FileInfo(path));
         }
 
         static void ReworkDataset(string name)
         {            
             string execfolder = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
-            var path = execfolder + @"\..\..\..\WebGoogleMapsClustering\AreaGMC\Files\" + name;
+            var path = execfolder + @"\..\..\..\Kunukn.GooglemapsClustering.Web\AreaGMC\Files\" + name;
             var fi = new FileInfo(path);
             if (fi.Directory == null || !fi.Directory.Exists)
             {
@@ -325,7 +325,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
         static void ReadCsvFileAndCount()
         {
             string execfolder = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
-            var path = execfolder + @"\..\..\..\WebGoogleMapsClustering\AreaGMC\Files\Points.csv";
+            var path = execfolder + @"\..\..\..\Kunukn.GooglemapsClustering.Web\AreaGMC\Files\Points.csv";
             var points = Dataset.LoadDatasetFromDatabase(path,LoadType.Csv);
             
             //var b = new Boundary { Minx = -179, Maxx = 179, Miny = -90, Maxy = 90 };
