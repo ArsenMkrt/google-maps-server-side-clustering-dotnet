@@ -1,8 +1,0 @@
-MIT License
-
-
-
-The Software copyright specification only includes 
-the clustering implementation details. 
-The images and JS address search implementation details 
-is not included in this copyright.
