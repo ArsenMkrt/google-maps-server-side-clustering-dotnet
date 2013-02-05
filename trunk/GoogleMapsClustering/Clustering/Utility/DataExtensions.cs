@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Kunukn.GooglemapsClustering.Clustering.Data;
 
-namespace Kunukn.GooglemapsClustering.Clustering.Data
+namespace Kunukn.GooglemapsClustering.Clustering.Utility
 {
     public static class DataExtensions
     {

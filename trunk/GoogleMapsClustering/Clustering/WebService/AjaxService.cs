@@ -3,6 +3,7 @@ using System.Linq;
 using System.ServiceModel.Activation;
 using Kunukn.GooglemapsClustering.Clustering.Algorithm;
 using Kunukn.GooglemapsClustering.Clustering.Data;
+using Kunukn.GooglemapsClustering.Clustering.Data.Json;
 
 namespace Kunukn.GooglemapsClustering.Clustering.WebService
 {
@@ -20,7 +21,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
         {                                    
             var jsonReceive = new JsonGetMarkersReceive(nelat, nelon, swlat, swlon, zoomlevel, gridx, gridy, zoomlevelClusterStop, filter, sendid);
             
-            var clusteringEnabled = jsonReceive.IsClusteringEnabled || Config.AlwaysClusteringEnabledWhenZoomLevelLess > jsonReceive.Zoomlevel;
+            var clusteringEnabled = jsonReceive.IsClusteringEnabled || AlgoConfig.AlwaysClusteringEnabledWhenZoomLevelLess > jsonReceive.Zoomlevel;
             
             JsonGetMarkersReply reply;
             
@@ -56,7 +57,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             // If we are here then there are no clustering
             // The number of items returned is restricted to avoid json data overflow
             List<P> filteredDataset = ClusterAlgorithmBase.FilterDataset(dataset, jsonReceive.Viewport);
-            List<P> filteredDatasetMaxPoints = filteredDataset.Take(Config.MaxMarkersReturned).ToList();
+            List<P> filteredDatasetMaxPoints = filteredDataset.Take(AlgoConfig.MaxMarkersReturned).ToList();
 
             reply = new JsonGetMarkersReply { Points = filteredDatasetMaxPoints, ReplyId = sendid, Success = "1" };            
             return reply;
