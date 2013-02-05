@@ -209,8 +209,8 @@ var gmcKN = {
             zoomlevelClusterStop: 15,
             alwaysClusteringEnabledWhenZoomLevelLess: 8,
             
-            jsonMarkerUrl: '/AreaGMC/service.svc/GMC/GetMarkers',            
-            jsonMarkerDetailUrl: '/AreaGMC/service.svc/GMC/GetMarkerDetail',
+            jsonMarkerUrl: '/AreaGMC/gmc.svc/GetMarkers',            
+            jsonMarkerDetailUrl: '/AreaGMC/gmc.svc/GetMarkerDetail',
 
             clusterImage: {
                 src: 'Images/cluster2.png', //this is invisible img only used for click-event detecting

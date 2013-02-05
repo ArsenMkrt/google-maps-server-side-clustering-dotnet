@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Routing;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 using Kunukn.GooglemapsClustering.Clustering.Utility;
+using Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.Code;
 using Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.Code.Logging;
 
 namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering
@@ -17,7 +18,7 @@ namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering
 
         void Application_Start(object sender, EventArgs e)
         {                               
-           _log = new Log4Net();
+           _log = new Log4Net();            
            //_log.Info(MethodBase.GetCurrentMethod(), "Init");
 
             // Database load simulation

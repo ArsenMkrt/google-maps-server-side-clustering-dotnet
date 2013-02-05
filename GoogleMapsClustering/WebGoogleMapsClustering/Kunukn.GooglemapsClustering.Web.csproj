@@ -60,6 +60,7 @@
     <Reference Include="System.Web.ApplicationServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AreaGMC\gmc.svc" />
     <Content Include="AreaGMC\MapClustering.html" />
     <Content Include="AreaGMC\Documents\FAQ.txt" />
     <Content Include="AreaGMC\Images\clusteringpreview.gif" />
@@ -106,9 +107,9 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Clustering\Clustering.csproj">
+    <ProjectReference Include="..\Kunukn.GooglemapsClustering.Clustering\Kunukn.GooglemapsClustering.Clustering.csproj">
       <Project>{BB8882F0-08A3-47D9-B4C2-31F60CD39F45}</Project>
-      <Name>Clustering</Name>
+      <Name>Kunukn.GooglemapsClustering.Clustering</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -117,6 +118,9 @@
     <None Include="AreaGMC\Files\Points.csv" />
     <Content Include="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GmcGlobalKeySettings.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
