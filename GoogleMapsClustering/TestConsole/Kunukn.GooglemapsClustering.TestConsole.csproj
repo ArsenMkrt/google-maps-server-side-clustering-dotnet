@@ -51,13 +51,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Clustering\Clustering.csproj">
+    <ProjectReference Include="..\Kunukn.GooglemapsClustering.Clustering\Kunukn.GooglemapsClustering.Clustering.csproj">
       <Project>{BB8882F0-08A3-47D9-B4C2-31F60CD39F45}</Project>
-      <Name>Clustering</Name>
+      <Name>Kunukn.GooglemapsClustering.Clustering</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WebGoogleMapsClustering\WebGoogleMapsClustering.csproj">
+    <ProjectReference Include="..\Kunukn.GooglemapsClustering.Web\Kunukn.GooglemapsClustering.Web.csproj">
       <Project>{58F81B8D-2A6C-40C3-90A3-D03C470D361D}</Project>
-      <Name>WebGoogleMapClustering</Name>
+      <Name>Kunukn.GooglemapsClustering.Web</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
