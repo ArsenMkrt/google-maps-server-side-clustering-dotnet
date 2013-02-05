@@ -1,4 +1,5 @@
 ﻿using System;
+using Kunukn.GooglemapsClustering.Clustering.Utility;
 
 namespace Kunukn.GooglemapsClustering.Clustering.Data
 {

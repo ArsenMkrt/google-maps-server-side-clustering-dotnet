@@ -33,22 +33,18 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
         {
             // Collect used buckets and return the result
             var clusterPoints = new List<P>();
+
             //O(m*n)
             foreach (var item in BucketsLookup)
             {
                 var bucket = item.Value;
-                if (bucket.IsUsed)
-                {
-                    if (bucket.Points.Count < Config.MinClusterSize)
-                    {
-                        clusterPoints.AddRange(bucket.Points);
-                    }
-                    else
-                    {
-                        bucket.Centroid.C = bucket.Points.Count;
-                        clusterPoints.Add(bucket.Centroid);
-                    }
+                if (!bucket.IsUsed) continue;
 
+                if (bucket.Points.Count < AlgoConfig.MinClusterSize) clusterPoints.AddRange(bucket.Points);                
+                else
+                {
+                    bucket.Centroid.C = bucket.Points.Count;
+                    clusterPoints.Add(bucket.Centroid);
                 }
             }
 
@@ -65,7 +61,9 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
             return dataset.Where(p => MathTool.IsInside(viewport, p)).ToList();
         }
 
+        #region NOT USED
         /*
+        // Can be used instead of GetCentroidFromClusterLatLon if your data are not near lon 180
         // Basic Centroid Calculation of N Points
         public static P GetCentroidFromCluster(List<P> list) //O(n)
         {          
@@ -87,6 +85,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
             return centroid;
         }
         */
+        #endregion NOT USED
 
         // Circular mean, very relevant for points around New Zealand, where lon -180 to 180 overlap
         // Adapted Centroid Calculation of N Points for Google Maps usage
@@ -152,7 +151,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
 
         public P GetClosestPoint(P from, List<P> list) // O(n)
         {
-            double min = double.MaxValue;
+            var min = double.MaxValue;
             P closests = null;
             foreach (var p in list)
             {
@@ -180,8 +179,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
 
             foreach (P p in Dataset)
             {
-                double minDist = Double.MaxValue;
-                string index = string.Empty;
+                var minDist = Double.MaxValue;
+                var index = string.Empty;
                 foreach (var i in BucketsLookup.Keys)
                 {
                     var bucket = BucketsLookup[i];
@@ -205,15 +204,17 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
             }
         }
 
-        // update centroid location to nearest point, 
+        // Update centroid location to nearest point, 
         // e.g. if you want to show cluster point on a real existing point area
         // O(n)
         public void UpdateCentroidToNearestContainingPoint(Bucket bucket)
         {
             if (bucket == null || bucket.Centroid == null ||
                 bucket.Points == null || bucket.Points.Count == 0)
+            {
                 return;
-
+            }
+                
             var closest = GetClosestPoint(bucket.Centroid, bucket.Points);
             bucket.Centroid.Lon = closest.Lon; // no normalize, points are already normalized by default
             bucket.Centroid.Lat = closest.Lat;

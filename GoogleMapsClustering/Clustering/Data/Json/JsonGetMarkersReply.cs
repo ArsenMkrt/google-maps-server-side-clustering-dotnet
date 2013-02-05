@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Kunukn.GooglemapsClustering.Clustering.Data
+namespace Kunukn.GooglemapsClustering.Clustering.Data.Json
 {
     public class JsonGetMarkersReply : JsonReplyBase
     {                        

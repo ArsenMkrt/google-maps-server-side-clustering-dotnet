@@ -2,7 +2,7 @@
 using System.Text;
 using System.Web.Script.Serialization;
 
-namespace Kunukn.GooglemapsClustering.Clustering.Data
+namespace Kunukn.GooglemapsClustering.Clustering.Data.Json
 {
     public class JsonMarkerInfoReply : JsonReplyBase
     {

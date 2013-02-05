@@ -1,4 +1,4 @@
-﻿namespace Kunukn.GooglemapsClustering.Clustering.Data
+﻿namespace Kunukn.GooglemapsClustering.Clustering.Data.Json
 {
     public class JsonReplyBase
     {

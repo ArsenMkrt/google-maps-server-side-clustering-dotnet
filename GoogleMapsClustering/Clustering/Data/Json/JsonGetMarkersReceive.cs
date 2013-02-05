@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Kunukn.GooglemapsClustering.Clustering.Data
+namespace Kunukn.GooglemapsClustering.Clustering.Data.Json
 {
     /// <summary>
     /// Parse json receive data
