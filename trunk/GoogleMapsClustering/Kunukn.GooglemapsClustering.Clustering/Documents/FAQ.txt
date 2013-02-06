@@ -42,10 +42,10 @@ specific values are set for gridx and gridy in the settings.
 *Q. How do I load the dataset?*
 
 A. By default the dataset are loaded from a csv file to the Application session.
-Look how it is done in {{{Kunukn.GooglemapsClustering.WebGoogleMapClustering.Application_Start}}}
+Look how it is done in {{{Kunukn.GooglemapsClustering.Web.Application_Start}}}
 
 The csv file is located at 
-{{{GoogleMapsClustering/WebGoogleMapsClustering/AreaGMC/Files/Points.csv}}}
+{{{GoogleMapsClustering/Kunukn.GooglemapsClustering.Web/AreaGMC/Files/Points.csv}}}
 
 The format of the csv file is 
 longitude; latitude; point id in GUID format; type id.
@@ -55,7 +55,7 @@ Only the longitude and latitude are parsed to double values.
 point id and type id are string values and are not parsed.
 
 There is also the possible to load from a serialized file programmatically but no example file is included.
-Look in the code {{{Kunukn.GooglemapsClustering.DataUtility.Dataset.LoadDatasetFromDatabase()}}}
+Look in the code {{{Kunukn.GooglemapsClustering.Clustering.Utility.Dataset.LoadDatasetFromDatabase()}}}
 
 ---------------------------------
 
@@ -136,13 +136,6 @@ http://code.google.com/intl/da-DK/apis/maps/articles/toomanymarkers.html
 
 ---------------------------------
 
-*Q. How do I generate random data points?*
-
-A. Use the method: {{{Kunukn.GooglemapsClustering.TestConsole.Program.GenerateRandomDatasetToCSVFile()}}}
-to update information for how many points you want and in which area you want them.
-
----------------------------------
-
 *Q. Who made the Google Maps search function in this example?*
 
 A. The example code is with inspiration from
@@ -186,6 +179,31 @@ In the mapclustering.js in the settings.
 set gridx and gridy to low numbers, e.g. 2 and 2.
 ---------------------------------
 
+*Q. How do I generate random data points?*
+
+A. Use the method: {{{Kunukn.GooglemapsClustering.TestConsole.Program.GenerateRandomDatasetToCSVFile()}}}
+to update information for how many points you want and in which area you want them.
+
+---------------------------------
+
+*Q. What license type is this?*
+
+A. MIT License.
+
+---------------------------------
+
+*Q. How much does it cost to use Google Maps?*
+
+A. Google knows the answer. Try this link https://developers.google.com/maps/faq
+
+---------------------------------
+
+*Q. Could you port this to Java?*
+
+A. Yes I was thinking about it, but decided I want to spend my time on other projects for the time being.
+
+---------------------------------
+
 *Q. Who made this?*
 
 A. Kunuk Nykjaer spend the time in the weekends to make 
@@ -206,22 +224,5 @@ The marker images are taken from http://mapicons.nicolasmollet.com/
   * Jonas Olsen http://dk.linkedin.com/in/joolz/
   * Lars Gundersen http://dk.linkedin.com/in/larsgundersen/
   * Lasse Rasch http://dk.linkedin.com/pub/lasse-rasch/7/991/a10/
----------------------------------
-
-*Q. What license type is this?*
-
-A. MIT License.
-
----------------------------------
-
-*Q. How much does it cost to use Google Maps?*
-
-A. Google knows the answer. Try this link https://developers.google.com/maps/faq
-
----------------------------------
-
-*Q. Could you port this to Java?*
-
-A. Yes I was thinking about it, but decided I want to spend my time on other projects for the time being.
 
 ---------------------------------

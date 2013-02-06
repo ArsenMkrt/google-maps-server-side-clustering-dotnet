@@ -31,22 +31,23 @@
         </div>
 
         <div id="gmcKN_checkboxContainer">
+            <input type="button" value="ZoomIn" onclick="gmcKN.zoomIn();" class="inputZoom" />&nbsp;&nbsp;
+            <input type="button" value="ZoomOut" onclick="gmcKN.zoomOut();"  class="inputZoom" />
+            <br />
+
             <input type="checkbox" id="gmcKN_Type1" name="Type" value="Type1" onclick="gmcKN.checkboxClicked('gmc_type1',this.checked+'');"
-                checked="checked" />Type1<br />
+                   checked="checked" />Type1<br />
             <input type="checkbox" id="gmcKN_Type2" name="Type" value="Type2" onclick="gmcKN.checkboxClicked('gmc_type2',this.checked+'');"
-                checked="checked" />Type2<br />
+                   checked="checked" />Type2<br />
             <input type="checkbox" id="gmcKN_Type3" name="Type" value="Type3" onclick="gmcKN.checkboxClicked('gmc_type3',this.checked+'');"
-                checked="checked" />Type3<br />
+                   checked="checked" />Type3<br />
             <input type="checkbox" id="gmcKN_Lines" name="Type" value="Lines" onclick="gmcKN.checkboxClicked('gmc_meta_lines',this.checked+'');" />Toggle
             lines<br />
             <span id="gmcKN_Clustering_span">
                 <input type="checkbox" id="gmcKN_Clustering" name="Type" value="Clustering" onclick="gmcKN.checkboxClicked('gmc_clustering',this.checked+'');"
-                    checked="checked" />Toggle clustering </span>
+                       checked="checked" />Toggle clustering </span>
             <br />
-            <span id="gmcKN_zoomInfo" class="gmcKN_mono">zoom: </span>
-            <br />
-            <input type="button" value="ZoomIn" onclick="gmcKN.zoomIn();"/> 
-            <input type="button" value="ZoomOut" onclick="gmcKN.zoomOut();"/>
+            <span id="gmcKN_zoomInfo" class="gmcKN_mono">zoom: </span>                        
         </div>
     </div>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
