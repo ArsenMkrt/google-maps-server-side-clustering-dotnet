@@ -28,7 +28,7 @@ The server running time with an average laptop was about 300 msec. for 300.000 p
 It should be possible to increase the number of points and keep a delay below 1 sec. 
 by implementing a spatial data structure such as range search but it would only help if you are zoomed in. 
 If you are zoomed all the way out you will have to iterate all the points  
-then you would have to rely on pre-clustering (offline clustering) for fast runtime response.
+then you would have to rely on pre-clustering for time complexity improvement.
 
 ---------------------------------
 
@@ -42,10 +42,10 @@ specific values are set for gridx and gridy in the settings.
 *Q. How do I load the dataset?*
 
 A. By default the dataset are loaded from a csv file to the Application session.
-Look how it is done in {{{Kunukn.GooglemapsClustering.WebGoogleMapClustering.Application_Start}}}
+Look how it is done in {{{Kunukn.GooglemapsClustering.Web.Application_Start}}}
 
 The csv file is located at 
-{{{GoogleMapsClustering/WebGoogleMapsClustering/AreaGMC/Files/Points.csv}}}
+{{{GoogleMapsClustering/Kunukn.GooglemapsClustering.Web/AreaGMC/Files/Points.csv}}}
 
 The format of the csv file is 
 longitude; latitude; point id in GUID format; type id.
@@ -55,13 +55,7 @@ Only the longitude and latitude are parsed to double values.
 point id and type id are string values and are not parsed.
 
 There is also the possible to load from a serialized file programmatically but no example file is included.
-Look in the code {{{Kunukn.GooglemapsClustering.DataUtility.Dataset.LoadDatasetFromDatabase()}}}
-
----------------------------------
-
-*Q. How many points are there in the demo example?*
-
-A. There are 45497 points.
+Look in the code {{{Kunukn.GooglemapsClustering.Clustering.Utility.Dataset.LoadDatasetFromDatabase()}}}
 
 ---------------------------------
 
@@ -90,7 +84,7 @@ By default there can only be either one mark inside a grid. Either a cluster-poi
 
 A. In the file {{{mapclustering.js }}}
 set the showGridLines to false or disable it server-side
-setting {{{Kunukn.GooglemapsClustering.Clustering.Config.DoShowGridLinesInGoogleMap}}} to false. 
+setting {{{GmcGlobalKeySettings.config DoShowGridLinesInGoogleMap}}} to false. 
 I recommend to disable it server-side which will reduce the json-data size for the webservice call.
 
 ---------------------------------
@@ -98,21 +92,21 @@ I recommend to disable it server-side which will reduce the json-data size for t
 *Q. How do I extend the viewport data send to the client?*
 
 A. Increase or decrease the value in 
-{{{Kunukn.GooglemapsClustering.Clustering.Config.OuterGridExtend}}}
+{{{GmcGlobalKeySettings.config OuterGridExtend}}}
 
 ---------------------------------
 
 *Q. How do I control the cluster merging point?*
 
 A. Increase or decrease the value in 
-{{{Kunukn.GooglemapsClustering.Clustering.Config.MergeWithin}}}
+{{{GmcGlobalKeySettings.config MergeWithin}}}
 
 ---------------------------------
 
 *Q. How do I set the minimum count of points level before a cluster is made?*
 
 A. Increase or decrease the value in 
-{{{Kunukn.GooglemapsClustering.Clustering.Config.MinClusterSize}}}
+{{{GmcGlobalKeySettings.config MinClusterSize}}}
 
 ---------------------------------
 
@@ -120,7 +114,7 @@ A. Increase or decrease the value in
 
 A. The data for drawing the gridlines are assumed correct last time I checked. The Google API 
 for drawing red linens can't draw all longitude value scenarious (I Assume), 
-e.g. from 60 to -100. I didn't want to spend more time on the value scenarious to make a fix 
+e.g. from 60 to -100. I didn't want to spend more time on the value scenarious to make it work 
 by splitting draw functions to something like e.g. 60 to 180 and then -180 to -100
 
 ---------------------------------
@@ -142,13 +136,6 @@ http://code.google.com/intl/da-DK/apis/maps/articles/toomanymarkers.html
 
 ---------------------------------
 
-*Q. How do I generate random data points?*
-
-A. Use the method: {{{Kunukn.GooglemapsClustering.TestConsole.Program.GenerateRandomDatasetToCSVFile()}}}
-to update information for how many points you want and in which area you want them.
-
----------------------------------
-
 *Q. Who made the Google Maps search function in this example?*
 
 A. The example code is with inspiration from
@@ -163,19 +150,26 @@ where n is the number of points used in total and m is the number of grids retur
 You are welcome to analyse it yourself :) I use hashset and hashmap to minimize the time complexity.
 
 Time complexity is ~ O(n^2) on worst case but extremely unlikely, 
-happens if most centroids are merged with neighbor-centroids.
+happens if most centroids are merged with neighbor-centroids 
+(not a likely scenario for common dataset, where data only exists at grid borderlines).
 ---------------------------------
 
 *Q. Where did you get the points?*
 
-A. The points are taken from the file cities5000 at http://download.geonames.org/export/dump/
+A. The points are taken from the file cities1000 at http://download.geonames.org/export/dump/
+
+---------------------------------
+
+*Q. How many points are there in the demo example?*
+
+A. There are 130.530 points.
 
 ---------------------------------
 
 *Q. How can I customize this to use most points and keep fast performance?*
 
 A. 
-In the file: {{{Kunukn.GooglemapsClustering.Clustering.Config}}}. 
+In the file: {{{GmcGlobalKeySettings.config}}}. 
 Set {{{OuterGridExtend}}} to 0. 
 Set {{{DoMergeGridIfCentroidsAreCloseToEachOther}}} to false. 
 Set {{{DoShowGridLinesInGoogleMap}}} to false. 
@@ -183,6 +177,31 @@ Set {{{DoShowGridLinesInGoogleMap}}} to false.
 
 In the mapclustering.js in the settings. 
 set gridx and gridy to low numbers, e.g. 2 and 2.
+---------------------------------
+
+*Q. How do I generate random data points?*
+
+A. Use the method: {{{Kunukn.GooglemapsClustering.TestConsole.Program.GenerateRandomDatasetToCSVFile()}}}
+to update information for how many points you want and in which area you want them.
+
+---------------------------------
+
+*Q. What license type is this?*
+
+A. MIT License.
+
+---------------------------------
+
+*Q. How much does it cost to use Google Maps?*
+
+A. Google knows the answer. Try this link https://developers.google.com/maps/faq
+
+---------------------------------
+
+*Q. Could you port this to Java?*
+
+A. Yes I was thinking about it, but decided I want to spend my time on other projects for the time being.
+
 ---------------------------------
 
 *Q. Who made this?*
@@ -194,7 +213,7 @@ which I later discontinued because I felt the grid-based worked better.
 All the server-side clustering logic is made by Kunuk Nykjaer.
 The JS GUI-part is largely adapted and reworked by Kunuk Nykjaer and the inspiration came partly 
 from JS-implementation by Jonas Olsen, Lars Gundersen and misc. http://stackoverflow.com/ pages. 
-The server-side webservice definition are with inspiration from Lasse Rasch's implementations.
+The server-side webservice definition (asmx files) are with inspiration from Lasse Rasch's implementations.
 The JS logic-part (cluster points updating, lines drawing) was made by Kunuk Nykjaer).
 The address search part done with inspiration 
 from http://tech.cibul.net/geocode-with-google-maps-api-v3/.
@@ -205,23 +224,5 @@ The marker images are taken from http://mapicons.nicolasmollet.com/
   * Jonas Olsen http://dk.linkedin.com/in/joolz/
   * Lars Gundersen http://dk.linkedin.com/in/larsgundersen/
   * Lasse Rasch http://dk.linkedin.com/pub/lasse-rasch/7/991/a10/
----------------------------------
-
-*Q. What license type is this?*
-
-A. MIT License.
-
----------------------------------
-
-*Q. How much does it cost to use Google Maps?*
-
-A. Google knows the answer. Try this link
-https://developers.google.com/maps/faq
-
----------------------------------
-
-*Q. Could you port this to Java?*
-
-A. Yes I was thinking about it, but decided I want to spend my time on other projects for the time being.
 
 ---------------------------------
