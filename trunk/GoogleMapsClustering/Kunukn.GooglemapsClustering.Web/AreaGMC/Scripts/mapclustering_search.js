@@ -1,5 +1,9 @@
 ﻿// Author: Kunuk Nykjaer et al.
 
+// only search related js here
+// source: http://tech.cibul.net/geocode-with-google-maps-api-v3/
+
+
 gmcKN.searchInfo = {
     searchMarker: null,
     zoomLevel: 12,
@@ -42,10 +46,8 @@ gmcKN.mymap.latlonsearch = function() {
     });
 };
 
-gmcKN.mymap.initializeSearch = function() {
-    // search -------------        
-    // http://tech.cibul.net/geocode-with-google-maps-api-v3/
-
+gmcKN.mymap.initializeSearch = function () {
+    
     $('#gmcKN_search').focus();
     $('#gmcKN_latitude').keypress(function(e) {
         if (e.which === 13) {

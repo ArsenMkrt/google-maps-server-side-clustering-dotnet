@@ -17,21 +17,21 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             return jsonReply;
         }
 
-        public JsonGetMarkersReply GetMarkers(double nelat, double nelon, double swlat, double swlon, int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, string filter, int sendid)
+        public JsonMarkersReply GetMarkers(double nelat, double nelon, double swlat, double swlon, int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, string filter, int sendid)
         {                                    
             var jsonReceive = new JsonGetMarkersReceive(nelat, nelon, swlat, swlon, zoomlevel, gridx, gridy, zoomlevelClusterStop, filter, sendid);
             
             var clusteringEnabled = jsonReceive.IsClusteringEnabled || AlgoConfig.AlwaysClusteringEnabledWhenZoomLevelLess > jsonReceive.Zoomlevel;
             
-            JsonGetMarkersReply reply;
+            JsonMarkersReply reply;
             
-            jsonReceive.Viewport.ValidateLatLon(); // Validate google map viewport input
+            jsonReceive.Viewport.ValidateLatLon(); // Validate google map viewport input (is always valid)
             jsonReceive.Viewport.Normalize();
 
-            // Get all points from memory, application cache
+            // Get all points from memory
             var allpoints = MemoryDatabase.Points;
                                         
-            var dataset = allpoints; // unfiltered at the moment
+            var dataset = allpoints; // unfiltered at the moment            
             if (jsonReceive.TypeFilter.Count > 0)
             {
                 // Filter data by typeFilter value
@@ -48,7 +48,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
                 var clusterPoints = clusterAlgo.GetCluster(new ClusterInfo { ZoomLevel = jsonReceive.Zoomlevel });
 
                 // Prepare data to the client
-                reply = new JsonGetMarkersReply { Points = clusterPoints, ReplyId = sendid, Polylines = clusterAlgo.Lines };                
+                reply = new JsonMarkersReply { Points = clusterPoints, ReplyId = sendid, Polylines = clusterAlgo.Lines};
 
                 // Return client data
                 return reply;
@@ -59,22 +59,23 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             List<P> filteredDataset = ClusterAlgorithmBase.FilterDataset(dataset, jsonReceive.Viewport);
             List<P> filteredDatasetMaxPoints = filteredDataset.Take(AlgoConfig.MaxMarkersReturned).ToList();
 
-            reply = new JsonGetMarkersReply { Points = filteredDatasetMaxPoints, ReplyId = sendid, Success = "1" };            
+            reply = new JsonMarkersReply { Points = filteredDatasetMaxPoints, ReplyId = sendid};
             return reply;
         }
 
-        public JsonMarkerInfoReply GetMarkerDetail(string id, string type, int sendid)
+        public JsonMarkerInfoReply GetMarkerInfo(string id, string type, int sendid)
         {                                                
             var reply = new JsonMarkerInfoReply { Id = id, Type = type, ReplyId = sendid };                        
-            reply.BuildContent();
-            reply.Success = "1";
+            reply.BuildContent();            
+            return reply;
+        }            
+
+        public JsonInfoReply GetInfo()
+        {
+           var reply = new JsonInfoReply { Points = MemoryDatabase.Points.Count};
             return reply;
         }
-        
-        public string Test()
-        {
-            return "test";
-        }
+       
     }
 
 }

@@ -1,8 +1,6 @@
 ﻿// Author: Kunuk Nykjaer et al.
 
 var gmcKN = {
-
-    dragging: null,
     
     markers: [],
     map: undefined,
@@ -30,25 +28,19 @@ var gmcKN = {
         console.log(s);
     },
 
+    zoomIn: function () {
+        var z = gmcKN.map.getZoom();        
+        gmcKN.map.setZoom(z + 1);
+    },
+
+    zoomOut: function () {
+        var z = gmcKN.map.getZoom();
+        gmcKN.map.setZoom(z - 1);
+    },
+
     mymap: {
         initialize: function () {
-            
-//            $(document.body).on("mousemove", function (e) {
-//                if (gmcKN.dragging) {
-//                    gmcKN.dragging.offset({
-//                        top: e.pageY,
-//                        left: e.pageX
-//                    });
-//                }
-//            });
-//            $(document.body).on("mousedown", "#gmcKN_checkboxContainer", function (e) {
-//                gmcKN.dragging = $(e.target);
-//            });
-//            $(document.body).on("mouseup", function (e) {
-//                gmcKN.dragging = null;
-//            });
-            
-
+                        
             var center = new google.maps.LatLng(gmcKN.mymap.settings.mapCenterLat, gmcKN.mymap.settings.mapCenterLon, true);
 
             gmcKN.map = new google.maps.Map(document.getElementById('gmcKN_map'), {
@@ -88,8 +80,9 @@ var gmcKN = {
             zoomlevelClusterStop: 15,
             alwaysClusteringEnabledWhenZoomLevelLess: 8,
             
-            jsonMarkerUrl: '/AreaGMC/gmc.svc/GetMarkers',            
-            jsonMarkerDetailUrl: '/AreaGMC/gmc.svc/GetMarkerDetail',
+            jsonMarkerUrl: '/AreaGMC/gmc.svc/GetMarkers', // post
+            jsonMarkerInfoUrl: '/AreaGMC/gmc.svc/GetMarkerInfo', // post
+            jsonInfoUrl: '/AreaGMC/gmc.svc/GetInfo', // get
 
             clusterImage: {
                 src: 'Images/cluster2.png', //this is invisible img only used for click-event detecting
@@ -428,7 +421,7 @@ var gmcKN = {
 
                 $.ajax({
                     type: 'POST',
-                    url: gmcKN.mymap.settings.jsonMarkerDetailUrl,
+                    url: gmcKN.mymap.settings.jsonMarkerInfoUrl,
                     data: parameters,
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',

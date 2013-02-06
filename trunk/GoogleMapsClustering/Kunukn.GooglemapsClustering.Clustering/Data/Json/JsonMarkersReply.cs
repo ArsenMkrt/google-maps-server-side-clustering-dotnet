@@ -2,12 +2,12 @@
 
 namespace Kunukn.GooglemapsClustering.Clustering.Data.Json
 {
-    public class JsonGetMarkersReply : JsonReplyBase
+    public class JsonMarkersReply : JsonReplyBase
     {                        
         public List<P> Points { get; set; } // markers or clusters        
-        public List<Line> Polylines { get; set; } // google map draw lines
+        public List<Line> Polylines { get; set; } // google map draw lines        
 
-        public JsonGetMarkersReply()
+        public JsonMarkersReply()
         {
             Points = new List<P>();
             Polylines = new List<Line>();            
