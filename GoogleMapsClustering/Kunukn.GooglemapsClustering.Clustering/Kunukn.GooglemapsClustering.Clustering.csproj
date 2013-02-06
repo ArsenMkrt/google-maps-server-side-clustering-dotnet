@@ -50,6 +50,7 @@
     <Compile Include="Algorithm\GridCluster.cs" />
     <Compile Include="Data\Enums.cs" />
     <Compile Include="Data\AlgoConfig.cs" />
+    <Compile Include="Data\Json\JsonInfoReply.cs" />
     <Compile Include="Utility\Dataset.cs" />
     <Compile Include="Utility\FileUtil.cs" />
     <Compile Include="Utility\Serializer.cs" />
@@ -60,7 +61,7 @@
     <Compile Include="Utility\DataExtensions.cs" />
     <Compile Include="Data\DatasetToSerialize.cs" />
     <Compile Include="Data\Json\JsonGetMarkersReceive.cs" />
-    <Compile Include="Data\Json\JsonGetMarkersReply.cs" />
+    <Compile Include="Data\Json\JsonMarkersReply.cs" />
     <Compile Include="Data\Json\JsonMarkerInfoReply.cs" />
     <Compile Include="Data\Json\JsonReplyBase.cs" />
     <Compile Include="Data\LatLonInfo.cs" />
@@ -75,7 +76,16 @@
     <Compile Include="WebService\AjaxService.cs" />
     <Compile Include="WebService\IAjaxService.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Documents\Design\googlemaps-clustering-viewport_ver1.png" />
+    <Content Include="Documents\Design\GoogleMapsClustering_SD_ver1.png" />
+    <Content Include="Documents\FAQ.txt" />
+    <Content Include="Documents\License.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Documents\Design\googlemaps-clustering-viewport_ver1.vsd" />
+    <None Include="Documents\Design\GoogleMapsClustering_SD_ver1.vsd" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

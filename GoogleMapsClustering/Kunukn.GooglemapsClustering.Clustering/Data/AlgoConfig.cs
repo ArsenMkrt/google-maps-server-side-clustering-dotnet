@@ -24,6 +24,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             MinClusterSize = int.Parse(local[s = "MinClusterSize"] ?? global[s] ?? Throw(s));
             MaxMarkersReturned = int.Parse(local[s = "MaxMarkersReturned"] ?? global[s] ?? Throw(s));
             AlwaysClusteringEnabledWhenZoomLevelLess = int.Parse(local[s = "AlwaysClusteringEnabledWhenZoomLevelLess"] ?? global[s] ?? Throw(s));
+            Environment = local[s = "Environment"] ?? global[s] ?? Throw(s);            
         }
 
         // Use debug data        
@@ -50,8 +51,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
         // to disable this effect set the value to -1
         public static readonly int AlwaysClusteringEnabledWhenZoomLevelLess;
 
-
-
+        // Not used
+        public static readonly string Environment;        
 
         public static NameValueCollection GetSectionLocal()
         {

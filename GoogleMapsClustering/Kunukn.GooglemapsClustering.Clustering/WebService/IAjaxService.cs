@@ -13,21 +13,20 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "GetMarkers",
             BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
-        JsonGetMarkersReply GetMarkers(double nelat, double nelon, double swlat, double swlon,
+        JsonMarkersReply GetMarkers(double nelat, double nelon, double swlat, double swlon,
                                  int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, string filter, int sendid);
 
         [OperationContract]
-        [WebInvoke(Method = "POST", UriTemplate = "GetMarkerDetail",
+        [WebInvoke(Method = "POST", UriTemplate = "GetMarkerInfo",
             BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
-        JsonMarkerInfoReply GetMarkerDetail(string id, string type, int sendid);
-
-        
+        JsonMarkerInfoReply GetMarkerInfo(string id, string type, int sendid);
+              
         [OperationContract]
         [WebGet(
-            UriTemplate = "test",
+            UriTemplate = "GetInfo",
             ResponseFormat = WebMessageFormat.Json)
         ]
-        string Test();
+        JsonInfoReply GetInfo();
     }
 
 }

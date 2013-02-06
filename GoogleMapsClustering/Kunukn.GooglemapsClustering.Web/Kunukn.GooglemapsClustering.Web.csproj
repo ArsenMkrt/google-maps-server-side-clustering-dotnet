@@ -62,17 +62,13 @@
   <ItemGroup>
     <Content Include="AreaGMC\gmc.svc" />
     <Content Include="AreaGMC\MapClusteringSearch.html" />
-    <Content Include="AreaGMC\Documents\FAQ.txt" />
     <Content Include="AreaGMC\Images\clusteringpreview.gif" />
     <Content Include="AreaGMC\Images\link.txt" />
     <Content Include="AreaGMC\Images\markers\court.png" />
     <Content Include="AreaGMC\Images\markers\firstaid.png" />
     <Content Include="AreaGMC\Images\markers\house.png" />
     <Content Include="AreaGMC\Images\markers\link.txt" />
-    <Content Include="AreaGMC\Documents\Design\googlemaps-clustering-viewport_ver1.png" />
-    <Content Include="AreaGMC\Documents\Design\GoogleMapsClustering_SD_ver1.png" />
-    <Content Include="AreaGMC\Documents\License.txt" />
-    <Content Include="AreaGMC\Documents\Readme.htm" />
+    <Content Include="AreaGMC\Readme.html" />
     <Content Include="AreaGMC\MapClustering.html" />
     <Content Include="AreaGMC\Scripts\mapclustering_search.js" />
     <Content Include="AreaGMC\Scripts\mapclustering.js" />
@@ -102,6 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="AreaGMC\Documents\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Kunukn.GooglemapsClustering.Clustering\Kunukn.GooglemapsClustering.Clustering.csproj">
@@ -110,8 +107,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="AreaGMC\Documents\Design\googlemaps-clustering-viewport_ver1.vsd" />
-    <None Include="AreaGMC\Documents\Design\GoogleMapsClustering_SD_ver1.vsd" />
     <None Include="AreaGMC\Files\Points.csv" />
     <Content Include="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

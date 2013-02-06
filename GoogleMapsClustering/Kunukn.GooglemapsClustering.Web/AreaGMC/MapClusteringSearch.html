@@ -16,12 +16,12 @@
             <input id="gmcKN_search" size="18" type="text" />
             <label>
                 latitude:</label>
-            <input id="gmcKN_latitude" size="10" class="gmcKN_mono" maxlength="18" type="text" onclick="this.select();" />
+            <input id="gmcKN_latitude" size="10" class="gmcKN_mono" maxlength="19" type="text" onclick="this.select();" />
             <label>
                 longitude:</label>
-            <input id="gmcKN_longitude" class="gmcKN_mono" size="10" maxlength="18" type="text" onclick="this.select();" />
+            <input id="gmcKN_longitude" class="gmcKN_mono" size="10" maxlength="19" type="text" onclick="this.select();" />
             <input id="gmcKN_btnLatLonSearch" type="button" value="search" onclick="gmcKN.mymap.latlonsearch(); return false;" />            
-            <input id="gmcKN_lonlat" maxlength="18" onclick="this.select();" value="Drag the marker"/>
+            <input id="gmcKN_lonlat" maxlength="19" onclick="this.select();" value="Drag the marker"/>
             <!--
             <a href="http://kunuk.wordpress.com/2011/11/05/google-map-server-side-clustering-with-asp-net/"
                                               target="_blank">Server-side clustering blog&nbsp;</a> -->
@@ -45,6 +45,8 @@
             <br />
             <span id="gmcKN_zoomInfo" class="gmcKN_mono">zoom: </span>
             <br />
+            <input type="button" value="ZoomIn" onclick="gmcKN.zoomIn();"/> 
+            <input type="button" value="ZoomOut" onclick="gmcKN.zoomOut();"/>
         </div>
     </div>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>

@@ -16,7 +16,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
     /// <summary>
     /// Author: Kunuk Nykjaer
     /// Misc. methods for quick testing and converting data
-    /// Not NUnit or testcases, just quick testing methods
+    /// Not NUnit or testcases, just quick testing and parsing methods
     /// </summary>
     class Program
     {
@@ -57,7 +57,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             //http://download.geonames.org/export/dump/
 
             var rand = new Random();
-            const string name = "cities5000";
+            const string name = "cities1000";
             List<string> lines = FileUtil.ReadFile(string.Format("c:\\temp\\{0}.txt", name));
             var dataset = new List<P>();
 
