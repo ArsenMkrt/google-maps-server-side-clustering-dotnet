@@ -61,7 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AreaGMC\gmc.svc" />
-    <Content Include="AreaGMC\MapClustering.html" />
+    <Content Include="AreaGMC\MapClusteringSearch.html" />
     <Content Include="AreaGMC\Documents\FAQ.txt" />
     <Content Include="AreaGMC\Images\clusteringpreview.gif" />
     <Content Include="AreaGMC\Images\link.txt" />
@@ -73,11 +73,9 @@
     <Content Include="AreaGMC\Documents\Design\GoogleMapsClustering_SD_ver1.png" />
     <Content Include="AreaGMC\Documents\License.txt" />
     <Content Include="AreaGMC\Documents\Readme.htm" />
-    <Content Include="AreaGMC\Scripts\jquery-ui.min.js" />
-    <Content Include="AreaGMC\Scripts\jquery.min.js" />
+    <Content Include="AreaGMC\MapClustering.html" />
+    <Content Include="AreaGMC\Scripts\mapclustering_search.js" />
     <Content Include="AreaGMC\Scripts\mapclustering.js" />
-    <Content Include="AreaGMC\Styles\Default.css" />
-    <Content Include="AreaGMC\Styles\jquery-ui.css" />
     <Content Include="Default.html" />
     <Content Include="favicon.ico" />
     <Content Include="AreaGMC\Images\cluster2.png" />
@@ -88,8 +86,7 @@
     <Content Include="AreaGMC\Images\m5.png" />
     <Content Include="AreaGMC\Images\pin24.png" />
     <Content Include="Global.asax" />
-    <Content Include="AreaGMC\Styles\Googlemap.css" />
-    <Content Include="AreaGMC\Service.svc" />
+    <Content Include="AreaGMC\Styles\Gmc.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
