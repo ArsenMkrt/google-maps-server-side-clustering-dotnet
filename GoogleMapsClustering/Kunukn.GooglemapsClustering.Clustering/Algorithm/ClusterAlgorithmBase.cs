@@ -115,8 +115,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
             double latCos = 0;
             foreach (var p in list)
             {
-                lonSin += Math.Sin(p.Lon.LatLonToRadian());
-                lonCos += Math.Cos(p.Lon.LatLonToRadian());
+                lonSin += Math.Sin(p.X.LatLonToRadian());
+                lonCos += Math.Cos(p.X.LatLonToRadian());
                 latSin += Math.Sin(p.Y.LatLonToRadian());
                 latCos += Math.Cos(p.Y.LatLonToRadian());
             }
@@ -216,7 +216,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
             }
                 
             var closest = GetClosestPoint(bucket.Centroid, bucket.Points);
-            bucket.Centroid.Lon = closest.Lon; // no normalize, points are already normalized by default
+            bucket.Centroid.X = closest.X; // no normalize, points are already normalized by default
             bucket.Centroid.Y = closest.Y;
         }
         // O(k*n)

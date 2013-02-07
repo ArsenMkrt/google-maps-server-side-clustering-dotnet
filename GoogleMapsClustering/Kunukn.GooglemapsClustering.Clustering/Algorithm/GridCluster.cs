@@ -215,7 +215,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
         // To work properly it requires the p is already normalized
         public static int[] GetPointMappedIds(P p, Boundary grid, double deltax, double deltay)
         {
-            var relativeX = p.Lon - grid.Minx;
+            var relativeX = p.X - grid.Minx;
             var relativeY = p.Y - grid.Miny;
             int idx, idy;
 
@@ -251,12 +251,12 @@ then the longitudes from 170 to -170 will be clustered together
                 overlapMapMinX++;
             }
             
-            int idxx = (int)(p.Lon / deltax);
-            if (p.Lon < 0) idxx--;
+            int idxx = (int)(p.X / deltax);
+            if (p.X < 0) idxx--;
             
-            if (Math.Abs(LatLonInfo.MaxLonValue % p.Lon - 0) < Numbers.Epsilon)
+            if (Math.Abs(LatLonInfo.MaxLonValue % p.X - 0) < Numbers.Epsilon)
             {
-                if (p.Lon < 0) idxx++;
+                if (p.X < 0) idxx++;
                 else idxx--;
             }
                                     

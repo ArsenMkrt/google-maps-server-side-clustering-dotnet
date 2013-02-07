@@ -28,7 +28,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             for (var i = 0; i < c; i++)
             {
                 var p = points[i];
-                ps.Data.Add(new SingleDetectLibrary.Code.Data.P { X = p.Lon, Y = p.Y, }); // used for testing K nearest neighbor
+                ps.Data.Add(new SingleDetectLibrary.Code.Data.P { X = p.X, Y = p.Y, }); // used for testing K nearest neighbor
 
                 var a = rand.Next(c);
                 var b = rand.Next(c);

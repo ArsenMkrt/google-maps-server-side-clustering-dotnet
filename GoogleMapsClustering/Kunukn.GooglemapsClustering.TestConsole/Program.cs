@@ -124,19 +124,19 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             var dx = 20;
             var dy = 20;
 
-            var xy = GridCluster.GetPointMappedIds(new P { Lon = 175, Y = 35 }, b, dx, dy);
+            var xy = GridCluster.GetPointMappedIds(new P { X = 175, Y = 35 }, b, dx, dy);
             Console.WriteLine("x: {0}   y: {1}", xy[0], xy[1]);
 
-            xy = GridCluster.GetPointMappedIds(new P { Lon = 175, Y = 35 }, b, dx, dy);
+            xy = GridCluster.GetPointMappedIds(new P { X = 175, Y = 35 }, b, dx, dy);
             Console.WriteLine("x: {0}   y: {1}", xy[0], xy[1]);
 
-            xy = GridCluster.GetPointMappedIds(new P { Lon = 180, Y = 35 }, b, dx, dy);
+            xy = GridCluster.GetPointMappedIds(new P { X = 180, Y = 35 }, b, dx, dy);
             Console.WriteLine("x: {0}   y: {1}", xy[0], xy[1]);
 
-            xy = GridCluster.GetPointMappedIds((new P { Lon = 181, Y = 35 }).Normalize(), b, dx, dy);
+            xy = GridCluster.GetPointMappedIds((new P { X = 181, Y = 35 }).Normalize(), b, dx, dy);
             Console.WriteLine("x: {0}   y: {1}", xy[0], xy[1]);
 
-            xy = GridCluster.GetPointMappedIds((new P { Lon = -181, Y = 35 }).Normalize(), b, dx, dy);
+            xy = GridCluster.GetPointMappedIds((new P { X = -181, Y = 35 }).Normalize(), b, dx, dy);
             Console.WriteLine("x: {0}   y: {1}", xy[0], xy[1]);
         }
 
@@ -150,7 +150,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             {
                 var lat = (b.Miny + b.AbsY * Rand.NextDouble()).NormalizeLatitude();
                 var lon = (b.Minx + b.AbsX * Rand.NextDouble()).NormalizeLongitude();
-                list.Add(new P { I = Guid.NewGuid().ToString(), C = 1, Y = lat, Lon = lon, T = i.ToString() });
+                list.Add(new P { I = Guid.NewGuid().ToString(), C = 1, Y = lat, X = lon, T = i.ToString() });
             }
 
             return list;
