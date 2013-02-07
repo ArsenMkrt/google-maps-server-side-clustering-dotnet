@@ -42,8 +42,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
                  var arr = s.Split(new []{";"}, StringSplitOptions.RemoveEmptyEntries);
                  if (arr.Length == 4)
                  {
-                     double x = PBase.ToValue(arr[0]).Value;
-                     double y = PBase.ToValue(arr[1]).Value;
+                     double x = Utility.ParseValue.ToDouble(arr[0]).Value;
+                     double y = Utility.ParseValue.ToDouble(arr[1]).Value;
                      var i = arr[2];
                      var t = arr[3];
 

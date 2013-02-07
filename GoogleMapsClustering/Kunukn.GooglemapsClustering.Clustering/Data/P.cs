@@ -13,13 +13,13 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
     {
         public string Y // lat json
         {
-            get { return ToString(Lat); }
-            set { Lat = ToValue(value).Value; } // Do throw exception if null
+            get { return ParseValue.DoubleToString(Lat); }
+            set { Lat = ParseValue.ToDouble(value).Value; } // Do throw exception if null
         }
         public string X // lon json
         {
-            get { return ToString(Lon); }
-            set { Lon = ToValue(value).Value; }
+            get { return ParseValue.DoubleToString(Lon); }
+            set { Lon = ParseValue.ToDouble(value).Value; }
         }
 
         public P(double x, double y) : base(x, y) { I = string.Empty; T = string.Empty; C = 1; }
