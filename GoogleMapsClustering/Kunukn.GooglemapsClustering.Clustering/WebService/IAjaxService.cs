@@ -20,13 +20,22 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
         [WebInvoke(Method = "POST", UriTemplate = "GetMarkerInfo",
             BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
         JsonMarkerInfoReply GetMarkerInfo(string id, string type, int sendid);
-              
+           
+   
         [OperationContract]
         [WebGet(
             UriTemplate = "GetInfo",
             ResponseFormat = WebMessageFormat.Json)
         ]
         JsonInfoReply GetInfo();
+
+
+        [OperationContract]
+        [WebGet(
+            UriTemplate = "GetKnn/{s}",
+            ResponseFormat = WebMessageFormat.Json)
+        ]
+        JsonKnnReply GetKnn(string s);
     }
 
 }

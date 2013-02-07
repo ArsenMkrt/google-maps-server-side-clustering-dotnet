@@ -69,7 +69,6 @@
     <Content Include="AreaGMC\Images\markers\house.png" />
     <Content Include="AreaGMC\Images\markers\link.txt" />
     <Content Include="AreaGMC\Readme.html" />
-    <Content Include="AreaGMC\MapClustering.html" />
     <Content Include="AreaGMC\Scripts\mapclustering_search.js" />
     <Content Include="AreaGMC\Scripts\mapclustering.js" />
     <Content Include="Default.html" />
