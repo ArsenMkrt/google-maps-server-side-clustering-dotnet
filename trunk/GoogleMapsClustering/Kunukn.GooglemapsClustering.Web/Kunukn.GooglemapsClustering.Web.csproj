@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AreaGMC\gmc.svc" />
+    <Content Include="AreaGMC\MapClustering.html" />
     <Content Include="AreaGMC\MapClusteringSearch.html" />
     <Content Include="AreaGMC\Images\clusteringpreview.gif" />
     <Content Include="AreaGMC\Images\link.txt" />
