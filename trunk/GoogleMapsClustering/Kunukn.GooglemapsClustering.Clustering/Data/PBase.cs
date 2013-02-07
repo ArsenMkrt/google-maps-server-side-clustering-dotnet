@@ -52,17 +52,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
         {
             return Uid.GetHashCode();
         }
-
-        public static string ToString(double d)
-        {
-            var rounded = Math.Round(d, Numbers.Round);
-            return Utility.ParseValue.DoubleToString(rounded);
-        }
-        public static double? ToValue(string s)
-        {
-            return Utility.ParseValue.ToDouble(s);            
-        }
-
+           
         [ScriptIgnore] // don't include in JSON data
         private double _lon;
         [ScriptIgnore]

@@ -228,8 +228,8 @@ namespace Kunukn.GooglemapsClustering.TestConsole
                 var arr = s.Split(';');
                 if (arr.Length == 4)
                 {
-                    double x = PBase.ToValue(arr[0]).Value;
-                    double y = PBase.ToValue(arr[1]).Value;
+                    double x = ParseValue.ToDouble(arr[0]).Value;
+                    double y = ParseValue.ToDouble(arr[1]).Value;
                     var i = arr[2];
                     var t = arr[3];
 
