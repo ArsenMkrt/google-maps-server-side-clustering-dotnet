@@ -12,21 +12,10 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
 
     [Serializable]
     public class P : PBase, IP, ISerializable
-    {
-        public string Y // lat json
-        {
-            get { return ParseValue.DoubleToString(Lat); }
-            set  { Lat = ParseValue.ToDouble(value).Value; } // Do throw exception if null
-        }
-
-        public string X // lon json
-        {
-            get { return ParseValue.DoubleToString(Lon); }
-            set { Lon = ParseValue.ToDouble(value).Value; }
-        }
-
-        public P(double x, double y) : base(x, y) { I = string.Empty; T = string.Empty; C = 1; }
-        public P() { I = string.Empty; T = string.Empty; C = 1; }
+    {              
+        public P(double x, double y) : base(x, y) { Init(); }
+        public P() { Init(); }
+        void Init() { I = string.Empty; T = string.Empty; C = 1; }
 
         public int C { get; set; } // count
         public string I { get; set; } // marker id           
@@ -44,29 +33,26 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
 
         public P(SerializationInfo info, StreamingContext ctxt)
         {
-            //this.Lat = (double)info.GetValue("Lat", typeof(double));
-            //this.Lon = (double)info.GetValue("Lon", typeof(double));
             this.C = 1;
-            this.I = (string)info.GetValue("I", typeof(string));
-            this.T = (string)info.GetValue("T", typeof(string));
-            this.X = (string)info.GetValue("X", typeof(string));
-            this.Y = (string)info.GetValue("Y", typeof(string));
+            this.I = (string)info.GetValue("Id", typeof(string));
+            this.T = (string)info.GetValue("Type", typeof(string));
+            this.Lon = ((string)info.GetValue("Lon", typeof(string))).ToDouble();
+            this.Lat = ((string)info.GetValue("Lat", typeof(string))).ToDouble();
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
         {
-            //info.AddValue("Lat", this.Lat);
-            //info.AddValue("Lon", this.Lon);
             info.AddValue("I", this.I);
             info.AddValue("T", this.T);
-            info.AddValue("X", this.X);
-            info.AddValue("Y", this.Y);
+            info.AddValue("X", this.Lon);
+            info.AddValue("Y", this.Lat);
             info.AddValue("C", this.C);
         }
 
         public override string ToString()
         {
-            return string.Format("Uid: {0}, X:{1}, Y:{2} ", Uid, X, Y);
+            return string.Format("Uid: {0}, Lon:{1}, Lat:{2}, T:{3}, I:{4}",
+                Uid, Lon, Lat, T, I);
         }
 
         #region Not used
@@ -122,7 +108,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
         //    this.T = p.C == 1 ? p.T : string.Empty;
         //    this.I = p.C == 1 ? p.I : string.Empty;
         //}
-     
+
         #endregion Not used
     }
 }

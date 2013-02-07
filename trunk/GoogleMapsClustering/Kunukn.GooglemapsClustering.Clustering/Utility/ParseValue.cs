@@ -9,12 +9,9 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
         static readonly CultureInfo CultureEnUs = new CultureInfo("en-US");
         const string S = "G";
 
-        public static double? ToDouble(this string s)
+        public static double ToDouble(this string s)
         {
-            double d;
-            var isParsed = double.TryParse(s, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out d);
-            if (isParsed) return d;
-            return null;
+            return double.Parse(s, NumberStyles.Float, NumberFormatInfo.InvariantInfo);
         }
 
         public static string DoubleToString(this double d)
@@ -22,5 +19,18 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
             double rounded = Math.Round(d, Numbers.Round);
             return rounded.ToString(S, CultureEnUs);
         }
+
+        public static double Round(this double d)
+        {
+            return Math.Round(d, Numbers.Round);
+        }
+
+        //public static double? ToDouble(this string s)
+        //{
+        //    double d;
+        //    var isParsed = double.TryParse(s, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out d);
+        //    if (isParsed) return d;
+        //    return null;
+        //}
     }
 }

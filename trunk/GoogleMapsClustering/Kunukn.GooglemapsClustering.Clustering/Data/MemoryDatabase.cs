@@ -16,11 +16,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
 
         public static void SetPoints(List<Kunukn.GooglemapsClustering.Clustering.Data.P> points)
         {
-            if(_flag || points == null)
-            {
-                return;
-            }
-
+            if(_flag || points == null) return;
+            
             // Used for testing K nearest neighbor
             SingleDetectLibrary.Code.Contract.IPoints ps = new Points(); 
             ps.Data = new List<SingleDetectLibrary.Code.Data.P>();
@@ -31,7 +28,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             for (var i = 0; i < c; i++)
             {
                 var p = points[i];
-                ps.Data.Add(new SingleDetectLibrary.Code.Data.P { X = p.Lon, Y = p.Lat, }); // used for testing K nearest neighbor
+                ps.Data.Add(new SingleDetectLibrary.Code.Data.P { X = p.Lon, Y = p.Y, }); // used for testing K nearest neighbor
 
                 var a = rand.Next(c);
                 var b = rand.Next(c);
@@ -43,18 +40,18 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             Points = points;
 
 
-            // Used for testing K nearest neighbor
-            var rect = new SingleDetectLibrary.Code.Data.Rectangle
-            {
-                XMin = -180,
-                XMax = 180,
-                YMin = -90,                
-                YMax = 90,
-                MaxDistance = 20,
-            };
-            rect.Validate();            
-            ISingleDetectAlgorithm algo = new SingleDetectAlgorithm(ps, rect, StrategyType.Grid);
-            Data = algo;
+            //// Used for testing K nearest neighbor
+            //var rect = new SingleDetectLibrary.Code.Data.Rectangle
+            //{
+            //    XMin = -180,
+            //    XMax = 180,
+            //    YMin = -90,                
+            //    YMax = 90,
+            //    MaxDistance = 20,
+            //};
+            //rect.Validate();            
+            //ISingleDetectAlgorithm algo = new SingleDetectAlgorithm(ps, rect, StrategyType.Grid);
+            //Data = algo;
 
             //var origin = new SingleDetectLibrary.Code.Data.P { X = 0, Y = 0 };
             //var duration = algo.UpdateKnn(origin, 3);

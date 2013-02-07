@@ -19,7 +19,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
     {
         protected static JsonReplyBase NotValidReply(int sendid)
         {
-            var jsonReply = new JsonReplyBase { ReplyId = sendid, Success = "0" };
+            var jsonReply = new JsonReplyBase { Rid = sendid, Ok = "0" };
             return jsonReply;
         }
 
@@ -54,7 +54,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
                 var clusterPoints = clusterAlgo.GetCluster(new ClusterInfo { ZoomLevel = jsonReceive.Zoomlevel });
 
                 // Prepare data to the client
-                reply = new JsonMarkersReply { Points = clusterPoints, ReplyId = sendid, Polylines = clusterAlgo.Lines };
+                reply = new JsonMarkersReply { Points = clusterPoints, Rid = sendid, Polylines = clusterAlgo.Lines };
 
                 // Return client data
                 return reply;
@@ -65,13 +65,13 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             List<P> filteredDataset = ClusterAlgorithmBase.FilterDataset(dataset, jsonReceive.Viewport);
             List<P> filteredDatasetMaxPoints = filteredDataset.Take(AlgoConfig.MaxMarkersReturned).ToList();
 
-            reply = new JsonMarkersReply { Points = filteredDatasetMaxPoints, ReplyId = sendid };
+            reply = new JsonMarkersReply { Points = filteredDatasetMaxPoints, Rid = sendid };
             return reply;
         }
 
         public JsonMarkerInfoReply GetMarkerInfo(string id, string type, int sendid)
         {
-            var reply = new JsonMarkerInfoReply { Id = id, Type = type, ReplyId = sendid };
+            var reply = new JsonMarkerInfoReply { Id = id, Type = type, Rid = sendid };
             reply.BuildContent();
             return reply;
         }
@@ -81,7 +81,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
         {
             var reply = new JsonInfoReply { 
                 DbSize = MemoryDatabase.Points.Count, 
-                Points = MemoryDatabase.Points.Take(5).ToList() 
+                Points = MemoryDatabase.Points.Take(3).ToList() 
             };            
             return reply;
         }

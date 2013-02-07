@@ -1,13 +1,13 @@
 ﻿// Author: Kunuk Nykjaer et al.
 
 var gmcKN = {
-    
+
     markers: [],
     map: undefined,
     infowindow: undefined,
     debugMarker: undefined,
     debuginfo: undefined,
-    
+
     // http://code.google.com/intl/da-DK/apis/maps/documentation/javascript/reference.html
     geocoder: new google.maps.Geocoder(),
     debug: {
@@ -20,7 +20,7 @@ var gmcKN = {
         lastSendGetMarkers: 0, //get markers
         lastReceivedGetMarkers: 0,
         lastSendMarkerDetail: 0,
-        lastReceivedMarkerDetail: 0,        
+        lastReceivedMarkerDetail: 0,
         lastCache: ""
     },
 
@@ -29,7 +29,7 @@ var gmcKN = {
     },
 
     zoomIn: function () {
-        var z = gmcKN.map.getZoom();        
+        var z = gmcKN.map.getZoom();
         gmcKN.map.setZoom(z + 1);
     },
 
@@ -40,7 +40,7 @@ var gmcKN = {
 
     mymap: {
         initialize: function () {
-                        
+
             var center = new google.maps.LatLng(gmcKN.mymap.settings.mapCenterLat, gmcKN.mymap.settings.mapCenterLon, true);
 
             gmcKN.map = new google.maps.Map(document.getElementById('gmcKN_map'), {
@@ -79,7 +79,7 @@ var gmcKN = {
             zoomLevel: 2,
             zoomlevelClusterStop: 15,
             alwaysClusteringEnabledWhenZoomLevelLess: 8,
-            
+
             jsonMarkerUrl: '/AreaGMC/gmc.svc/GetMarkers', // post
             jsonMarkerInfoUrl: '/AreaGMC/gmc.svc/GetMarkerInfo', // post            
 
@@ -120,7 +120,7 @@ var gmcKN = {
                 offsetH: 0,
                 offsetW: 0
             },
-            textErrorMessage: 'Error'            
+            textErrorMessage: 'Error'
         },
 
         events: {
@@ -212,7 +212,7 @@ var gmcKN = {
                     success: function (data) {
                         var items = data;
 
-                        var lastReceivedGetMarkers = items.ReplyId;
+                        var lastReceivedGetMarkers = items.Rid; // ReplyId
                         if (lastReceivedGetMarkers <= gmcKN.async.lastReceivedGetMarkers) {
                             // async mismatch, this is old reply, dont use it
                             gmcKN.log('async mismatch ' + lastReceivedGetMarkers + ' ' + gmcKN.async.lastReceivedGetMarkers);
@@ -336,8 +336,8 @@ var gmcKN = {
 
                         $.each(newmarkersTodo, function () {
                             var item = this;
-                            var lat = item.Y + ""; //lat
-                            var lon = item.X + ""; //lon
+                            var lat = item.Y; // lat
+                            var lon = item.X; // lon
 
                             var latLng = new google.maps.LatLng(lat, lon, true);
 
@@ -427,7 +427,7 @@ var gmcKN = {
                     success: function (data) {
                         items = data;
 
-                        var lastReceivedMarkerDetail = items.ReplyId;
+                        var lastReceivedMarkerDetail = items.Rid; // replyId
                         if (lastReceivedMarkerDetail <= gmcKN.async.lastReceivedMarkerDetail) {
                             // async mismatch, this is old reply, dont use it
                             gmcKN.log('async mismatch ' + lastReceivedMarkerDetail + ' ' + gmcKN.async.lastReceivedMarkerDetail);

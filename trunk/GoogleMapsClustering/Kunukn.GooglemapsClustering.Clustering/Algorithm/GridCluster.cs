@@ -216,7 +216,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
         public static int[] GetPointMappedIds(P p, Boundary grid, double deltax, double deltay)
         {
             var relativeX = p.Lon - grid.Minx;
-            var relativeY = p.Lat - grid.Miny;
+            var relativeY = p.Y - grid.Miny;
             int idx, idy;
 
             // Naive version, lon points near 180 and lat points near 90 are not clustered together
