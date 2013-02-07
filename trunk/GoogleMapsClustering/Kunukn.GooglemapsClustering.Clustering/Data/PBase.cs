@@ -11,7 +11,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
 
         protected PBase(double lon, double lat)
         {
-            Lon = lon;
+            X = lon;
             Lat = lat;
             Uid = ++_counter;
         }
@@ -26,7 +26,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
         public object Data { get; set; } // Data container for anything
 
         [ScriptIgnore] // don't include in JSON data
-        public double X { get { return Lon; }  set { Lon = value; }  }
+        public double X { get { return Lon; } set { Lon = value; } }
 
         [ScriptIgnore] // don't include in JSON data
         public double Y { get { return Lat; } set { Lat = value; } }
@@ -46,14 +46,14 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
 
         public virtual double Distance(PBase p)
         {
-            return Distance(p.Lon, p.Lat);
+            return Distance(p.X, p.Y);
         }
 
         // Euclidean distance
         public virtual double Distance(double x, double y)
         {
-            var dx = Lon - x;
-            var dy = Lat - y;
+            var dx = X - x;
+            var dy = Y - y;
             var dist = (dx * dx) + (dy * dy);
             dist = Math.Sqrt(dist);
             return dist;

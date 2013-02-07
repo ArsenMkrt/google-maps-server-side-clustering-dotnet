@@ -34,25 +34,25 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
         public P(SerializationInfo info, StreamingContext ctxt)
         {
             this.C = 1;
-            this.I = (string)info.GetValue("Id", typeof(string));
-            this.T = (string)info.GetValue("Type", typeof(string));
-            this.Lon = ((string)info.GetValue("Lon", typeof(string))).ToDouble();
-            this.Lat = ((string)info.GetValue("Lat", typeof(string))).ToDouble();
+            this.I = (string)info.GetValue("I", typeof(string));
+            this.T = (string)info.GetValue("T", typeof(string));
+            this.X = ((string)info.GetValue("X", typeof(string))).ToDouble();
+            this.Y = ((string)info.GetValue("Y", typeof(string))).ToDouble();
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
         {
             info.AddValue("I", this.I);
             info.AddValue("T", this.T);
-            info.AddValue("X", this.Lon);
-            info.AddValue("Y", this.Lat);
+            info.AddValue("X", this.X);
+            info.AddValue("Y", this.Y);
             info.AddValue("C", this.C);
         }
 
         public override string ToString()
         {
-            return string.Format("Uid: {0}, Lon:{1}, Lat:{2}, T:{3}, I:{4}",
-                Uid, Lon, Lat, T, I);
+            return string.Format("Uid: {0}, X:{1}, Y:{2}, T:{3}, I:{4}",
+                Uid, X, Y, T, I);
         }
 
         #region Not used

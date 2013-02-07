@@ -53,7 +53,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
 
              foreach (var p in dataset)
              {
-                 p.Lon = p.Lon.NormalizeLongitude();
+                 p.X = p.X.NormalizeLongitude();
                  p.Y = p.Y.NormalizeLatitude();
              }
 

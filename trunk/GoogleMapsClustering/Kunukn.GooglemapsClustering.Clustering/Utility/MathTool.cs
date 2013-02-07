@@ -15,7 +15,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
         public static double Distance(P a, P b)
         {
             // lat lon wrap, values don't seem needed to be normalized to [0;1] for better distance calc
-            var absx = LatLonDiff(a.Lon, b.Lon);
+            var absx = LatLonDiff(a.X, b.X);
             var absy = LatLonDiff(a.Y, b.Y);
 
             return Math.Pow(Math.Pow(absx, Exp) +
@@ -143,7 +143,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
 
         public static bool IsInside(Boundary b, P p)
         {
-            return IsInside(b.Minx, b.Miny, b.Maxx, b.Maxy, p.Lon, p.Y, false, false);
+            return IsInside(b.Minx, b.Miny, b.Maxx, b.Maxy, p.X, p.Y, false, false);
         }
         
         // used by zoom level and deciding the grid size, O(halfSteps)
