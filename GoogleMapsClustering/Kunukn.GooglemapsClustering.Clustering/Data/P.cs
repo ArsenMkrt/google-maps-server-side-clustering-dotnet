@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using System.Web.Script.Serialization;
 using Kunukn.GooglemapsClustering.Clustering.Contract;
 using Kunukn.GooglemapsClustering.Clustering.Utility;
@@ -9,13 +10,15 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
     /// Kunuk Nykjaer
     /// </summary>
 
-    public class P : PBase, IP
+    [Serializable]
+    public class P : PBase, IP, ISerializable
     {
         public string Y // lat json
         {
             get { return ParseValue.DoubleToString(Lat); }
-            set { Lat = ParseValue.ToDouble(value).Value; } // Do throw exception if null
+            set  { Lat = ParseValue.ToDouble(value).Value; } // Do throw exception if null
         }
+
         public string X // lon json
         {
             get { return ParseValue.DoubleToString(Lon); }
@@ -37,6 +40,28 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             Lon = Lon.NormalizeLongitude();
             Lat = Lat.NormalizeLatitude();
             return this;
+        }
+
+        public P(SerializationInfo info, StreamingContext ctxt)
+        {
+            //this.Lat = (double)info.GetValue("Lat", typeof(double));
+            //this.Lon = (double)info.GetValue("Lon", typeof(double));
+            this.C = 1;
+            this.I = (string)info.GetValue("I", typeof(string));
+            this.T = (string)info.GetValue("T", typeof(string));
+            this.X = (string)info.GetValue("X", typeof(string));
+            this.Y = (string)info.GetValue("Y", typeof(string));
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
+        {
+            //info.AddValue("Lat", this.Lat);
+            //info.AddValue("Lon", this.Lon);
+            info.AddValue("I", this.I);
+            info.AddValue("T", this.T);
+            info.AddValue("X", this.X);
+            info.AddValue("Y", this.Y);
+            info.AddValue("C", this.C);
         }
 
         public override string ToString()
@@ -97,29 +122,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
         //    this.T = p.C == 1 ? p.T : string.Empty;
         //    this.I = p.C == 1 ? p.I : string.Empty;
         //}
-
-        //public P(SerializationInfo info, StreamingContext ctxt)
-        //{
-        //    //this.Lat = (double)info.GetValue("Lat", typeof(double));
-        //    //this.Lon = (double)info.GetValue("Lon", typeof(double));
-        //    this.C = 1;
-        //    this.I = (string)info.GetValue("I", typeof(string));
-        //    this.T = (string)info.GetValue("T", typeof(string));
-        //    this.X = (string)info.GetValue("X", typeof(string));
-        //    this.Y = (string)info.GetValue("Y", typeof(string));
-        //}
-
-        //public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
-        //{
-        //    //info.AddValue("Lat", this.Lat);
-        //    //info.AddValue("Lon", this.Lon);
-        //    info.AddValue("I", this.I);            
-        //    info.AddValue("T", this.T);
-        //    info.AddValue("X", this.X);
-        //    info.AddValue("Y", this.Y);
-        //    info.AddValue("C", this.C);
-        //}
-
+     
         #endregion Not used
     }
 }

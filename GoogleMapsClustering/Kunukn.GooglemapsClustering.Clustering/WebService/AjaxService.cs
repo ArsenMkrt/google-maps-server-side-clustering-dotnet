@@ -79,7 +79,10 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
 
         public JsonInfoReply GetInfo()
         {
-            var reply = new JsonInfoReply { Points = MemoryDatabase.Points.Count };
+            var reply = new JsonInfoReply { 
+                DbSize = MemoryDatabase.Points.Count, 
+                Points = MemoryDatabase.Points.Take(5).ToList() 
+            };            
             return reply;
         }
 

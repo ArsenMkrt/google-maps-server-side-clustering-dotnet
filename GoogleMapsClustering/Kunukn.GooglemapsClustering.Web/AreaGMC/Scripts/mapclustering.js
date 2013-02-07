@@ -266,7 +266,7 @@ var gmcKN = {
                             }
                         }
                         // store current existing valid markers
-                        for (i in gmcKN.markers) {
+                        for (var i in gmcKN.markers) {
                             if (gmcKN.markers.hasOwnProperty(i)) {
                                 var m = gmcKN.markers[i];
                                 var key = m.get("key"); //key  
@@ -281,7 +281,7 @@ var gmcKN = {
                         }
 
                         // add new markers from event not already drawn
-                        for (i in items.Points) {
+                        for (var i in items.Points) {
                             if (items.Points.hasOwnProperty(i)) {
                                 var p = items.Points[i];
                                 var key = gmcKN.getKey(p); //key                            
@@ -336,8 +336,8 @@ var gmcKN = {
 
                         $.each(newmarkersTodo, function () {
                             var item = this;
-                            var lat = item.Y; //lat
-                            var lon = item.X; //lon
+                            var lat = item.Y + ""; //lat
+                            var lon = item.X + ""; //lon
 
                             var latLng = new google.maps.LatLng(lat, lon, true);
 
@@ -367,13 +367,13 @@ var gmcKN = {
                             var key = gmcKN.getKey(item);
                             marker.set("key", key); // used for next event, remove or keep the marker
 
-                            if (item.C === 1) {
+                            if (item.C === 1) { // single item, no cluster
                                 //gmcKN.infowindow.close();
                                 google.maps.event.addListener(marker, 'click', function (event) {
                                     gmcKN.mymap.events.attachCallOut(marker, item);
                                 });
                             }
-                            else {
+                            else { // cluster marker
                                 google.maps.event.addListener(marker, 'click', function (event) {
                                     //gmcKN.infowindow.close();
                                     var z = gmcKN.map.getZoom();

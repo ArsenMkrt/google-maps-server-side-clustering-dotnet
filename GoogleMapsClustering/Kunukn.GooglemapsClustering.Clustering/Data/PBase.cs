@@ -2,8 +2,9 @@
 using System.Web.Script.Serialization;
 
 namespace Kunukn.GooglemapsClustering.Clustering.Data
-{ 
-    public abstract class PBase
+{
+    [Serializable]
+    public class PBase
     {
         protected PBase()
         {
