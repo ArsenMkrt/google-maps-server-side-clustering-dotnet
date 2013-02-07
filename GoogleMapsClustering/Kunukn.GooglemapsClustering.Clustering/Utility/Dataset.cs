@@ -42,8 +42,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
                  var arr = s.Split(new []{";"}, StringSplitOptions.RemoveEmptyEntries);
                  if (arr.Length == 4)
                  {
-                     double x = Utility.ParseValue.ToDouble(arr[0]).Value;
-                     double y = Utility.ParseValue.ToDouble(arr[1]).Value;
+                     var x = arr[0].ToDouble();
+                     var y = arr[1].ToDouble();
                      var i = arr[2];
                      var t = arr[3];
 
@@ -54,7 +54,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
              foreach (var p in dataset)
              {
                  p.Lon = p.Lon.NormalizeLongitude();
-                 p.Lat = p.Lat.NormalizeLatitude();
+                 p.Y = p.Y.NormalizeLatitude();
              }
 
              return dataset;
