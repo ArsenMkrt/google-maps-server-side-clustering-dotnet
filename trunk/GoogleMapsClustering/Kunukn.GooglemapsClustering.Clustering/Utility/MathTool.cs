@@ -205,6 +205,9 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
             return r;
         }
 
+
+        #region ** NOT USED **
+        
         // NOT USED, widen the area, this avoids the lon lat isinside problem
         //private static bool IsInsideWiden(Boundary b, P p)
         //{
@@ -219,8 +222,6 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
 
         //    return IsInside(b.Minx - x, b.Miny - y, b.Maxx + x, b.Maxy + y, p.Lon, p.Lat, isInsideDetectedX, isInsideDetectedY);
         //}
-
-
 
         /*        
         // normalize value in range [0;1]
@@ -248,5 +249,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
             return Norm(lat, LatLonInfo.MinLatValue, LatLonInfo.MaxLatValue);
         }
          */
+
+        #endregion NOT USED
     }
 }

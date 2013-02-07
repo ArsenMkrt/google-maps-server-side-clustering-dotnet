@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 
 namespace Kunukn.GooglemapsClustering.Clustering.Utility
@@ -16,35 +17,13 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
             switch (loadType)
             {
                 case LoadType.Serialized: 
-                    return LoadDatasetFromDatabaseSer(websitepath);                    
+                    throw new NotSupportedException(MethodBase.GetCurrentMethod().ToString());
                 case LoadType.Csv: 
                     return LoadDatasetFromDatabaseCsv(websitepath);                    
                 default:
                     throw new ApplicationException("LoadDatasetFromDatabase unknown loadtype");
             }            
-        }
-
-         private static List<P> LoadDatasetFromDatabaseSer(string websitepath)
-         {
-             var filepath = websitepath;
-             var fi = new FileInfo(websitepath);
-             if (!fi.Exists)
-             {
-                 throw new ApplicationException(
-                     string.Format("File does not exists: {0}",fi.FullName));
-             }
-                 
-             var fileinfoPath = new FileInfo(filepath);
-
-             var dataset = FileUtil.LoadDataSetFromFile(fileinfoPath);
-             foreach (var p in dataset)
-             {
-                 p.Lon = p.Lon.NormalizeLongitude();
-                 p.Lat = p.Lat.NormalizeLatitude();
-             }
-
-             return dataset;
-         }
+        }         
 
          private  static List<P> LoadDatasetFromDatabaseCsv(string websitepath)
          {
