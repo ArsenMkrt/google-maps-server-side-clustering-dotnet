@@ -126,10 +126,10 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
 
             foreach (var p2 in p2Lines)
             {
-                string x = PBase.ToStringEN((p2.Minx).NormalizeLongitude());
-                string x2 = PBase.ToStringEN((p2.Maxx).NormalizeLongitude());
-                string y = PBase.ToStringEN((p2.Miny).NormalizeLatitude());
-                string y2 = PBase.ToStringEN((p2.Maxy).NormalizeLatitude());
+                string x = PBase.ToString((p2.Minx).NormalizeLongitude());
+                string x2 = PBase.ToString((p2.Maxx).NormalizeLongitude());
+                string y = PBase.ToString((p2.Miny).NormalizeLatitude());
+                string y2 = PBase.ToString((p2.Maxy).NormalizeLatitude());
                 Lines.Add(new Line { X = x, Y = y, X2 = x2, Y2 = y2 });
             }
         }

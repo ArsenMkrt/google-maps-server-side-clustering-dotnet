@@ -58,6 +58,7 @@
     <Compile Include="Data\Json\JsonInfoReply.cs" />
     <Compile Include="Utility\Dataset.cs" />
     <Compile Include="Utility\FileUtil.cs" />
+    <Compile Include="Utility\ParseValue.cs" />
     <Compile Include="Utility\Serializer.cs" />
     <Compile Include="Utility\ExceptionUtil.cs" />
     <Compile Include="Data\Boundary.cs" />

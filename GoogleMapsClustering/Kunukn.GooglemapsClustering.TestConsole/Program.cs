@@ -60,6 +60,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             const string name = "cities1000";
             List<string> lines = FileUtil.ReadFile(string.Format("c:\\temp\\{0}.txt", name));
             var dataset = new List<P>();
+            int numOfType = 3;
 
             foreach (var line in lines)
             {
@@ -94,7 +95,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
 
                 if (lon != null && lat != null && MathTool.IsLonValid(lon.Value) && MathTool.IsLatValid(lat.Value))
                 {
-                    dataset.Add(new P(lon.Value, lat.Value) { I = id, T = (rand.Next(3) + 1).ToString() });
+                    dataset.Add(new P(lon.Value, lat.Value) { I = id, T = (rand.Next(numOfType) + 1).ToString() });
                 }
             }
 
@@ -108,9 +109,9 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             var fi = new FileInfo(path);
             if (fi.Directory != null && fi.Directory.Exists)
             {
-                SaveCsvData(GenerateRandomDataset(10000, new Boundary { Minx = 172, Maxx = -178, Miny = -48, Maxy = -38 }), fi);
-            }
-                
+                SaveCsvData(GenerateRandomDataset(10000, 
+                    new Boundary { Minx = 172, Maxx = -178, Miny = -48, Maxy = -38 }), fi);
+            }                
             else
             {
                 throw new ApplicationException("Path is invalid: " + path);
@@ -164,9 +165,10 @@ namespace Kunukn.GooglemapsClustering.TestConsole
         static void SaveCsvData(IEnumerable<P> dataset, FileInfo filepath)
         {
             //var dataset = FileUtil.LoadDataSetFromFile();
-            var save = dataset.Select(p => string.Format("{0};{1};{2};{3}", p.X, p.Y, p.I, p.T)).ToList();
+            var save = dataset.Select(p => string.Format("{0};{1};{2};{3}", 
+                p.X, p.Y, p.I, p.T)).ToList();
             
-            //foreach (var s in save)  Console.WriteLine(s);
+            //foreach (var s in save) WL(s);
             FileUtil.WriteFile(save, filepath);
         }
 

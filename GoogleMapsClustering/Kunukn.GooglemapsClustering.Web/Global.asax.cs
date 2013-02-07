@@ -4,7 +4,6 @@ using System.Web;
 using System.Web.Routing;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 using Kunukn.GooglemapsClustering.Clustering.Utility;
-using Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.Code;
 using Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.Code.Logging;
 
 namespace Kunukn.GooglemapsClustering.Web
@@ -26,7 +25,7 @@ namespace Kunukn.GooglemapsClustering.Web
             var points = Dataset.LoadDatasetFromDatabase(websitepath, LoadType.Csv);
             foreach (var p in points) p.Normalize();
                 
-            MemoryDatabase.SetPoints(points);                        
+            MemoryDatabase.SetPoints(points);
             RegisterRoutes();
         }
 
@@ -46,7 +45,8 @@ namespace Kunukn.GooglemapsClustering.Web
 
             if (ex.Message == "File does not exist.")
             {
-                var msg = string.Format("{0} {1} {2}", ex.Message, HttpContext.Current.Request.Url, ex.StackTrace);
+                var msg = string.Format("{0} {1} {2}", 
+                    ex.Message, HttpContext.Current.Request.Url, ex.StackTrace);
                 _log.Error(MethodBase.GetCurrentMethod(), msg);                
             }
             else
