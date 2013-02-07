@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using System.Web.Script.Serialization;
+using Kunukn.GooglemapsClustering.Clustering.Contract;
 using Kunukn.GooglemapsClustering.Clustering.Utility;
 
 namespace Kunukn.GooglemapsClustering.Clustering.Data
@@ -9,8 +10,10 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
     /// Kunuk Nykjaer
     /// </summary>
 
+    // todo refactor, make it cleaner and simpler
+
     [Serializable]
-    public class P : PBase, ISerializable, IComparable
+    public class P : PBase, IP, ISerializable, IComparable
     {
         public string Y // lat json
         {
@@ -22,7 +25,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             get { return ToStringEN(Lon); }
             set { Lon = ToValue(value).Value; }
         }
-
+        
         public P(double x, double y) : base(x, y) { I = string.Empty; T = string.Empty; C = 1; }
         public P() { I = string.Empty; T = string.Empty; C = 1; }
         public P(P p) 
@@ -111,6 +114,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             return this;
         }
 
+
+        // todo evaluate if this is needed/correct
         public override int GetHashCode()
         {
             var x = Lon * 100000; //make the decimals be important
@@ -119,6 +124,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             return (int)r;
         }
 
+
+        // todo evaluate if this is needed/correct
         public override bool Equals(Object o)
         {
             if (o == null)
@@ -131,9 +138,9 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             {
                 return false;
             }
-                
-            var x = this.Lon == other.Lon;
-            var y = this.Lat == other.Lat;
+
+            var x = Math.Abs(this.Lon - other.Lon) < Numbers.Epsilon;
+            var y = Math.Abs(this.Lat - other.Lat) < Numbers.Epsilon;
             return x && y;
         }
 

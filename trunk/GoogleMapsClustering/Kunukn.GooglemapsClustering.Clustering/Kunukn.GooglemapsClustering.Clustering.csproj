@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SingleDetectLibrary">
+      <HintPath>..\packages\SingleDetectLibrary\SingleDetectLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -48,8 +51,10 @@
   <ItemGroup>
     <Compile Include="Algorithm\ClusterAlgorithmBase.cs" />
     <Compile Include="Algorithm\GridCluster.cs" />
+    <Compile Include="Contract\IP.cs" />
     <Compile Include="Data\Enums.cs" />
     <Compile Include="Data\AlgoConfig.cs" />
+    <Compile Include="Data\Json\JsonKnnReply.cs" />
     <Compile Include="Data\Json\JsonInfoReply.cs" />
     <Compile Include="Utility\Dataset.cs" />
     <Compile Include="Utility\FileUtil.cs" />

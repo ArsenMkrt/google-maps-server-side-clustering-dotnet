@@ -1,9 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.ServiceModel.Activation;
 using Kunukn.GooglemapsClustering.Clustering.Algorithm;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 using Kunukn.GooglemapsClustering.Clustering.Data.Json;
+using SingleDetectLibrary.Code;
+using SingleDetectLibrary.Code.Contract;
+using SingleDetectLibrary.Code.Data;
+using P = Kunukn.GooglemapsClustering.Clustering.Data.P;
 
 namespace Kunukn.GooglemapsClustering.Clustering.WebService
 {
@@ -12,25 +18,25 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
     public class AjaxService : IAjaxService
     {
         protected static JsonReplyBase NotValidReply(int sendid)
-        {            
-            var jsonReply = new JsonReplyBase { ReplyId = sendid, Success = "0" };            
+        {
+            var jsonReply = new JsonReplyBase { ReplyId = sendid, Success = "0" };
             return jsonReply;
         }
 
         public JsonMarkersReply GetMarkers(double nelat, double nelon, double swlat, double swlon, int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, string filter, int sendid)
-        {                                    
+        {
             var jsonReceive = new JsonGetMarkersReceive(nelat, nelon, swlat, swlon, zoomlevel, gridx, gridy, zoomlevelClusterStop, filter, sendid);
-            
+
             var clusteringEnabled = jsonReceive.IsClusteringEnabled || AlgoConfig.AlwaysClusteringEnabledWhenZoomLevelLess > jsonReceive.Zoomlevel;
-            
+
             JsonMarkersReply reply;
-            
+
             jsonReceive.Viewport.ValidateLatLon(); // Validate google map viewport input (is always valid)
             jsonReceive.Viewport.Normalize();
 
             // Get all points from memory
             var allpoints = MemoryDatabase.Points;
-                                        
+
             var dataset = allpoints; // unfiltered at the moment            
             if (jsonReceive.TypeFilter.Count > 0)
             {
@@ -48,7 +54,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
                 var clusterPoints = clusterAlgo.GetCluster(new ClusterInfo { ZoomLevel = jsonReceive.Zoomlevel });
 
                 // Prepare data to the client
-                reply = new JsonMarkersReply { Points = clusterPoints, ReplyId = sendid, Polylines = clusterAlgo.Lines};
+                reply = new JsonMarkersReply { Points = clusterPoints, ReplyId = sendid, Polylines = clusterAlgo.Lines };
 
                 // Return client data
                 return reply;
@@ -59,23 +65,58 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             List<P> filteredDataset = ClusterAlgorithmBase.FilterDataset(dataset, jsonReceive.Viewport);
             List<P> filteredDatasetMaxPoints = filteredDataset.Take(AlgoConfig.MaxMarkersReturned).ToList();
 
-            reply = new JsonMarkersReply { Points = filteredDatasetMaxPoints, ReplyId = sendid};
+            reply = new JsonMarkersReply { Points = filteredDatasetMaxPoints, ReplyId = sendid };
             return reply;
         }
 
         public JsonMarkerInfoReply GetMarkerInfo(string id, string type, int sendid)
-        {                                                
-            var reply = new JsonMarkerInfoReply { Id = id, Type = type, ReplyId = sendid };                        
-            reply.BuildContent();            
+        {
+            var reply = new JsonMarkerInfoReply { Id = id, Type = type, ReplyId = sendid };
+            reply.BuildContent();
             return reply;
-        }            
+        }
+
 
         public JsonInfoReply GetInfo()
         {
-           var reply = new JsonInfoReply { Points = MemoryDatabase.Points.Count};
+            var reply = new JsonInfoReply { Points = MemoryDatabase.Points.Count };
             return reply;
         }
-       
+
+
+        // Preparing for K nearest neighbor
+        public JsonKnnReply GetKnn(string s)
+        {
+            var invalid = new JsonKnnReply { Data = string.Format("invalid: {0}", s ?? "null") };
+            if (string.IsNullOrEmpty(s)) return invalid;
+
+            var arr = s.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+            if (arr.Length != 3) return invalid;
+
+            var lat = arr[0].Replace("_", ".");
+            var lon = arr[1].Replace("_", ".");
+            var neighbors = arr[2];
+
+            double x, y;
+            int k;
+
+            var b = double.TryParse(lon, System.Globalization.NumberStyles.Any, CultureInfo.GetCultureInfo("en-US"), out x);
+            b &= double.TryParse(lat, System.Globalization.NumberStyles.Any, CultureInfo.GetCultureInfo("en-US"), out y);
+            b &= int.TryParse(neighbors, out k);
+
+            if (!b) return invalid;
+
+                  
+            // knn algo
+            var algo = MemoryDatabase.Data as ISingleDetectAlgorithm;
+            if (algo == null) return invalid;
+
+            // Use algo
+            var origin = new SingleDetectLibrary.Code.Data.P {X = x, Y = y};
+            var duration = algo.UpdateKnn(origin, k);
+            
+            return new JsonKnnReply { Data = string.Format("{0}; {1}; {2}; msec: {3}", x, y, k, duration), Nns = algo.Knn.NNs.Data};
+        }
     }
 
 }
