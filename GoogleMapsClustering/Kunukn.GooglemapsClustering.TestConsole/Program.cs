@@ -71,36 +71,45 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             IPoints points = Dataset.LoadDataset(@"c:\temp\points.csv", LoadType.Csv);
 
             // Used for testing K nearest neighbor
-            IPointsKnn knnDataset = new PointsKnn();
-            knnDataset.Data = new List<IPKnn>();
+            IPointsKnn dataset = new PointsKnn();
+            dataset.Data.AddRange(points.Data.Select(i => i as IPKnn));
 
             // Used for testing K nearest neighbor
             var rect = new SingleDetectLibrary.Code.Data.Rectangle
             {
-                XMin = -180,
-                XMax = 180,
-                YMin = -90,
-                YMax = 90,
+                XMin = -300,
+                XMax = 300,
+                YMin = -200,
+                YMax = 200,
                 MaxDistance = 20,
             };
             rect.Validate();
+            const int k = 3;
 
-            ISingleDetectAlgorithm algo = new SingleDetectAlgorithm(knnDataset, rect, StrategyType.Grid);
+            ISingleDetectAlgorithm algo = new SingleDetectAlgorithm(dataset, rect, StrategyType.Grid);
             
             var origin = new SingleDetectLibrary.Code.Data.P { X = 0, Y = 0 };
-            var duration = algo.UpdateKnn(origin, 3);
+            var duration = algo.UpdateKnn(origin, k);
 
-            var res = algo.Knn.NNs.Data.OrderBy(i => i.Distance).ToList();
-            var rr = res;
+            // Print result
+            WL(string.Format("{0} msec. {1}:", algo.Strategy.Name, duration));
+            WL("K Nearest Neighbors:");
+            WL(string.Format("Origin: {0}", origin));
+            WL(string.Format("Distance sum: {0}", algo.Knn.GetDistanceSum()));
+            algo.Knn.NNs.Data.OrderBy(i => i.Distance).ToList().ForEach(WL);
+
 
             // Update strategy
             algo.SetAlgorithmStrategy(new NaiveStrategy());
 
             // Use algo
-            duration = algo.UpdateKnn(origin, 3);
+            duration = algo.UpdateKnn(origin, k);
 
-            var res2 = algo.Knn.NNs.Data.OrderBy(i => i.Distance).ToList();
-            var assd = res2;
+            // Print result
+            WL(string.Format("\n{0} msec. {1}:", algo.Strategy.Name, duration));
+            WL("K Nearest Neighbors:");
+            WL(string.Format("Distance sum: {0}", algo.Knn.GetDistanceSum()));
+            algo.Knn.NNs.Data.OrderBy(i => i.Distance).ToList().ForEach(WL);
         }
 
 

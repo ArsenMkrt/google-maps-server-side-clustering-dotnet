@@ -2,6 +2,7 @@
 using System.Runtime.Serialization;
 using Kunukn.GooglemapsClustering.Clustering.Contract;
 using Kunukn.GooglemapsClustering.Clustering.Utility;
+using SingleDetectLibrary.Code.Data;
 
 namespace Kunukn.GooglemapsClustering.Clustering.Data
 {
@@ -10,9 +11,12 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
     /// </summary>
 
     [Serializable]
-    public class P : PBase, IP, ISerializable
+    public class P : PBase, IP, SingleDetectLibrary.Code.Contract.IP, ISerializable
     {                      
-        public P() {}
+        public P()
+        {
+            GridIndex = new GridIndex();
+        }
         
         public virtual IP Normalize()
         {
@@ -44,6 +48,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
         {
             return string.Format("Uid: {0}, X:{1}, Y:{2}, T:{3}, I:{4}",
                 Uid, X, Y, T, I);
-        }        
+        }
+
+        public GridIndex GridIndex { get; set; }
     }
 }
