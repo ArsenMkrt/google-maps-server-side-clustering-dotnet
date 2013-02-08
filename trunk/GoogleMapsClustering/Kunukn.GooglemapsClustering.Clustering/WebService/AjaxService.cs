@@ -37,13 +37,11 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             jsonReceive.Viewport.Normalize();
 
             // Get all points from memory
-            var allpoints = MemoryDatabase.Points;
-
-            var dataset = allpoints; // unfiltered at the moment            
+            var dataset = MemoryDatabase.GetPoints();                                  
             if (jsonReceive.TypeFilter.Count > 0)
             {
                 // Filter data by typeFilter value
-                dataset.Data = allpoints.Data.Where(p => jsonReceive.TypeFilter.Contains(p.T) == false).ToList();
+                dataset = new Ps { Data = dataset.Data.Where(p => jsonReceive.TypeFilter.Contains(p.T) == false).ToList() };
             }
 
             // Clustering
@@ -83,9 +81,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
         {
             var reply = new JsonInfoReply
             {
-                DbSize = MemoryDatabase.Points.Count,
-                Points = DataConvert(new Ps { Data = MemoryDatabase.Points.Data.Take(3).ToList() })
-
+                DbSize = MemoryDatabase.GetPoints().Count,
+                Points = DataConvert(new Ps { Data = MemoryDatabase.GetPoints().Data.Take(3).ToList() })
             };
             return reply;
         }

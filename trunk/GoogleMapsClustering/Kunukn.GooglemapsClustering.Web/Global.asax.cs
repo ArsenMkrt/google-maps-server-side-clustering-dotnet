@@ -22,10 +22,9 @@ namespace Kunukn.GooglemapsClustering.Web
            //_log.Info(MethodBase.GetCurrentMethod(), "Init");
 
             // Database load simulation
-            var websitepath = HttpContext.Current.Server.MapPath("~") + @"AreaGMC\Files\Points.csv";
-            IPoints points = Dataset.LoadDataset(websitepath, LoadType.Csv);
-            
-            MemoryDatabase.SetPoints(points);
+            var filepath = HttpContext.Current.Server.MapPath("~") + @"AreaGMC\Files\Points.csv";
+            MemoryDatabase.SetFilepath(filepath);
+            //MemoryDatabase.SetPoints(Dataset.LoadDataset(filepath));
             RegisterRoutes();
         }
 

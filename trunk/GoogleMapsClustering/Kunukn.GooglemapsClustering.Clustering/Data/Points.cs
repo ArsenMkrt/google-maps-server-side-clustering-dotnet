@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using Kunukn.GooglemapsClustering.Clustering.Contract;
 
 namespace Kunukn.GooglemapsClustering.Clustering.Data
 {
-    public class Points : IPoints
+    public class Points : IPoints, ISerializable
     {
         public int Count { get { return Data.Count; } }
         public List<IP> Data { get; set; }
@@ -26,11 +28,21 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             Data.Add(p);
         }
 
+        public List<IP> ToList()
+        {
+            return this.Data.ToList();
+        }
+
         public override string ToString()
         {
             var sb = new StringBuilder();
             foreach (var p in Data) sb.AppendFormat("[{0}] ", p);
             return sb.ToString();
+        }
+
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext ctxt)
+        {
+            info.AddValue("Data", this.Data);           
         }
     }
 }
