@@ -11,8 +11,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
     /// /// Author: Kunuk Nykjaer
     /// </summary>
     public abstract class ClusterAlgorithmBase
-    {
-        protected readonly static Random Rand = new Random();
+    {        
         protected readonly IPoints Dataset; // all points
         //id, bucket
         public readonly Dictionary<string, Bucket> BucketsLookup =

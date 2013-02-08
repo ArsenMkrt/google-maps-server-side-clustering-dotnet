@@ -12,6 +12,19 @@ using Kunukn.GooglemapsClustering.Clustering.Data;
 using Kunukn.GooglemapsClustering.Clustering.Utility;
 using Kunukn.GooglemapsClustering.WebGoogleMapClustering;
 
+using P = Kunukn.GooglemapsClustering.Clustering.Data.P;
+using IP = Kunukn.GooglemapsClustering.Clustering.Contract.IP;
+using IPoints = Kunukn.GooglemapsClustering.Clustering.Contract.IPoints;
+
+using SingleDetectLibrary.Code;
+using SingleDetectLibrary.Code.Contract;
+using SingleDetectLibrary.Code.StrategyPattern;
+using IPsKnn = SingleDetectLibrary.Code.Contract.IPoints;
+using IPKnn = SingleDetectLibrary.Code.Contract.IP;
+using IPointsKnn = SingleDetectLibrary.Code.Contract.IPoints;
+using PointsKnn = SingleDetectLibrary.Code.Data.Points;
+using PKnn = SingleDetectLibrary.Code.Data.P;
+
 namespace Kunukn.GooglemapsClustering.TestConsole
 {
     /// <summary>
@@ -30,6 +43,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
+            //Knn();
             //LatLonParse();
             //PMapTest();
             //GenerateRandomDatasetToCsvFile();
@@ -51,6 +65,46 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             WL("\npress a key to exit ...");
             Console.ReadKey();
         }
+
+        static void Knn()
+        {
+            IPoints points = Dataset.LoadDataset(@"c:\temp\points.csv", LoadType.Csv);
+
+            // Used for testing K nearest neighbor
+            IPointsKnn knnDataset = new PointsKnn();
+            knnDataset.Data = new List<IPKnn>();
+
+            // Used for testing K nearest neighbor
+            var rect = new SingleDetectLibrary.Code.Data.Rectangle
+            {
+                XMin = -180,
+                XMax = 180,
+                YMin = -90,
+                YMax = 90,
+                MaxDistance = 20,
+            };
+            rect.Validate();
+
+            ISingleDetectAlgorithm algo = new SingleDetectAlgorithm(knnDataset, rect, StrategyType.Grid);
+            
+            var origin = new SingleDetectLibrary.Code.Data.P { X = 0, Y = 0 };
+            var duration = algo.UpdateKnn(origin, 3);
+
+            var res = algo.Knn.NNs.Data.OrderBy(i => i.Distance).ToList();
+            var rr = res;
+
+            // Update strategy
+            algo.SetAlgorithmStrategy(new NaiveStrategy());
+
+            // Use algo
+            duration = algo.UpdateKnn(origin, 3);
+
+            var res2 = algo.Knn.NNs.Data.OrderBy(i => i.Distance).ToList();
+            var assd = res2;
+        }
+
+
+
 
         // lat lon points data
         static void LatLonParse()
@@ -191,8 +245,8 @@ namespace Kunukn.GooglemapsClustering.TestConsole
                 throw new ApplicationException("Path is invalid: " + path2);
             }
 
-            IPoints all = Dataset.LoadDatasetFromDatabase(path1, LoadType.Csv);            
-            var points2 = Dataset.LoadDatasetFromDatabase(path2, LoadType.Csv);
+            IPoints all = Dataset.LoadDataset(path1, LoadType.Csv);            
+            var points2 = Dataset.LoadDataset(path2, LoadType.Csv);
             all.Data.AddRange(points2.Data);
             
 
@@ -210,7 +264,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
                 throw new ApplicationException("Path is invalid: " + path);
             }
 
-            var points = Dataset.LoadDatasetFromDatabase(path, LoadType.Csv);
+            var points = Dataset.LoadDataset(path, LoadType.Csv);
             foreach (var p in points.Data)
             {
                 // something               
@@ -329,7 +383,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
         {
             string execfolder = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
             var path = execfolder + @"\..\..\..\Kunukn.GooglemapsClustering.Web\AreaGMC\Files\Points.csv";
-            var points = Dataset.LoadDatasetFromDatabase(path, LoadType.Csv);
+            var points = Dataset.LoadDataset(path, LoadType.Csv);
 
             //var b = new Boundary { Minx = -179, Maxx = 179, Miny = -90, Maxy = 90 };
             //int i = points.Count(p => MathTool.IsInside(b, p));

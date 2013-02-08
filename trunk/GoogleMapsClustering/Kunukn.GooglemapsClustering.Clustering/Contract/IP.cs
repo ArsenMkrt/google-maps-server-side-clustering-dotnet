@@ -14,7 +14,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Contract
         string I { get; set; }  // marker id
         string T { get; set; }  // marker type
 
-        object Data { get; set; } // data container for anything
+        object Data { get; set; } // data container for anything, use it as you like
         
         IP Normalize();
         double Distance(PBase p);

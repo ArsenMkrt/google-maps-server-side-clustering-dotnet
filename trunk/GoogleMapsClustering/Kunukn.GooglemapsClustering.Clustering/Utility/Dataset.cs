@@ -13,20 +13,20 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
     public class Dataset
     {
         // Database simulation
-        public static IPoints LoadDatasetFromDatabase(string websitepath, LoadType loadType)
+        public static IPoints LoadDataset(string websitepath, LoadType loadType)
         {
             switch (loadType)
             {
                 case LoadType.Serialized:
                     throw new NotSupportedException(MethodBase.GetCurrentMethod().ToString());
                 case LoadType.Csv:
-                    return LoadDatasetFromDatabaseCsv(websitepath);
+                    return LoadDatasetFromCsv(websitepath);                    
                 default:
                     throw new ApplicationException("LoadDatasetFromDatabase unknown loadtype");
             }
         }
 
-        private static IPoints LoadDatasetFromDatabaseCsv(string websitepath)
+        private static IPoints LoadDatasetFromCsv(string websitepath)
         {
             var filepath = websitepath;
             var fi = new FileInfo(websitepath);
@@ -36,28 +36,22 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
             }
 
             var list = FileUtil.ReadFile(filepath);
-            var dataset = new Points();
+            IPoints dataset = new Points();
 
             foreach (var s in list)
             {
                 var arr = s.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-                if (arr.Length == 4)
-                {
-                    var x = arr[0].ToDouble();
-                    var y = arr[1].ToDouble();
-                    var i = arr[2];
-                    var t = arr[3];
+                if (arr.Length != 4) continue;
 
-                    dataset.Add(new P { X = x, Y = y, I = i, T = t });
-                }
+                var x = arr[0].ToDouble();
+                var y = arr[1].ToDouble();
+                var i = arr[2];
+                var t = arr[3];
+
+                dataset.Add(new P { X = x, Y = y, I = i, T = t });
             }
-
-            foreach (var p in dataset.Data)
-            {
-                p.X = p.X.NormalizeLongitude();
-                p.Y = p.Y.NormalizeLatitude();
-            }
-
+            
+            dataset.Normalize();
             return dataset;
         }
     }

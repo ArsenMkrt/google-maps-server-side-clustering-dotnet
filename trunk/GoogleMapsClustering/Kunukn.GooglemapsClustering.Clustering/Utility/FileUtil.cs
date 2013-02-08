@@ -12,11 +12,11 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
     /// </summary>
     public static class FileUtil
     {
-        private static Action<object> WL = Console.WriteLine;
+        private static readonly Action<object> WL = Console.WriteLine;
 
         public const string FolderPath = @"c:\temp\";
-        private static readonly Encoding _encodingRead = Encoding.Default; // Encoding.Default  Encoding.UTF8  Encoding.Unicode      
-        private static readonly Encoding _encodingWrite = Encoding.Unicode; //Encoding.Default  Encoding.UTF8  Encoding.Unicode
+        private static readonly Encoding EncodingRead = Encoding.Default; // Encoding.Default  Encoding.UTF8  Encoding.Unicode      
+        private static readonly Encoding EncodingWrite = Encoding.Unicode; //Encoding.Default  Encoding.UTF8  Encoding.Unicode
 
         /// <summary>        
         /// folder path is created if not exists
@@ -39,7 +39,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
             bool success = false;
             try
             {
-                if (fileInfo == null) return false;
+                if (fileInfo == null || fileInfo.Directory==null) return false;
                                                   
                 if (!fileInfo.Directory.Exists)
                 {
@@ -48,7 +48,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
                                     
                 using (var streamWriter = fileInfo.CreateText() )
                 {
-                    streamWriter.Write(data, _encodingWrite);
+                    streamWriter.Write(data, EncodingWrite);
                     success = true;
                 }
             }
@@ -66,35 +66,31 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
         /// Creates the folders if not exists for file path
         /// </summary>
         public static bool CreateFilePath(string filepath)
-        {
-            bool success = false;
+        {            
             try
             {
                 var fi = new FileInfo(filepath);
-                if (!fi.Directory.Exists)
-                {
-                    Directory.CreateDirectory(fi.Directory.ToString());
-                }                    
-                success = true;
+                if (fi.Directory == null) return false;
+
+                if (!fi.Directory.Exists) Directory.CreateDirectory(fi.Directory.ToString());
+
+                return true;
             }
             catch (Exception ex)
             {
                 WL(ExceptionUtil.GetException(ex));
                 WL("\nPress a key ... ");
                 Console.ReadKey();
-            }
-            return success;
+                return false;
+            }            
         }
 
         // Save points from mem to file
         public const string DatasetSerializeName = "datasetGridcluster.ser";
         public static void SaveDataSetToFile(IPoints dataset, string filename = null)
         {
-            if(filename==null)
-            {
-                SaveDataSetToFile(dataset, DatasetSerializeName);
-            }
-                
+            if(filename==null) SaveDataSetToFile(dataset, DatasetSerializeName);
+                            
             var objectToSerialize = new DatasetToSerialize { Dataset = dataset };
             new Serializer().SerializeObject(FolderPath + filename, objectToSerialize);
         }
@@ -102,11 +98,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
         // Load points from file to mem        
         public static IPoints LoadDataSetFromFile(FileInfo filepath = null)
         {
-            if(filepath==null)
-            {
-                return LoadDataSetFromFile(new FileInfo(FolderPath + DatasetSerializeName));   
-            }
-                
+            if(filepath==null) return LoadDataSetFromFile(new FileInfo(FolderPath + DatasetSerializeName));   
+                            
             var objectToSerialize = (DatasetToSerialize)
                 (new Serializer().DeSerializeObject(filepath.FullName));
             return objectToSerialize.Dataset;
@@ -122,7 +115,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
             var list = new List<string>();
             try
             {                
-                using (var reader = new StreamReader(path, _encodingRead, true))
+                using (var reader = new StreamReader(path, EncodingRead, true))
                 {
                     var line = reader.ReadLine();
                     while (line != null)
@@ -136,7 +129,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
             {
                 WL(ExceptionUtil.GetException(ex));
                 WL("\nPress a key ... ");
-                throw ex;
+                throw;
             }
 
             return list;

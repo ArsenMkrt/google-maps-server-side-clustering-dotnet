@@ -7,6 +7,7 @@ var gmcKN = {
     infowindow: undefined,
     debugMarker: undefined,
     debuginfo: undefined,
+    markersCount: 0,
 
     // http://code.google.com/intl/da-DK/apis/maps/documentation/javascript/reference.html
     geocoder: new google.maps.Geocoder(),
@@ -61,7 +62,7 @@ var gmcKN = {
 
             google.maps.event.addListener(gmcKN.map, 'idle', function () { gmcKN.mymap.events.getBounds(false); });
             google.maps.event.addListener(gmcKN.map, 'zoom_changed', function () {
-                document.getElementById("gmcKN_zoomInfo").innerHTML = "zoom: " + gmcKN.map.getZoom() + ".  ";
+                document.getElementById("gmcKN_zoomInfo").innerHTML = " Zoom: " + gmcKN.map.getZoom() + ".  ";
                 if (gmcKN.map.getZoom() < gmcKN.mymap.settings.alwaysClusteringEnabledWhenZoomLevelLess) {
                     $('#gmcKN_Clustering_span').hide();
                 }
@@ -77,8 +78,8 @@ var gmcKN = {
             mapCenterLat: 35,
             mapCenterLon: 10,
             zoomLevel: 2,
-            zoomlevelClusterStop: 15,
-            alwaysClusteringEnabledWhenZoomLevelLess: 8,
+            zoomlevelClusterStop: 15, // don't cluster from this zoom level and larger
+            alwaysClusteringEnabledWhenZoomLevelLess: 6,
 
             jsonMarkerUrl: '/AreaGMC/gmc.svc/GetMarkers', // post
             jsonMarkerInfoUrl: '/AreaGMC/gmc.svc/GetMarkerInfo', // post            
@@ -221,6 +222,9 @@ var gmcKN = {
                         // update
                         gmcKN.async.lastReceivedGetMarkers = lastReceivedGetMarkers;
 
+                        gmcKN.markersCount = items.Count;
+                        document.getElementById("gmcKN_markersCount").innerHTML = " Markers: " + gmcKN.markersCount + ".  ";
+
                         // grid lines clear current
                         $.each(gmcKN.mymap.events.polys, function () {
                             var item = this;
@@ -258,9 +262,9 @@ var gmcKN = {
                         var newmarkersTodo = [];    // points to be displayed
 
                         // store new points to be drawn                  
-                        for (i in items.Points) {
-                            if (items.Points.hasOwnProperty(i)) {
-                                var p = items.Points[i];
+                        for (i in items.Markers) {
+                            if (items.Markers.hasOwnProperty(i)) {
+                                var p = items.Markers[i];
                                 var key = gmcKN.getKey(p); //key                            
                                 pointsCacheIncome[key] = p;
                             }
@@ -281,9 +285,9 @@ var gmcKN = {
                         }
 
                         // add new markers from event not already drawn
-                        for (var i in items.Points) {
-                            if (items.Points.hasOwnProperty(i)) {
-                                var p = items.Points[i];
+                        for (var i in items.Markers) {
+                            if (items.Markers.hasOwnProperty(i)) {
+                                var p = items.Markers[i];
                                 var key = gmcKN.getKey(p); //key                            
                                 if (pointsCacheOnMap[key] === undefined) {
                                     if (pointsCacheIncome[key] === undefined) {
