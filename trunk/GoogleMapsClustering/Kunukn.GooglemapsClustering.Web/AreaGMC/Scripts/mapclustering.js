@@ -62,7 +62,7 @@ var gmcKN = {
 
             google.maps.event.addListener(gmcKN.map, 'idle', function () { gmcKN.mymap.events.getBounds(false); });
             google.maps.event.addListener(gmcKN.map, 'zoom_changed', function () {
-                document.getElementById("gmcKN_zoomInfo").innerHTML = " Zoom: " + gmcKN.map.getZoom() + ".  ";
+                document.getElementById("gmcKN_zoomInfo").innerHTML = "&nbsp;Zoom: " + gmcKN.map.getZoom() + ".  ";
                 if (gmcKN.map.getZoom() < gmcKN.mymap.settings.alwaysClusteringEnabledWhenZoomLevelLess) {
                     $('#gmcKN_Clustering_span').hide();
                 }
@@ -223,7 +223,7 @@ var gmcKN = {
                         gmcKN.async.lastReceivedGetMarkers = lastReceivedGetMarkers;
 
                         gmcKN.markersCount = items.Count;
-                        document.getElementById("gmcKN_markersCount").innerHTML = " Markers: " + gmcKN.markersCount + ".  ";
+                        document.getElementById("gmcKN_markersCount").innerHTML = "&nbsp;Markers: " + gmcKN.markersCount + ".  ";
 
                         // grid lines clear current
                         $.each(gmcKN.mymap.events.polys, function () {
