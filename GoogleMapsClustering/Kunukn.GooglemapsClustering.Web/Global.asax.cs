@@ -23,7 +23,7 @@ namespace Kunukn.GooglemapsClustering.Web
             // Database load simulation
             var websitepath = HttpContext.Current.Server.MapPath("~") + @"AreaGMC\Files\Points.csv";
             var points = Dataset.LoadDatasetFromDatabase(websitepath, LoadType.Csv);
-            foreach (var p in points) p.Normalize();
+            foreach (var p in points.Data) p.Normalize();
                 
             MemoryDatabase.SetPoints(points);
             RegisterRoutes();

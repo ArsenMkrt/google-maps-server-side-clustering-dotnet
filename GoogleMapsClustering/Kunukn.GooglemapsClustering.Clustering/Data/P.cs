@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.Serialization;
-using System.Web.Script.Serialization;
 using Kunukn.GooglemapsClustering.Clustering.Contract;
 using Kunukn.GooglemapsClustering.Clustering.Utility;
 
@@ -12,19 +11,10 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
 
     [Serializable]
     public class P : PBase, IP, ISerializable
-    {              
-        public P(double x, double y) : base(x, y) { Init(); }
-        public P() { Init(); }
-        void Init() { I = string.Empty; T = string.Empty; C = 1; }
-
-        public int C { get; set; } // count
-        public string I { get; set; } // marker id           
-        public string T { get; set; } // marker type
-
-        [ScriptIgnore] //  don't include in JSON data
-        public string Name { get; set; } // custom
-
-        public P Normalize()
+    {                      
+        public P() {}
+        
+        public virtual IP Normalize()
         {
             Lon = Lon.NormalizeLongitude();
             Lat = Lat.NormalizeLatitude();
@@ -40,7 +30,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             this.Y = ((string)info.GetValue("Y", typeof(string))).ToDouble();
         }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
+        // Data returned as Json
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext ctxt)
         {
             info.AddValue("I", this.I);
             info.AddValue("T", this.T);
@@ -55,8 +46,9 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
                 Uid, X, Y, T, I);
         }
 
-        #region Not used
+        #region Not used, todo delete
 
+        //public P(double x, double y) : base(x, y) { Init(); }
         //public int CompareTo(object o) // if used in sorted list
         //{
         //    var other = o as P;

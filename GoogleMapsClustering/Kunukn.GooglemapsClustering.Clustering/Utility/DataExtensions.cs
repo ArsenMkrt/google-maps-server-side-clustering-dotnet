@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Kunukn.GooglemapsClustering.Clustering.Contract;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 
 namespace Kunukn.GooglemapsClustering.Clustering.Utility
@@ -14,9 +15,9 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
             return Math.Round(d, Numbers.Round);
         }
 
-        public static void Normalize(this List<P> list)
+        public static void Normalize(this IPoints list)
         {
-            foreach (var p in list) p.Normalize();
+            foreach (var p in list.Data) p.Normalize();
         }
 
         // Distance

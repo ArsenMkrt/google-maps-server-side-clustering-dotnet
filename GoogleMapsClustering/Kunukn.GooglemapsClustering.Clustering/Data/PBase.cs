@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web.Script.Serialization;
 using Kunukn.GooglemapsClustering.Clustering.Utility;
 
 namespace Kunukn.GooglemapsClustering.Clustering.Data
@@ -7,42 +6,34 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
     [Serializable]
     public abstract class PBase
     {
-        protected PBase(){ Uid = ++_counter;}
+        private static int _counter;        
+        protected PBase(){ Uid = ++_counter; Init();}
+                     
+        public virtual int Uid { get; private set; }        
+        public virtual object Data { get; set; } // Data container for anything
+        
+        public virtual double X { get { return Lon; } set { Lon = value; } }        
+        public virtual double Y { get { return Lat; } set { Lat = value; } }
+        
+        public virtual int C { get; set; } // count
+        public virtual string I { get; set; } // marker id           
+        public virtual string T { get; set; } // marker type        
+        public virtual string Name { get; set; } // custom
 
-        protected PBase(double lon, double lat)
-        {
-            X = lon;
-            Lat = lat;
-            Uid = ++_counter;
-        }
-
-        [ScriptIgnore] // don't include in JSON data
-        private static int _counter;
-
-        [ScriptIgnore] // don't include in JSON data
-        public int Uid { get; private set; }
-
-        [ScriptIgnore] // don't include in JSON data
-        public object Data { get; set; } // Data container for anything
-
-        [ScriptIgnore] // don't include in JSON data
-        public double X { get { return Lon; } set { Lon = value; } }
-
-        [ScriptIgnore] // don't include in JSON data
-        public double Y { get { return Lat; } set { Lat = value; } }
-       
         private double _lat;
-        public double Lat
+        public virtual double Lat
         {
             get { return ParseValue.Round(_lat); }
             set { _lat = value; }
         }
         private double _lon;
-        public double Lon
+        public virtual double Lon
         {
             get { return ParseValue.Round(_lon); }
             set { _lon = value; }
         }
+
+        void Init() { I = string.Empty; T = string.Empty; C = 1; }
 
         public virtual double Distance(PBase p)
         {

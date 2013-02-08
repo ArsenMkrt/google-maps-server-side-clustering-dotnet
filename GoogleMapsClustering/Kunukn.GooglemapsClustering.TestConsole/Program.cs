@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web.Script.Serialization;
 using Kunukn.GooglemapsClustering.Clustering;
 using Kunukn.GooglemapsClustering.Clustering.Algorithm;
+using Kunukn.GooglemapsClustering.Clustering.Contract;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 using Kunukn.GooglemapsClustering.Clustering.Utility;
 using Kunukn.GooglemapsClustering.WebGoogleMapClustering;
@@ -46,7 +47,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
 
             stopwatch.Stop();
 
-            WL(string.Format("Elapsed: {0}\n",stopwatch.Elapsed.ToString()));
+            WL(string.Format("Elapsed: {0}\n", stopwatch.Elapsed.ToString()));
             WL("\npress a key to exit ...");
             Console.ReadKey();
         }
@@ -58,13 +59,13 @@ namespace Kunukn.GooglemapsClustering.TestConsole
 
             var rand = new Random();
             const string name = "cities1000";
-            List<string> lines = FileUtil.ReadFile(string.Format("c:\\temp\\{0}.txt", name));
-            var dataset = new List<P>();
-            int numOfType = 3;
+            var lines = FileUtil.ReadFile(string.Format("c:\\temp\\{0}.txt", name));
+            var dataset = new Points();
+            const int numOfType = 3;
 
             foreach (var line in lines)
             {
-                var delimiters = new [] { ' ', '\t' };
+                var delimiters = new[] { ' ', '\t' };
                 var arr = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
                 if (arr.Length < 10) continue;
 
@@ -93,9 +94,9 @@ namespace Kunukn.GooglemapsClustering.TestConsole
                     }
                 }
 
-                if (lon != null && lat != null && MathTool.IsLonValid(lon.Value) && MathTool.IsLatValid(lat.Value))
+                if (lon.HasValue && lat.HasValue && MathTool.IsLonValid(lon.Value) && MathTool.IsLatValid(lat.Value))
                 {
-                    dataset.Add(new P(lon.Value, lat.Value) { I = id, T = (rand.Next(numOfType) + 1).ToString() });
+                    dataset.Add(new P { X = lon.Value, Y = lat.Value, I = id, T = (rand.Next(numOfType) + 1).ToString() });
                 }
             }
 
@@ -109,20 +110,20 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             var fi = new FileInfo(path);
             if (fi.Directory != null && fi.Directory.Exists)
             {
-                SaveCsvData(GenerateRandomDataset(10000, 
+                SaveCsvData(GenerateRandomDataset(10000,
                     new Boundary { Minx = 172, Maxx = -178, Miny = -48, Maxy = -38 }), fi);
-            }                
+            }
             else
             {
                 throw new ApplicationException("Path is invalid: " + path);
-            }                
+            }
         }
 
         static void PMapTest()
         {
             var b = new Boundary { Minx = -180, Maxx = 180, Miny = -90, Maxy = 90 };
-            var dx = 20;
-            var dy = 20;
+            const int dx = 20;
+            const int dy = 20;
 
             var xy = GridCluster.GetPointMappedIds(new P { X = 175, Y = 35 }, b, dx, dy);
             Console.WriteLine("x: {0}   y: {1}", xy[0], xy[1]);
@@ -140,12 +141,12 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             Console.WriteLine("x: {0}   y: {1}", xy[0], xy[1]);
         }
 
-        static IEnumerable<P> GenerateRandomDataset(int n, Boundary b)
+        static IPoints GenerateRandomDataset(int n, Boundary b)
         {
             b.Normalize();
 
-            // random points
-            var list = new List<P>();
+            // Random points
+            var list = new List<IP>();
             for (var i = 0; i < n; i++)
             {
                 var lat = (b.Miny + b.AbsY * Rand.NextDouble()).NormalizeLatitude();
@@ -153,21 +154,21 @@ namespace Kunukn.GooglemapsClustering.TestConsole
                 list.Add(new P { I = Guid.NewGuid().ToString(), C = 1, Y = lat, X = lon, T = i.ToString() });
             }
 
-            return list;
+            return new Points {Data = list};
         }
 
-        static void SaveSerData(List<P> dataset)
+        static void SaveSerData(IPoints dataset)
         {
             FileUtil.SaveDataSetToFile(dataset);
             var list = FileUtil.LoadDataSetFromFile();
         }
 
-        static void SaveCsvData(IEnumerable<P> dataset, FileInfo filepath)
+        static void SaveCsvData(IPoints dataset, FileInfo filepath)
         {
             //var dataset = FileUtil.LoadDataSetFromFile();
-            var save = dataset.Select(p => string.Format("{0};{1};{2};{3}", 
+            var save = dataset.Data.Select(p => string.Format("{0};{1};{2};{3}",
                 p.X, p.Y, p.I, p.T)).ToList();
-            
+
             //foreach (var s in save) WL(s);
             FileUtil.WriteFile(save, filepath);
         }
@@ -183,24 +184,24 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             {
                 throw new ApplicationException("Path is invalid: " + path1);
             }
-                
+
             fi1 = new FileInfo(path2);
             if (fi1.Directory == null || !fi1.Directory.Exists)
             {
                 throw new ApplicationException("Path is invalid: " + path2);
             }
-                
-            var points1 = Dataset.LoadDatasetFromDatabase(path1, LoadType.Csv);
-            var all = points1.ToList();
+
+            IPoints all = Dataset.LoadDatasetFromDatabase(path1, LoadType.Csv);            
             var points2 = Dataset.LoadDatasetFromDatabase(path2, LoadType.Csv);
-            all.AddRange(points2);
+            all.Data.AddRange(points2.Data);
+            
 
             var path = execfolder + @"\..\..\..\Kunukn.GooglemapsClustering.Web\AreaGMC\Files\" + name;
             SaveCsvData(all, new FileInfo(path));
         }
 
         static void ReworkDataset(string name)
-        {            
+        {
             string execfolder = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
             var path = execfolder + @"\..\..\..\Kunukn.GooglemapsClustering.Web\AreaGMC\Files\" + name;
             var fi = new FileInfo(path);
@@ -208,9 +209,9 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             {
                 throw new ApplicationException("Path is invalid: " + path);
             }
-                
+
             var points = Dataset.LoadDatasetFromDatabase(path, LoadType.Csv);
-            foreach (var p in points)
+            foreach (var p in points.Data)
             {
                 // something               
             }
@@ -221,7 +222,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
         static void ConvertDataset()
         {
             var list = FileUtil.ReadFile(@"c:\temp\temp.csv");
-            var dataset = new List<P>();
+            var dataset = new Points();
 
             foreach (var s in list)
             {
@@ -233,7 +234,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
                     var i = arr[2];
                     var t = arr[3];
 
-                    dataset.Add(new P(x, y) { I = i, T = t });
+                    dataset.Add(new P { X = x, Y = y, I = i, T = t });
                 }
             }
 
@@ -304,23 +305,23 @@ namespace Kunukn.GooglemapsClustering.TestConsole
 
         static void TestBaseGetCentroidFromClusterLatLon()
         {
-            var list = new List<P>();
-            list.Add(new P(50, 20));
-            list.Add(new P(70, 60));
-            //list.Add(new P(-160, 40));
-            //list.Add(new P(-170, 40));
+            var list = new List<IP>();
+            list.Add(new P { X = 50, Y = 20 });
+            list.Add(new P { X = 70, Y = 60 });
+            //list.Add(new P { X = -160, Y = 40 });
+            //list.Add(new P { X = -170, Y = 40 });
 
 
-            var p = ClusterAlgorithmBase.GetCentroidFromClusterLatLon(list);
+            var p = ClusterAlgorithmBase.GetCentroidFromClusterLatLon(new Points{Data = list});
             Console.WriteLine(p);
         }
 
         static void ReadSerializedFileAndCount()
         {
-            List<P> points = FileUtil.LoadDataSetFromFile();
+            var points = FileUtil.LoadDataSetFromFile();
             var b = new Boundary { Minx = -179, Maxx = 179, Miny = -90, Maxy = 90 };
-            int i = points.Count(p => MathTool.IsInside(b, p));
-                        
+            int i = points.Data.Count(p => MathTool.IsInside(b, p));
+
             Console.WriteLine("count: " + i);
         }
 
@@ -328,8 +329,8 @@ namespace Kunukn.GooglemapsClustering.TestConsole
         {
             string execfolder = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
             var path = execfolder + @"\..\..\..\Kunukn.GooglemapsClustering.Web\AreaGMC\Files\Points.csv";
-            var points = Dataset.LoadDatasetFromDatabase(path,LoadType.Csv);
-            
+            var points = Dataset.LoadDatasetFromDatabase(path, LoadType.Csv);
+
             //var b = new Boundary { Minx = -179, Maxx = 179, Miny = -90, Maxy = 90 };
             //int i = points.Count(p => MathTool.IsInside(b, p));
 

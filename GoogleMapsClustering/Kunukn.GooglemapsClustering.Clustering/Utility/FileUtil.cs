@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Kunukn.GooglemapsClustering.Clustering.Contract;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 
 namespace Kunukn.GooglemapsClustering.Clustering.Utility
@@ -87,7 +88,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
 
         // Save points from mem to file
         public const string DatasetSerializeName = "datasetGridcluster.ser";
-        public static void SaveDataSetToFile(List<P> dataset, string filename = null)
+        public static void SaveDataSetToFile(IPoints dataset, string filename = null)
         {
             if(filename==null)
             {
@@ -99,7 +100,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
         }
        
         // Load points from file to mem        
-        public static List<P> LoadDataSetFromFile(FileInfo filepath = null)
+        public static IPoints LoadDataSetFromFile(FileInfo filepath = null)
         {
             if(filepath==null)
             {

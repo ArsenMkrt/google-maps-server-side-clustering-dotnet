@@ -1,4 +1,5 @@
 ﻿using System;
+using Kunukn.GooglemapsClustering.Clustering.Contract;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 
 namespace Kunukn.GooglemapsClustering.Clustering.Utility
@@ -12,7 +13,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
         // Minkowski dist        
         // if lat lon precise dist is needed, use Haversine or similar formulas
         // this is approx calc for clustering, no precise dist is needed
-        public static double Distance(P a, P b)
+        public static double Distance(IP a, IP b)
         {
             // lat lon wrap, values don't seem needed to be normalized to [0;1] for better distance calc
             var absx = LatLonDiff(a.X, b.X);
@@ -62,6 +63,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
         /// <param name="maxy"></param>
         /// <param name="x"></param>
         /// <param name="y"></param>
+        /// /// <param name="isInsideDetectedX"></param>
+        /// /// <param name="isInsideDetectedY"></param>
         /// <returns></returns>
         public static bool IsInside(double minx, double miny, double maxx, double maxy, double x, double y, bool isInsideDetectedX, bool isInsideDetectedY)
         {
@@ -141,7 +144,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
             return isX && isY;
         }
 
-        public static bool IsInside(Boundary b, P p)
+        public static bool IsInside(Boundary b, IP p)
         {
             return IsInside(b.Minx, b.Miny, b.Maxx, b.Maxy, p.X, p.Y, false, false);
         }

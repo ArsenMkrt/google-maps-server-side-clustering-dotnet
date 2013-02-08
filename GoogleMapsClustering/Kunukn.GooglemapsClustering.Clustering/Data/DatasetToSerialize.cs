@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Kunukn.GooglemapsClustering.Clustering.Contract;
 
 namespace Kunukn.GooglemapsClustering.Clustering.Data
 {
-    [Serializable()]
+    [Serializable]
     public class DatasetToSerialize : ISerializable
     {
         private const string Name = "Dataset";
-        public List<P> Dataset { get; set; }
+        public IPoints Dataset { get; set; }
         public DatasetToSerialize()
         {
-            Dataset = new List<P>();
+            Dataset = new Points();
         }
         public DatasetToSerialize(SerializationInfo info, StreamingContext ctxt)
         {
-            this.Dataset = (List<P>)info.GetValue(Name, typeof(List<P>));
+            this.Dataset = (IPoints)info.GetValue(Name, typeof(IPoints));
         }
         public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
         {

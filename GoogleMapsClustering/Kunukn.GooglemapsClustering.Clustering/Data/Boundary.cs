@@ -3,7 +3,7 @@ using Kunukn.GooglemapsClustering.Clustering.Utility;
 
 namespace Kunukn.GooglemapsClustering.Clustering.Data
 {
-    public class Boundary : Point2
+    public class Boundary : Rectangle
     {
         private readonly Boundary _b;
         public Boundary(){}
