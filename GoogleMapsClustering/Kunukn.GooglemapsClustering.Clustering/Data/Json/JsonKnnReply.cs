@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using SingleDetectLibrary.Code.Contract;
+using Kunukn.SingleDetectLibrary.Code.Contract;
 
 namespace Kunukn.GooglemapsClustering.Clustering.Data.Json
 {

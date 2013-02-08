@@ -13,7 +13,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
     public class Dataset
     {
         // Database simulation
-        public static IPoints LoadDataset(string websitepath, LoadType loadType)
+        public static IPoints LoadDataset(string websitepath, LoadType loadType = LoadType.Csv)
         {
             switch (loadType)
             {
