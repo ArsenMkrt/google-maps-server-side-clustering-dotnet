@@ -4,12 +4,16 @@ using System.Globalization;
 using System.Linq;
 using System.ServiceModel.Activation;
 using Kunukn.GooglemapsClustering.Clustering.Algorithm;
+using Kunukn.GooglemapsClustering.Clustering.Contract;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 using Kunukn.GooglemapsClustering.Clustering.Data.Json;
 using SingleDetectLibrary.Code;
 using SingleDetectLibrary.Code.Contract;
 using SingleDetectLibrary.Code.Data;
 using P = Kunukn.GooglemapsClustering.Clustering.Data.P;
+using IP = Kunukn.GooglemapsClustering.Clustering.Contract.IP;
+using Ps = Kunukn.GooglemapsClustering.Clustering.Data.Points;
+using IPs = Kunukn.GooglemapsClustering.Clustering.Contract.IPoints;
 
 namespace Kunukn.GooglemapsClustering.Clustering.WebService
 {
@@ -41,7 +45,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             if (jsonReceive.TypeFilter.Count > 0)
             {
                 // Filter data by typeFilter value
-                dataset = allpoints.Where(p => jsonReceive.TypeFilter.Contains(p.T) == false).ToList();
+                dataset.Data = allpoints.Data.Where(p => jsonReceive.TypeFilter.Contains(p.T) == false).ToList();
             }
 
             // Clustering
@@ -54,7 +58,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
                 var clusterPoints = clusterAlgo.GetCluster(new ClusterInfo { ZoomLevel = jsonReceive.Zoomlevel });
 
                 // Prepare data to the client
-                reply = new JsonMarkersReply { Points = clusterPoints, Rid = sendid, Polylines = clusterAlgo.Lines };
+                reply = new JsonMarkersReply { Points = DataConvert(clusterPoints), Rid = sendid, Polylines = clusterAlgo.Lines };
 
                 // Return client data
                 return reply;
@@ -62,14 +66,14 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
 
             // If we are here then there are no clustering
             // The number of items returned is restricted to avoid json data overflow
-            List<P> filteredDataset = ClusterAlgorithmBase.FilterDataset(dataset, jsonReceive.Viewport);
-            List<P> filteredDatasetMaxPoints = filteredDataset.Take(AlgoConfig.MaxMarkersReturned).ToList();
+            IPs filteredDataset = ClusterAlgorithmBase.FilterDataset(dataset, jsonReceive.Viewport);
+            IPs filteredDatasetMaxPoints = new Ps { Data = filteredDataset.Data.Take(AlgoConfig.MaxMarkersReturned).ToList() };
 
-            reply = new JsonMarkersReply { Points = filteredDatasetMaxPoints, Rid = sendid };
+            reply = new JsonMarkersReply { Points = DataConvert(filteredDatasetMaxPoints), Rid = sendid };
             return reply;
         }
 
-        public JsonMarkerInfoReply GetMarkerInfo(string id, string type, int sendid)
+           public JsonMarkerInfoReply GetMarkerInfo(string id, string type, int sendid)
         {
             var reply = new JsonMarkerInfoReply { Id = id, Type = type, Rid = sendid };
             reply.BuildContent();
@@ -78,15 +82,17 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
 
 
         public JsonInfoReply GetInfo()
-        {
+        {            
             var reply = new JsonInfoReply { 
-                DbSize = MemoryDatabase.Points.Count, 
-                Points = MemoryDatabase.Points.Take(3).ToList() 
+                DbSize = MemoryDatabase.Points.Count,
+                Points = DataConvert(new Ps { Data = MemoryDatabase.Points.Data.Take(3).ToList()})
+                
             };            
             return reply;
         }
 
 
+        // Todo finish imple
         // Preparing for K nearest neighbor
         public JsonKnnReply GetKnn(string s)
         {
@@ -120,6 +126,18 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             
             return new JsonKnnReply { Data = string.Format("{0}; {1}; {2}; msec: {3}", x, y, k, duration), Nns = algo.Knn.NNs.Data};
         }
+
+        
+        /// <summary>
+        /// Solve serializing to Json issue, use replace or use your own P type as you like 
+        /// </summary>
+        /// <param name="ps"></param>
+        /// <returns></returns>
+        protected static IList<P> DataConvert(IPs ps)
+        {
+            return ps.Data.Select(p => p as P).ToList();
+        }
+
     }
 
 }

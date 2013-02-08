@@ -51,7 +51,9 @@
   <ItemGroup>
     <Compile Include="Algorithm\ClusterAlgorithmBase.cs" />
     <Compile Include="Algorithm\GridCluster.cs" />
+    <Compile Include="Contract\IPoints.cs" />
     <Compile Include="Contract\IP.cs" />
+    <Compile Include="Data\Points.cs" />
     <Compile Include="Data\Enums.cs" />
     <Compile Include="Data\AlgoConfig.cs" />
     <Compile Include="Data\Json\JsonKnnReply.cs" />
@@ -76,7 +78,7 @@
     <Compile Include="Data\Numbers.cs" />
     <Compile Include="Data\P.cs" />
     <Compile Include="Data\PBase.cs" />
-    <Compile Include="Data\Point2.cs" />
+    <Compile Include="Data\Rectangle.cs" />
     <Compile Include="Utility\MathTool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebService\AjaxService.cs" />

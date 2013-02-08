@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Kunukn.GooglemapsClustering.Clustering.Contract;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 using Kunukn.GooglemapsClustering.Clustering.Utility;
 
@@ -12,13 +13,13 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
     public abstract class ClusterAlgorithmBase
     {
         protected readonly static Random Rand = new Random();
-        protected readonly List<P> Dataset; // all points
+        protected readonly IPoints Dataset; // all points
         //id, bucket
         public readonly Dictionary<string, Bucket> BucketsLookup =
             new Dictionary<string, Bucket>();
 
         protected ClusterAlgorithmBase() { }
-        protected ClusterAlgorithmBase(List<P> dataset)
+        protected ClusterAlgorithmBase(IPoints dataset)
         {
             if (dataset == null)
             {
@@ -27,12 +28,12 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
             Dataset = dataset;
         }
 
-        public abstract List<P> GetCluster(ClusterInfo clusterInfo);
+        public abstract IPoints GetCluster(ClusterInfo clusterInfo);
 
-        public List<P> GetClusterResult(Boundary grid)
+        public IPoints GetClusterResult(Boundary grid)
         {
             // Collect used buckets and return the result
-            var clusterPoints = new List<P>();
+            var clusterPoints = new Points();
 
             //O(m*n)
             foreach (var item in BucketsLookup)
@@ -40,7 +41,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
                 var bucket = item.Value;
                 if (!bucket.IsUsed) continue;
 
-                if (bucket.Points.Count < AlgoConfig.MinClusterSize) clusterPoints.AddRange(bucket.Points);                
+                if (bucket.Points.Count < AlgoConfig.MinClusterSize) clusterPoints.Data.AddRange(bucket.Points.Data);
                 else
                 {
                     bucket.Centroid.C = bucket.Points.Count;
@@ -54,51 +55,22 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
         }
 
         // O(n), could be O(logn-ish) using range search or similar, no problem when points are <500.000
-        public static List<P> FilterDataset(List<P> dataset, Boundary viewport)
+        public static IPoints FilterDataset(IPoints dataset, Boundary viewport)
         {
-            //List<P> filtered = dataset.Where(p => MathTool.IsInsideWiden(viewport, p)).ToList();
-
-            return dataset.Where(p => MathTool.IsInside(viewport, p)).ToList();
+            //return new Points { Data = dataset.Data.Where(i => MathTool.IsInsideWiden(viewport, i)).ToList() };            
+            return new Points {Data = dataset.Data.Where(i => MathTool.IsInside(viewport, i)).ToList()};
         }
-
-        #region NOT USED
-        /*
-        // Can be used instead of GetCentroidFromClusterLatLon if your data are not near lon 180
-        // Basic Centroid Calculation of N Points
-        public static P GetCentroidFromCluster(List<P> list) //O(n)
-        {          
-            int count;
-            if (list == null || (count = list.Count) == 0)
-                return null;
-
-            if (list.Count == 1)
-                return list.First();
-
-            var centroid = new P(0, 0) { C = count };//O(1)
-            foreach (var p in list)
-            {
-                centroid.Lon += p.Lon;
-                centroid.Lat += p.Lat;
-            }
-            centroid.Lon /= count;
-            centroid.Lat /= count;                        
-            return centroid;
-        }
-        */
-        #endregion NOT USED
-
+        
         // Circular mean, very relevant for points around New Zealand, where lon -180 to 180 overlap
         // Adapted Centroid Calculation of N Points for Google Maps usage
-        public static P GetCentroidFromClusterLatLon(List<P> list) //O(n)
+        public static IP GetCentroidFromClusterLatLon(IPoints list) //O(n)
         {
             int count;
-            if (list == null || (count = list.Count) == 0)
-            {
-                return null;
-            }                
+            if (list == null || (count = list.Count) == 0) return null;
+                          
             if (count == 1)
             {
-                return list.First();
+                return list.Data.First();
             }                
 
             // http://en.wikipedia.org/wiki/Circular_mean
@@ -113,7 +85,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
             double lonCos = 0;
             double latSin = 0;
             double latCos = 0;
-            foreach (var p in list)
+            foreach (var p in list.Data)
             {
                 lonSin += Math.Sin(p.X.LatLonToRadian());
                 lonCos += Math.Cos(p.X.LatLonToRadian());
@@ -135,7 +107,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
             var x = radx.RadianToLatLon();
             var y = rady.RadianToLatLon();
 
-            var centroid = new P(x, y) { C = count };
+            var centroid = new P{X=x, Y=y, C = count };
             return centroid;
         }
 
@@ -149,11 +121,11 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
             }                
         }
 
-        public P GetClosestPoint(P from, List<P> list) // O(n)
+        public IP GetClosestPoint(IP from, IPoints list) // O(n)
         {
             var min = double.MaxValue;
-            P closests = null;
-            foreach (var p in list)
+            IP closests = null;
+            foreach (var p in list.Data)
             {
                 var d = MathTool.Distance(from, p);
                 if (d >= min)
@@ -174,10 +146,10 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
             // Clear points in the buckets, they will be re-inserted
             foreach (var bucket in BucketsLookup.Values)
             {
-                bucket.Points.Clear();
+                bucket.Points.Data.Clear();
             }                
 
-            foreach (P p in Dataset)
+            foreach (var p in Dataset.Data)
             {
                 var minDist = Double.MaxValue;
                 var index = string.Empty;
@@ -227,5 +199,31 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
                 UpdateCentroidToNearestContainingPoint(bucket);
             }                
         }
+
+
+        #region NOT USED
+        /*
+        // Can be used instead of GetCentroidFromClusterLatLon if your data are not near lon 180
+        // Basic Centroid Calculation of N Points
+        public static IP GetCentroidFromCluster(IPoints list) //O(n)
+        {          
+            int count;
+            if (list == null || (count = list.Count) == 0)
+                return null;
+
+            if (list.Count == 1) return list.Data.First();
+
+            var centroid = new P(0, 0) { C = count };//O(1)
+            foreach (var p in list.Data)
+            {
+                centroid.Lon += p.Lon;
+                centroid.Lat += p.Lat;
+            }
+            centroid.Lon /= count;
+            centroid.Lat /= count;                        
+            return centroid;
+        }
+        */
+        #endregion NOT USED
     }
 }

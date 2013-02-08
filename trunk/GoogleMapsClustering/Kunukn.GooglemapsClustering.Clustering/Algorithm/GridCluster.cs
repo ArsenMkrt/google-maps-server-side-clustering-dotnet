@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Kunukn.GooglemapsClustering.Clustering.Contract;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 using Kunukn.GooglemapsClustering.Clustering.Data.Json;
 using Kunukn.GooglemapsClustering.Clustering.Utility;
@@ -63,7 +64,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
 
         public List<Line> Lines { get; private set; }
 
-        public GridCluster(List<P> dataset, JsonGetMarkersReceive jsonReceive)
+        public GridCluster(IPoints dataset, JsonGetMarkersReceive jsonReceive)
             : base(dataset)
         {
             // Important, set _delta and _grid values in constructor as first step
@@ -85,7 +86,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
             // a fix could be to split up the lines based on the coordinate values
 
             Lines = new List<Line>();
-            var p2Lines = new List<Point2>();
+            var p2Lines = new List<Rectangle>();
 
             const int borderLinesAdding = 1;
             int linesStepsX = (int)(Math.Round(_grid.AbsX / _deltaX) + borderLinesAdding);
@@ -105,7 +106,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
                 double x2 = xx;
                 double y = b.Miny;
                 double y2 = b.Maxy;
-                p2Lines.Add(new Point2 { Minx = x, Miny = y, Maxx = x2, Maxy = y2 });
+                p2Lines.Add(new Rectangle { Minx = x, Miny = y, Maxx = x2, Maxy = y2 });
             }
 
             // horizontal lines            
@@ -121,7 +122,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
                 double y2 = yy;
                 double x = b.Minx;
                 double x2 = b.Maxx;
-                p2Lines.Add(new Point2 { Minx = x, Miny = y, Maxx = x2, Maxy = y2 });
+                p2Lines.Add(new Rectangle { Minx = x, Miny = y, Maxx = x2, Maxy = y2 });
             }
 
             foreach (var p2 in p2Lines)
@@ -134,7 +135,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
             }
         }
 
-        public override List<P> GetCluster(ClusterInfo clusterInfo)
+        public override IPoints GetCluster(ClusterInfo clusterInfo)
         {
             return RunClusterAlgo(clusterInfo);
         }
@@ -202,18 +203,18 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
                     continue;
                 }
                     
-                current.Points.AddRange(neighbor.Points);//O(n)
+                current.Points.Data.AddRange(neighbor.Points.Data);//O(n)
 
                 // recalc centroid
                 var cp = GetCentroidFromClusterLatLon(current.Points);
                 current.Centroid = cp;
                 neighbor.IsUsed = false; // merged, then not used anymore
-                neighbor.Points.Clear(); // clear mem
+                neighbor.Points.Data.Clear(); // clear mem
             }
         }        
 
         // To work properly it requires the p is already normalized
-        public static int[] GetPointMappedIds(P p, Boundary grid, double deltax, double deltay)
+        public static int[] GetPointMappedIds(IP p, Boundary grid, double deltax, double deltay)
         {
             var relativeX = p.X - grid.Minx;
             var relativeY = p.Y - grid.Miny;
@@ -271,13 +272,13 @@ then the longitudes from 170 to -170 will be clustered together
         }
 
 
-        public List<P> RunClusterAlgo(ClusterInfo clusterInfo)
+        public IPoints RunClusterAlgo(ClusterInfo clusterInfo)
         {
             // skip points outside the grid
-            List<P> filtered = clusterInfo.IsFilterData ? FilterDataset(Dataset, _grid) : Dataset;
+            IPoints filtered = clusterInfo.IsFilterData ? FilterDataset(Dataset, _grid) : Dataset;
 
             // put points in buckets
-            foreach (var p in filtered)
+            foreach (var p in filtered.Data)
             {
                 int[] idxy = GetPointMappedIds(p, _grid, _deltaX, _deltaY);
                 int idx = idxy[0];

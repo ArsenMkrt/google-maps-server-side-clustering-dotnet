@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using Kunukn.GooglemapsClustering.Clustering.Contract;
 
 namespace Kunukn.GooglemapsClustering.Clustering.Data.Json
 {
     public class JsonMarkersReply : JsonReplyBase
     {                        
-        public List<P> Points { get; set; } // markers or clusters        
-        public List<Line> Polylines { get; set; } // google map draw lines        
+        public IList<P> Points { get; set; } // markers or clusters
+        public IList<Line> Polylines { get; set; } // google map draw lines        
 
         public JsonMarkersReply()
         {
