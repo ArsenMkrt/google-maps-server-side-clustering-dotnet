@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using Kunukn.GooglemapsClustering.Clustering.Contract;
 using Kunukn.GooglemapsClustering.Clustering.Utility;
-using SingleDetectLibrary.Code.Data;
+using Kunukn.SingleDetectLibrary.Code.Data;
 
 namespace Kunukn.GooglemapsClustering.Clustering.Data
 {

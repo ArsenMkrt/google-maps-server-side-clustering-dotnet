@@ -12,6 +12,8 @@
     <AssemblyName>Kunukn.GooglemapsClustering.Clustering</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,8 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SingleDetectLibrary">
-      <HintPath>..\packages\SingleDetectLibrary\SingleDetectLibrary.dll</HintPath>
+    <Reference Include="Kunukn.SingleDetectLibrary">
+      <HintPath>..\packages\SingleDetectLibrary\Kunukn.SingleDetectLibrary.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />

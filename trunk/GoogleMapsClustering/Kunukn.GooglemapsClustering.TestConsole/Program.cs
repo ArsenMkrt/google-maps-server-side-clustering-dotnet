@@ -16,14 +16,14 @@ using P = Kunukn.GooglemapsClustering.Clustering.Data.P;
 using IP = Kunukn.GooglemapsClustering.Clustering.Contract.IP;
 using IPoints = Kunukn.GooglemapsClustering.Clustering.Contract.IPoints;
 
-using SingleDetectLibrary.Code;
-using SingleDetectLibrary.Code.Contract;
-using SingleDetectLibrary.Code.StrategyPattern;
-using IPsKnn = SingleDetectLibrary.Code.Contract.IPoints;
-using IPKnn = SingleDetectLibrary.Code.Contract.IP;
-using IPointsKnn = SingleDetectLibrary.Code.Contract.IPoints;
-using PointsKnn = SingleDetectLibrary.Code.Data.Points;
-using PKnn = SingleDetectLibrary.Code.Data.P;
+using Kunukn.SingleDetectLibrary.Code;
+using Kunukn.SingleDetectLibrary.Code.Contract;
+using Kunukn.SingleDetectLibrary.Code.StrategyPattern;
+using IPsKnn = Kunukn.SingleDetectLibrary.Code.Contract.IPoints;
+using IPKnn = Kunukn.SingleDetectLibrary.Code.Contract.IP;
+using IPointsKnn = Kunukn.SingleDetectLibrary.Code.Contract.IPoints;
+using PointsKnn = Kunukn.SingleDetectLibrary.Code.Data.Points;
+using PKnn = Kunukn.SingleDetectLibrary.Code.Data.P;
 
 namespace Kunukn.GooglemapsClustering.TestConsole
 {
@@ -68,7 +68,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
 
         static void Knn()
         {
-            IPoints points = Dataset.LoadDataset(@"c:\temp\points.csv", LoadType.Csv);
+            IPoints points = Dataset.LoadDataset(@"c:\temp\points.csv");
 
             // Used for testing K nearest neighbor
             IPointsKnn dataset = new PointsKnn();
@@ -77,18 +77,20 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             // Used for testing K nearest neighbor
             var rect = new SingleDetectLibrary.Code.Data.Rectangle
             {
-                XMin = -300,
-                XMax = 300,
-                YMin = -200,
-                YMax = 200,
+                XMin = -180,
+                XMax = 180,
+                YMin = -90,
+                YMax = 90,
                 MaxDistance = 20,
             };
             rect.Validate();
             const int k = 3;
 
             ISingleDetectAlgorithm algo = new SingleDetectAlgorithm(dataset, rect, StrategyType.Grid);
-            
-            var origin = new SingleDetectLibrary.Code.Data.P { X = 0, Y = 0 };
+
+            var origin = new SingleDetectLibrary.Code.Data.P { X = 0, Y = 0 };            
+            algo.UpdateIndex(origin);
+
             var duration = algo.UpdateKnn(origin, k);
 
             // Print result
@@ -111,9 +113,6 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             WL(string.Format("Distance sum: {0}", algo.Knn.GetDistanceSum()));
             algo.Knn.NNs.Data.OrderBy(i => i.Distance).ToList().ForEach(WL);
         }
-
-
-
 
         // lat lon points data
         static void LatLonParse()
@@ -254,8 +253,8 @@ namespace Kunukn.GooglemapsClustering.TestConsole
                 throw new ApplicationException("Path is invalid: " + path2);
             }
 
-            IPoints all = Dataset.LoadDataset(path1, LoadType.Csv);            
-            var points2 = Dataset.LoadDataset(path2, LoadType.Csv);
+            IPoints all = Dataset.LoadDataset(path1);
+            var points2 = Dataset.LoadDataset(path2);
             all.Data.AddRange(points2.Data);
             
 
@@ -273,7 +272,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
                 throw new ApplicationException("Path is invalid: " + path);
             }
 
-            var points = Dataset.LoadDataset(path, LoadType.Csv);
+            var points = Dataset.LoadDataset(path);
             foreach (var p in points.Data)
             {
                 // something               
@@ -375,7 +374,9 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             //list.Add(new P { X = -170, Y = 40 });
 
 
-            var p = ClusterAlgorithmBase.GetCentroidFromClusterLatLon(new Points{Data = list});
+            var p = ClusterAlgorithmBase.GetCentroidFromClusterLatLon(
+                new Points{Data = list});
+
             Console.WriteLine(p);
         }
 
@@ -392,7 +393,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
         {
             string execfolder = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
             var path = execfolder + @"\..\..\..\Kunukn.GooglemapsClustering.Web\AreaGMC\Files\Points.csv";
-            var points = Dataset.LoadDataset(path, LoadType.Csv);
+            var points = Dataset.LoadDataset(path);
 
             //var b = new Boundary { Minx = -179, Maxx = 179, Miny = -90, Maxy = 90 };
             //int i = points.Count(p => MathTool.IsInside(b, p));
