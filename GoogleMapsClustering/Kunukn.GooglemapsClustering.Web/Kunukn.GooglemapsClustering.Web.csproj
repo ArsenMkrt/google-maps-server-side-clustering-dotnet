@@ -98,7 +98,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="AreaGMC\Files\Documents\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Kunukn.GooglemapsClustering.Clustering\Kunukn.GooglemapsClustering.Clustering.csproj">

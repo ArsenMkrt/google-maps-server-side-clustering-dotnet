@@ -4,12 +4,12 @@ using System.Globalization;
 using System.Linq;
 using System.ServiceModel.Activation;
 using Kunukn.GooglemapsClustering.Clustering.Algorithm;
-using Kunukn.GooglemapsClustering.Clustering.Contract;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 using Kunukn.GooglemapsClustering.Clustering.Data.Json;
+using Kunukn.GooglemapsClustering.Clustering.Utility;
 using Kunukn.SingleDetectLibrary.Code.Contract;
+using Kunukn.SingleDetectLibrary.Code.Data;
 using P = Kunukn.GooglemapsClustering.Clustering.Data.P;
-using IP = Kunukn.GooglemapsClustering.Clustering.Contract.IP;
 using Ps = Kunukn.GooglemapsClustering.Clustering.Data.Points;
 using IPs = Kunukn.GooglemapsClustering.Clustering.Contract.IPoints;
 
@@ -71,7 +71,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             return reply;
         }
 
-           public JsonMarkerInfoReply GetMarkerInfo(string id, string type, int sendid)
+        public JsonMarkerInfoReply GetMarkerInfo(string id, string type, int sendid)
         {
             var reply = new JsonMarkerInfoReply { Id = id, Type = type, Rid = sendid };
             reply.BuildContent();
@@ -80,18 +80,20 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
 
 
         public JsonInfoReply GetInfo()
-        {            
-            var reply = new JsonInfoReply { 
+        {
+            var reply = new JsonInfoReply
+            {
                 DbSize = MemoryDatabase.Points.Count,
-                Points = DataConvert(new Ps { Data = MemoryDatabase.Points.Data.Take(3).ToList()})
-                
-            };            
+                Points = DataConvert(new Ps { Data = MemoryDatabase.Points.Data.Take(3).ToList() })
+
+            };
             return reply;
         }
 
-
-        // Todo finish imple
+        
         // Preparing for K nearest neighbor
+        // example of usage
+        // /AreaGMC/gmc.svc/GetKnn/10_5;10_20;3
         public JsonKnnReply GetKnn(string s)
         {
             var invalid = new JsonKnnReply { Data = string.Format("invalid: {0}", s ?? "null") };
@@ -113,19 +115,22 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
 
             if (!b) return invalid;
 
-                  
             // knn algo
             var algo = MemoryDatabase.Data as ISingleDetectAlgorithm;
             if (algo == null) return invalid;
 
             // Use algo
-            var origin = new SingleDetectLibrary.Code.Data.P {X = x, Y = y};
+            var origin = new SingleDetectLibrary.Code.Data.P { X = x, Y = y };
             var duration = algo.UpdateKnn(origin, k);
             
-            return new JsonKnnReply { Data = string.Format("{0}; {1}; {2}; msec: {3}", x, y, k, duration), Nns = algo.Knn.NNs.Data};
+            return new JsonKnnReply
+            {
+                Data = string.Format("{0}; {1}; {2}; msec: {3}", x.DoubleToString(), y.DoubleToString(), k, duration),
+                Nns = algo.Knn.NNs.Select(p => p as PDist).ToList(),
+            };
         }
 
-        
+
         /// <summary>
         /// Solve serializing to Json issue, use replace or use your own P type as you like 
         /// </summary>
