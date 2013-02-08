@@ -127,10 +127,10 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
 
             foreach (var p2 in p2Lines)
             {
-                string x = ParseValue.DoubleToString((p2.Minx).NormalizeLongitude());                                        
-                string x2 = ParseValue.DoubleToString((p2.Maxx).NormalizeLongitude());
-                string y = ParseValue.DoubleToString((p2.Miny).NormalizeLatitude());
-                string y2 = ParseValue.DoubleToString((p2.Maxy).NormalizeLatitude());
+                string x = (p2.Minx).NormalizeLongitude().DoubleToString();                                        
+                string x2 = (p2.Maxx).NormalizeLongitude().DoubleToString();
+                string y = (p2.Miny).NormalizeLatitude().DoubleToString();
+                string y2 = (p2.Maxy).NormalizeLatitude().DoubleToString();
                 Lines.Add(new Line { X = x, Y = y, X2 = x2, Y2 = y2 });
             }
         }
@@ -141,7 +141,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
         }
 
 
-        // dictionary lookup key used by grid cluster algo
+        // Dictionary lookup key used by grid cluster algo
         public static string GetId(int idx, int idy) //O(1)
         {
             return idx + ";" + idy;
@@ -185,23 +185,14 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
 
             foreach (var neighborKey in neighborKeys)
             {
-                if (!BucketsLookup.ContainsKey(neighborKey))
-                {
-                    continue;
-                }                    
-
+                if (!BucketsLookup.ContainsKey(neighborKey)) continue;
+                                  
                 var neighbor = BucketsLookup[neighborKey];
-                if (neighbor.IsUsed == false)
-                {
-                    continue;
-                }
-                    
+                if (neighbor.IsUsed == false) continue;
+                                    
                 var current = BucketsLookup[currentKey];
                 var dist = MathTool.Distance(current.Centroid, neighbor.Centroid);
-                if (dist > withinDist)
-                {
-                    continue;
-                }
+                if (dist > withinDist) continue;                
                     
                 current.Points.Data.AddRange(neighbor.Points.Data);//O(n)
 
@@ -240,19 +231,19 @@ here we want idx 8, 9, -10 and -9 be equal to each other, we set them to idx=8
 then the longitudes from 170 to -170 will be clustered together
              */
             
-            int overlapMapMinX = (int)(LatLonInfo.MinLonValue / deltax) - 1;
-            int overlapMapMaxX = (int)(LatLonInfo.MaxLonValue / deltax);
+            var overlapMapMinX = (int)(LatLonInfo.MinLonValue / deltax) - 1;
+            var overlapMapMaxX = (int)(LatLonInfo.MaxLonValue / deltax);
 
-            // the deltaX = 20 example scenario, then set the value 9 to 8 and -10 to -9            
+            // The deltaX = 20 example scenario, then set the value 9 to 8 and -10 to -9            
 
-            // similar to if (LatLonInfo.MaxLonValue % deltax == 0) without floating presicion issue
+            // Similar to if (LatLonInfo.MaxLonValue % deltax == 0) without floating presicion issue
             if (Math.Abs(LatLonInfo.MaxLonValue % deltax - 0) < Numbers.Epsilon)            
             {
                 overlapMapMaxX--;
                 overlapMapMinX++;
             }
             
-            int idxx = (int)(p.X / deltax);
+            var idxx = (int)(p.X / deltax);
             if (p.X < 0) idxx--;
             
             if (Math.Abs(LatLonInfo.MaxLonValue % p.X - 0) < Numbers.Epsilon)
@@ -274,26 +265,25 @@ then the longitudes from 170 to -170 will be clustered together
 
         public IPoints RunClusterAlgo(ClusterInfo clusterInfo)
         {
-            // skip points outside the grid
+            // Skip points outside the grid
             IPoints filtered = clusterInfo.IsFilterData ? FilterDataset(Dataset, _grid) : Dataset;
 
-            // put points in buckets
+            // Put points in buckets
             foreach (var p in filtered.Data)
             {
                 int[] idxy = GetPointMappedIds(p, _grid, _deltaX, _deltaY);
                 int idx = idxy[0];
                 int idy = idxy[1];
 
-                // bucket id
+                // Bucket id
                 string id = GetId(idx, idy);
 
-                // bucket exists, add point
+                // Bucket exists, add point
                 if (BucketsLookup.ContainsKey(id))
                 {
                     BucketsLookup[id].Points.Add(p);   
-                }
-                    
-                // new bucket, create and add point
+                }                    
+                // New bucket, create and add point
                 else
                 {
                     var bucket = new Bucket(idx, idy, id);
@@ -302,27 +292,21 @@ then the longitudes from 170 to -170 will be clustered together
                 }
             }
 
-            // calculate centroid for all buckets
+            // Calculate centroid for all buckets
             SetCentroidForAllBuckets(BucketsLookup.Values);
 
-            // merge if gridpoint is to close
-            if (AlgoConfig.DoMergeGridIfCentroidsAreCloseToEachOther)
-            {
-                MergeClustersGrid();
-            }
-
-            if (AlgoConfig.DoUpdateAllCentroidsToNearestContainingPoint)
-            {
-                UpdateAllCentroidsToNearestContainingPoint();
-            }
-                
+            // Merge if gridpoint is to close
+            if (AlgoConfig.DoMergeGridIfCentroidsAreCloseToEachOther) MergeClustersGrid();
+            
+            if (AlgoConfig.DoUpdateAllCentroidsToNearestContainingPoint) UpdateAllCentroidsToNearestContainingPoint();
+                            
             // Check again
             // Merge if gridpoint is to close
             if (AlgoConfig.DoMergeGridIfCentroidsAreCloseToEachOther
                 && AlgoConfig.DoUpdateAllCentroidsToNearestContainingPoint)
             {
                 MergeClustersGrid();
-                // and again set centroid to closest point in bucket 
+                // And again set centroid to closest point in bucket 
                 UpdateAllCentroidsToNearestContainingPoint();
             }
 

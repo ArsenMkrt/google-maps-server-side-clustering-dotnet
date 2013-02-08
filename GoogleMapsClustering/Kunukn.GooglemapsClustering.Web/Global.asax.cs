@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using System.Web;
 using System.Web.Routing;
+using Kunukn.GooglemapsClustering.Clustering.Contract;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 using Kunukn.GooglemapsClustering.Clustering.Utility;
 using Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.Code.Logging;
@@ -22,9 +23,8 @@ namespace Kunukn.GooglemapsClustering.Web
 
             // Database load simulation
             var websitepath = HttpContext.Current.Server.MapPath("~") + @"AreaGMC\Files\Points.csv";
-            var points = Dataset.LoadDatasetFromDatabase(websitepath, LoadType.Csv);
-            foreach (var p in points.Data) p.Normalize();
-                
+            IPoints points = Dataset.LoadDataset(websitepath, LoadType.Csv);
+            
             MemoryDatabase.SetPoints(points);
             RegisterRoutes();
         }

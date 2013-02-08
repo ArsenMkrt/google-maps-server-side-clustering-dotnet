@@ -58,7 +58,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
                 var clusterPoints = clusterAlgo.GetCluster(new ClusterInfo { ZoomLevel = jsonReceive.Zoomlevel });
 
                 // Prepare data to the client
-                reply = new JsonMarkersReply { Points = DataConvert(clusterPoints), Rid = sendid, Polylines = clusterAlgo.Lines };
+                reply = new JsonMarkersReply { Markers = DataConvert(clusterPoints), Rid = sendid, Polylines = clusterAlgo.Lines };
 
                 // Return client data
                 return reply;
@@ -69,7 +69,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             IPs filteredDataset = ClusterAlgorithmBase.FilterDataset(dataset, jsonReceive.Viewport);
             IPs filteredDatasetMaxPoints = new Ps { Data = filteredDataset.Data.Take(AlgoConfig.MaxMarkersReturned).ToList() };
 
-            reply = new JsonMarkersReply { Points = DataConvert(filteredDatasetMaxPoints), Rid = sendid };
+            reply = new JsonMarkersReply { Markers = DataConvert(filteredDatasetMaxPoints), Rid = sendid };
             return reply;
         }
 
