@@ -98,7 +98,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             WL("K Nearest Neighbors:");
             WL(string.Format("Origin: {0}", origin));
             WL(string.Format("Distance sum: {0}", algo.Knn.GetDistanceSum()));
-            algo.Knn.NNs.Data.OrderBy(i => i.Distance).ToList().ForEach(WL);
+            algo.Knn.NNs.OrderBy(i => i.Distance).ToList().ForEach(WL);
 
 
             // Update strategy
@@ -111,7 +111,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             WL(string.Format("\n{0} msec. {1}:", algo.Strategy.Name, duration));
             WL("K Nearest Neighbors:");
             WL(string.Format("Distance sum: {0}", algo.Knn.GetDistanceSum()));
-            algo.Knn.NNs.Data.OrderBy(i => i.Distance).ToList().ForEach(WL);
+            algo.Knn.NNs.OrderBy(i => i.Distance).ToList().ForEach(WL);
         }
 
         // lat lon points data

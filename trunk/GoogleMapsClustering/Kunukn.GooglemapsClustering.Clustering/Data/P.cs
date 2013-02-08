@@ -23,7 +23,16 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             Lon = Lon.NormalizeLongitude();
             Lat = Lat.NormalizeLatitude();
             return this;
+        }     
+      
+        public override string ToString()
+        {
+            return string.Format("Uid: {0}, X:{1}, Y:{2}, T:{3}, I:{4}",
+                Uid, X, Y, T, I);
         }
+
+        public GridIndex GridIndex { get; set; }
+
 
         public P(SerializationInfo info, StreamingContext ctxt)
         {
@@ -44,12 +53,5 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             info.AddValue("C", this.C);
         }
 
-        public override string ToString()
-        {
-            return string.Format("Uid: {0}, X:{1}, Y:{2}, T:{3}, I:{4}",
-                Uid, X, Y, T, I);
-        }
-
-        public GridIndex GridIndex { get; set; }
     }
 }
