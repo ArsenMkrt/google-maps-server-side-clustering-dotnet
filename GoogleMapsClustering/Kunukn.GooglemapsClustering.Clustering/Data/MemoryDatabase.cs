@@ -19,13 +19,33 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
     public static class MemoryDatabase
     {        
         private static bool _flag;
-        public static IPoints Points { get; private set; }
+        private static IPoints Points { get; set; }
         public static object Data { get; private set; } // data container
+        private static string FilePath { get; set; }
+
+        static MemoryDatabase()
+        {
+            Points = new Points();
+        }
+
+        public static IPoints GetPoints()
+        {
+            if(Points!=null && Points.Count>0) return new Points{Data = Points.Data.ToList()};
+
+            var ps =  Utility.Dataset.LoadDataset(FilePath);
+            SetPoints(ps);
+            return new Points { Data = Points.Data.ToList() };
+        }
+
+        public static void SetFilepath(string path)
+        {
+            FilePath = path;
+        }
 
         public static void SetPoints(IPoints points)
-        {
-            if(_flag || points == null) return;
-            
+        {            
+            if (points == null) return;
+            //if(_flag) return;            
             
             // Randomize order, when limit take is used for max marker display
             // random locations are selected
