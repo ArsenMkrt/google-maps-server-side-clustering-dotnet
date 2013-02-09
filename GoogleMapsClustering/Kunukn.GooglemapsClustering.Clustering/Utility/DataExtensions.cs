@@ -191,9 +191,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
                 var m = lon % LatLonInfo.MaxLonValue;
                 normalized = LatLonInfo.MinLonValue + m;
             }
-
-            // set -180 to 180
-            normalized = normalized == -LatLonInfo.MaxLonValue ? LatLonInfo.MaxLonValue : normalized;
+            
             return normalized;
         }
 

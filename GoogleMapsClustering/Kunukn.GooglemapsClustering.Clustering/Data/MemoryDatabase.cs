@@ -17,6 +17,9 @@ using PKnn = Kunukn.SingleDetectLibrary.Code.Data.P;
 
 namespace Kunukn.GooglemapsClustering.Clustering.Data
 {
+    /// <summary>
+    /// The database for all the existing points
+    /// </summary>
     public static class MemoryDatabase
     {        
         private static bool _flag;

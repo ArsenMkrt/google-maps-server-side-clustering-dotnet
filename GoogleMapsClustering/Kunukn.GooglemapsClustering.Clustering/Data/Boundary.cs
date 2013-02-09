@@ -4,16 +4,14 @@ using Kunukn.GooglemapsClustering.Clustering.Utility;
 namespace Kunukn.GooglemapsClustering.Clustering.Data
 {
     public class Boundary : Rectangle
-    {
-        private readonly Boundary _b;
-        public Boundary(){}
+    {        
+        public Boundary() { }
         public Boundary(Boundary b)
-        {
-            _b = b;
-            Minx = b.Minx;
-            Miny = b.Miny;
-            Maxx = b.Maxx;
-            Maxy = b.Maxy;
+        {            
+            this.Minx = b.Minx;
+            this.Miny = b.Miny;
+            this.Maxx = b.Maxx;
+            this.Maxy = b.Maxy;
         }
 
 
@@ -39,27 +37,10 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
                 throw new ApplicationException("input Boundary.ValidateLatLon() error " + this);
         }
 
-        // distance lon
-        public double AbsX
-        {
-            get
-            {
-                return DataExtensions.AbsLon(Minx, Maxx);
-            }
-        }
-        // distance lat
-        public double AbsY
-        {
-            get
-            {
-                return DataExtensions.AbsLat(Miny, Maxy);
-            }
-        }
+        // Distance lon
+        public double AbsX { get { return Minx.AbsLon(Maxx); } }
 
-        public override string ToString()
-        {
-            return base.ToString();
-        }
-
+        // Distance lat
+        public double AbsY { get { return Miny.AbsLat(Maxy); } }
     }
 }

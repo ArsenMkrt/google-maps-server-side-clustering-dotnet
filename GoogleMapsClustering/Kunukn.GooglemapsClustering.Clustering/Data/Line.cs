@@ -3,7 +3,10 @@ using System.Runtime.Serialization;
 
 namespace Kunukn.GooglemapsClustering.Clustering.Data
 {
-    [Serializable]
+    /// <summary>
+    /// Used for polylines display on google maps
+    /// </summary>
+    [Serializable]    
     public class Line : ISerializable
     {
         public string X { get; set; }

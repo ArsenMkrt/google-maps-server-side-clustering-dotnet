@@ -177,7 +177,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
             double minDistX = _deltaX / AlgoConfig.MergeWithin;
             double minDistY = _deltaY / AlgoConfig.MergeWithin;
             // If clusters in grid are too close to each other, merge them
-            double withinDist = MathTool.Max(minDistX, minDistY);
+            double withinDist = Math.Max(minDistX, minDistY);
 
             foreach (var neighborKey in neighborKeys)
             {

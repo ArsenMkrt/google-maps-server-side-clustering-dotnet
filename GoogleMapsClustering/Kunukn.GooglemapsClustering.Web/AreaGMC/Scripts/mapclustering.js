@@ -81,7 +81,7 @@ var gmcKN = {
             mapCenterLon: 10,
             zoomLevel: 2,
             zoomlevelClusterStop: 15, // don't cluster from this zoom level and larger
-            alwaysClusteringEnabledWhenZoomLevelLess: 6,
+            alwaysClusteringEnabledWhenZoomLevelLess: 2,
 
             jsonGetMarkerUrl: '/AreaGMC/gmc.svc/GetMarkers', // get
             jsonMarkerUrl: '/AreaGMC/gmc.svc/Markers', // post
