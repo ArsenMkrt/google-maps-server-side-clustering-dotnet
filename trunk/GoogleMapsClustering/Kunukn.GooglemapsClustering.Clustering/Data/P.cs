@@ -7,31 +7,36 @@ using Kunukn.SingleDetectLibrary.Code.Data;
 namespace Kunukn.GooglemapsClustering.Clustering.Data
 {
     /// <summary>
-    /// Kunuk Nykjaer
+    /// Point class, overwrite it, modify it, extend it as you like
     /// </summary>
-
     [Serializable]
     public class P : PBase, IP, SingleDetectLibrary.Code.Contract.IP, ISerializable
-    {                      
+    {
         public P()
         {
             GridIndex = new GridIndex();
         }
-        
+
         public virtual IP Normalize()
         {
             Lon = Lon.NormalizeLongitude();
             Lat = Lat.NormalizeLatitude();
             return this;
-        }     
-      
+        }
+
+        // Dist betwee two points on Earth
+        public override double Distance(double x, double y)
+        {
+            return MathTool.Haversine(this.Y, this.X, y, x);
+        }
+
         public override string ToString()
         {
             return string.Format("Uid: {0}, X:{1}, Y:{2}, T:{3}, I:{4}",
                 Uid, X, Y, T, I);
         }
 
-        public GridIndex GridIndex { get; set; }
+        public virtual GridIndex GridIndex { get; set; }
 
 
         public P(SerializationInfo info, StreamingContext ctxt)

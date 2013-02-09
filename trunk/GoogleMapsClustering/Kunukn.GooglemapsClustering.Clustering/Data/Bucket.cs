@@ -11,11 +11,11 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
         public int Idx { get; private set; }
         public int Idy { get; private set; }
         public double ErrorLevel { get; set; } // clusterpoint and points avg dist
-        private bool _IsUsed;
+        private bool _isUsed;
         public bool IsUsed
         {
-            get { return _IsUsed && Centroid != null; }
-            set { _IsUsed = value; }
+            get { return _isUsed && Centroid != null; }
+            set { _isUsed = value; }
         }
         public Bucket(string id)
         {

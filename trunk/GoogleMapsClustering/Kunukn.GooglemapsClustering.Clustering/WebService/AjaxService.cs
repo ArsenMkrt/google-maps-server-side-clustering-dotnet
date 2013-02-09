@@ -21,6 +21,9 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
         = AspNetCompatibilityRequirementsMode.Allowed)]
     public class AjaxService : IAjaxService
     {
+
+        #region Post
+
         // Post
         public JsonMarkersReply Markers(double nelat, double nelon, double swlat, double swlon, int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, string filter, int sendid)
         {
@@ -91,6 +94,21 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             return reply;
         }
 
+      
+
+        // Post
+        public JsonMarkerInfoReply MarkerInfo(string id, string type, int sendid)
+        {
+            var reply = new JsonMarkerInfoReply { Id = id, Type = type, Rid = sendid };
+            reply.BuildContent();
+            return reply;
+        }
+
+        #endregion Post
+
+
+        #region Get        
+
         // Get
         public JsonMarkersReply GetMarkers(string s)
         {
@@ -114,6 +132,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
                 var zoomlevelClusterStop = int.Parse(arr[i++]);
                 var filter = arr[i++];
                 var sendid = int.Parse(arr[i++]);
+
+                // values are validated there
                 return Markers(nelat, nelon, swlat, swlon, zoomlevel, gridx, gridy, zoomlevelClusterStop, filter, sendid);
             }
             catch (Exception ex)
@@ -122,14 +142,6 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             }
 
             return invalid;
-        }
-
-        // Post
-        public JsonMarkerInfoReply MarkerInfo(string id, string type, int sendid)
-        {
-            var reply = new JsonMarkerInfoReply { Id = id, Type = type, Rid = sendid };
-            reply.BuildContent();
-            return reply;
         }
 
         // Get
@@ -148,6 +160,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
                 var id = arr[i++];
                 var type = arr[i++];
                 var sendid = int.Parse(arr[i++]);
+
+                // values are validated there
                 return MarkerInfo(id,type,sendid);
             }
             catch (Exception ex)
@@ -212,6 +226,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             };
         }
 
+        #endregion Get
 
         /// <summary>
         /// Solve serializing to Json issue, use replace or use your own P type as you like 

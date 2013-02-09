@@ -4,7 +4,7 @@
     {
         public const double MinLatValue = -90;
         public const double MaxLatValue = 90;
-        public static readonly double MinLonValue = -180;// + Numbers.Epsilon;
+        public static readonly double MinLonValue = -180;
         public const double MaxLonValue = 180;
 
         public const double MaxLatLength = 180;

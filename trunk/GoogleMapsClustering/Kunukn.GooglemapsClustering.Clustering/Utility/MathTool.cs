@@ -35,16 +35,51 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
             //return Math.Abs(differenceAngle);
         }
 
-
-        public static double Min(double a, double b)
+        public static double Haversine(IP p1, IP p2)
         {
-            return a <= b ? a : b;
-        }
-        public static double Max(double a, double b)
-        {
-            return a >= b ? a : b;
+            return Haversine(p1.Y, p1.X, p2.Y, p2.X);
         }
 
+        // http://en.wikipedia.org/wiki/Haversine_formula
+        // Approx dist between two points on earth
+        //public static double Haversine(double lat1, double lon1, double lat2, double lon2)
+        //{
+        //    const int R = 6371; // km
+        //    var dLat = ToRadians(lat2 - lat1);
+        //    var dLon = ToRadians(lon2 - lon1);
+        //    lat1 = ToRadians(lat1);
+        //    lat2 = ToRadians(lat2);
+
+        //    var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+        //            Math.Sin(dLon / 2) * Math.Sin(dLon / 2) * Math.Cos(lat1) * Math.Cos(lat2);
+        //    var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+        //    var d = R * c;
+        //    return d;
+        //}
+        // http://en.wikipedia.org/wiki/Haversine_formula
+        // Approx dist between two points on earth
+        // http://rosettacode.org/wiki/Haversine_formula
+        public static double Haversine(double lat1, double lon1, double lat2, double lon2)
+        {
+            const double R = 6372.8; // In kilometers
+            var dLat = ToRadians(lat2 - lat1);
+            var dLon = ToRadians(lon2 - lon1);
+            lat1 = ToRadians(lat1);
+            lat2 = ToRadians(lat2);
+
+            var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) + 
+                Math.Sin(dLon / 2) * Math.Sin(dLon / 2) * Math.Cos(lat1) * Math.Cos(lat2);
+            var c = 2 * Math.Asin(Math.Sqrt(a));
+            var d = R * c;
+            return d;
+        }
+
+        public static double ToRadians(double angle)
+        {
+            return Math.PI * angle / 180.0;
+        }
+
+      
         public static bool IsLowerThanLatMin(double d)
         {
             return d < LatLonInfo.MinLatValue;
@@ -197,14 +232,14 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
         // Value must be within a and b
         public static double Constrain(double x, double a, double b)
         {
-            var r = Max(a, Min(x, b));
+            var r = Math.Max(a, Math.Min(x, b));
             return r;
         }
 
         // Value must be within latitude boundary        
         public static double ConstrainLatitude(double x, double offset = 0)
         {            
-            var r = Max(LatLonInfo.MinLatValue + offset, Min(x, LatLonInfo.MaxLatValue - offset));
+            var r = Math.Max(LatLonInfo.MinLatValue + offset, Math.Min(x, LatLonInfo.MaxLatValue - offset));
             return r;
         }
 
