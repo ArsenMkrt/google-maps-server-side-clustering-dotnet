@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Kunukn.SingleDetectLibrary.Code;
 using Kunukn.SingleDetectLibrary.Code.Contract;
 using P = Kunukn.GooglemapsClustering.Clustering.Data.P;
@@ -23,6 +24,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
         private static IPoints PointsBackup { get; set; }
         public static object Data { get; private set; } // data container
         private static string FilePath { get; set; }
+        private static readonly Object _lock = new Object();
 
         static MemoryDatabase()
         {
@@ -44,15 +46,22 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
 
         private static IPoints LoadPoints()
         {
-            if(_flag)
+            lock (_lock)
             {
-                Points.SetRange(PointsBackup);
-                return Points;
+                if (_flag)
+                {
+                    // Alternative is to throw exception
+                    // If you are here, then points were deleted accidently from code somewhere
+                    Points.SetRange(PointsBackup);
+                    return Points;
+                }
+                _flag = true;
             }
 
             // Load from file
+
             var points = Utility.Dataset.LoadDataset(FilePath);            
-            if (points == null) return null;
+            if (points == null || !points.Data.Any() ) throw new ApplicationException("Data was not loaded from file");
                         
             // Randomize order, when limit take is used for max marker display
             // random locations are selected
@@ -60,7 +69,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             var c = points.Count;
             for (var i = 0; i < c; i++)
             {
-                //var p = points[i];                
+                //var p = points[i]; // do something with each p ?        
                 var a = rand.Next(c);
                 var b = rand.Next(c);
                 var temp = points[a];
@@ -70,13 +79,13 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
 
             Points = points;
             PointsBackup.SetRange(points);
-            SetKnnAlgo(points);
-
-            _flag = true;
+            SetKnnAlgo(points); // K Nearest neighbor algorithm
+            
             return Points;
         }
 
         // Used for testing K nearest neighbor
+        // Currently only working as K-NN in a box, not wrapped world K-NN
         static void SetKnnAlgo(IPoints points)
         {            
             IPointsKnn dataset = new PointsKnn();

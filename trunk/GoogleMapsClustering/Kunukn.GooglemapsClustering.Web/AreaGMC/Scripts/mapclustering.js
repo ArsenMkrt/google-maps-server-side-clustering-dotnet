@@ -1,4 +1,5 @@
 ﻿// Author: Kunuk Nykjaer et al.
+// jQuery and google library
 
 var gmcKN = {
 
@@ -6,8 +7,7 @@ var gmcKN = {
     map: undefined,
     infowindow: undefined,
     debugMarker: undefined,
-    debuginfo: undefined,
-    markersCount: 0,
+    debuginfo: undefined,    
 
     // http://code.google.com/intl/da-DK/apis/maps/documentation/javascript/reference.html
     geocoder: new google.maps.Geocoder(),
@@ -26,7 +26,9 @@ var gmcKN = {
     },
 
     log: function (s) {
-        console.log(s);
+        if (console.log) {
+            console.log(s);    
+        }        
     },
 
     zoomIn: function () {
@@ -81,8 +83,10 @@ var gmcKN = {
             zoomlevelClusterStop: 15, // don't cluster from this zoom level and larger
             alwaysClusteringEnabledWhenZoomLevelLess: 6,
 
-            jsonMarkerUrl: '/AreaGMC/gmc.svc/GetMarkers', // post
-            jsonMarkerInfoUrl: '/AreaGMC/gmc.svc/GetMarkerInfo', // post            
+            jsonGetMarkerUrl: '/AreaGMC/gmc.svc/GetMarkers', // get
+            jsonMarkerUrl: '/AreaGMC/gmc.svc/Markers', // post
+            jsonGetMarkerInfoUrl: '/AreaGMC/gmc.svc/GetMarkerInfo', // get
+            jsonMarkerInfoUrl: '/AreaGMC/gmc.svc/MarkerInfo', // post
 
             clusterImage: {
                 src: 'Images/cluster2.png', //this is invisible img only used for click-event detecting
@@ -173,8 +177,6 @@ var gmcKN = {
                 gmcKN.mymap.events.loadMarkers(mapData);
             },
 
-
-
             polys: [], //cache drawn grid lines        
             loadMarkers: function (mapData) {
 
@@ -192,7 +194,9 @@ var gmcKN = {
                 var pinImg3 = new google.maps.MarkerImage(gmcKN.mymap.settings.pinImage3.src,
                     new google.maps.Size(gmcKN.mymap.settings.pinImage3.width, gmcKN.mymap.settings.pinImage3.height), null, null);
 
-                var parameters = '{' +
+                ++gmcKN.async.lastSendGetMarkers;
+
+                var postParams = '{' +
                     '"nelat":"' + mapData.neLat +
                     '","nelon":"' + mapData.neLon +
                     '","swlat":"' + mapData.swLat +
@@ -202,16 +206,34 @@ var gmcKN = {
                     '","gridy":"' + gmcKN.mymap.settings.gridy +
                     '","zoomlevelClusterStop":"' + gmcKN.mymap.settings.zoomlevelClusterStop +
                     '","filter":"' + gmcKN.getFilterValues() +
-                    '","sendid":"' + (++gmcKN.async.lastSendGetMarkers) + '"}';
+                    '","sendid":"' + gmcKN.async.lastSendGetMarkers + '"}';
+
+                var getParams = "/" +
+                    gmcKN.dEscape(mapData.neLat) + ";" +
+                    gmcKN.dEscape(mapData.neLon) + ";" +
+                    gmcKN.dEscape(mapData.swLat) + ";" +
+                    gmcKN.dEscape(mapData.swLon) + ";" +
+                    mapData.zoomLevel + ";" +
+                    gmcKN.mymap.settings.gridx + ";" +
+                    gmcKN.mymap.settings.gridy + ";" +
+                    gmcKN.mymap.settings.zoomlevelClusterStop + ";" +
+                    gmcKN.getFilterValues() + ";" +
+                    gmcKN.async.lastSendGetMarkers;
 
                 $.ajax({
-                    type: 'POST',
-                    url: gmcKN.mymap.settings.jsonMarkerUrl,
-                    data: parameters,
+
+                    type: 'GET', // get
+                    url: gmcKN.mymap.settings.jsonGetMarkerUrl + getParams, // get
+
+                    // type: 'POST', // post
+                    // url: gmcKN.mymap.settings.jsonMarkerUrl, // post
+                    // data: postParams, // post
+
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: function (data) {
-                        var items = data;
+
+                        if (data.Ok === "0") return; // invalid state has occured
 
                         var lastReceivedGetMarkers = data.Rid; // ReplyId
                         if (lastReceivedGetMarkers <= gmcKN.async.lastReceivedGetMarkers) {
@@ -221,17 +243,19 @@ var gmcKN = {
                         }
                         // update
                         gmcKN.async.lastReceivedGetMarkers = lastReceivedGetMarkers;
-
-                        gmcKN.markersCount = data.Count;
-                        document.getElementById("gmcKN_markersCount").innerHTML = "&nbsp;Markers: " + gmcKN.markersCount + ".  ";
+                        
+                        var mia = "";
+                        if (data.Mia > 0) {
+                            mia = "<br/>&nbsp;Mia: " + data.Mia;
+                        }
+                        document.getElementById("gmcKN_markersCount").innerHTML = "&nbsp;Markers: " + data.Count + " " + mia;
 
                         // grid lines clear current
                         $.each(gmcKN.mymap.events.polys, function () {
                             var item = this;
-                            item.setMap(null); // clear prev lines
+                            this.setMap(null); // clear prev lines
                         });
                         gmcKN.mymap.events.polys.length = 0; // clear array   
-
 
                         if (gmcKN.debug.showGridLines === true && data.Polylines) {
 
@@ -255,7 +279,7 @@ var gmcKN = {
                                     map: gmcKN.map
                                 });
                                 // used for ref, for next screen clearing
-                                gmcKN.mymap.events.polys.push(polyline); 
+                                gmcKN.mymap.events.polys.push(polyline);
                             });
                         }
 
@@ -313,7 +337,6 @@ var gmcKN = {
                                 }
                             }
                         }
-
 
                         // trim markers array size
                         var temp = [];
@@ -419,19 +442,31 @@ var gmcKN = {
 
             // popup window
             attachCallOut: function (marker, item) {
-                var parameters = '{"id":"' + item.I +
+
+                ++gmcKN.async.lastSendMarkerDetail;
+
+                // Post params
+                var postParams = '{"id":"' + item.I +
                     '","type":"' + item.T +
-                    '","sendid":"' + (++gmcKN.async.lastSendMarkerDetail) +
+                    '","sendid":"' + gmcKN.async.lastSendMarkerDetail +
                     '"}';
 
+                // Get params
+                var getParams = "/" + item.I + ";" + item.T + ";" + gmcKN.async.lastSendMarkerDetail;
+
                 $.ajax({
-                    type: 'POST',
-                    url: gmcKN.mymap.settings.jsonMarkerInfoUrl,
-                    data: parameters,
+                    type: 'GET', // get
+                    url: gmcKN.mymap.settings.jsonGetMarkerInfoUrl + getParams, // get
+
+//                    type: 'POST', // post                    
+//                    url: gmcKN.mymap.settings.jsonMarkerInfoUrl, // post                    
+//                    data: postParams,
+
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: function (data) {
-                        items = data;
+
+                        if (data.Ok === "0") return; // invalid state has occured
 
                         var lastReceivedMarkerDetail = data.Rid; // replyId
                         if (lastReceivedMarkerDetail <= gmcKN.async.lastReceivedMarkerDetail) {
@@ -463,6 +498,11 @@ var gmcKN = {
         return s.replace(/\./g, "_"); //replace . with _
     },
 
+    dEscape: function (d) { //double escape
+        var s = d + "";
+        return s.replace(/\./g, "_"); //replace . with _
+    },
+
     // Checkbox values as binary sum
     getFilterValues: function () {
         var cb1 = $('#gmcKN_Clustering').attr('checked') === 'checked' ? 1 : 0;
@@ -472,8 +512,9 @@ var gmcKN = {
         var cb4 = $('#gmcKN_Type2').attr('checked') === 'checked' ? 1 : 0;
         var cb5 = $('#gmcKN_Type3').attr('checked') === 'checked' ? 1 : 0;
 
-        var filter = cb1 * 1 + cb2 * 2 + cb3 * 4 + cb4 * 8 + cb5 * 16; // binary sum
-        return filter + '';
+        // binary sum, take less space in string request
+        var filter = cb1 * 1 + cb2 * 2 + cb3 * 4 + cb4 * 8 + cb5 * 16;
+        return filter + "";
     },
 
     checkboxClicked: function (type, isChecked) {

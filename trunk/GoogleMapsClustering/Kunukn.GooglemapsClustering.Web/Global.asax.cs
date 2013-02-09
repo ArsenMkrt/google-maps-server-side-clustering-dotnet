@@ -21,6 +21,7 @@ namespace Kunukn.GooglemapsClustering.Web
 
             // Database load simulation            
             MemoryDatabase.SetFilepath(HttpContext.Current.Server.MapPath("~") + @"AreaGMC\Files\Points.csv");
+            MemoryDatabase.GetPoints(); // preload points from file
 
             RegisterRoutes();
         }
