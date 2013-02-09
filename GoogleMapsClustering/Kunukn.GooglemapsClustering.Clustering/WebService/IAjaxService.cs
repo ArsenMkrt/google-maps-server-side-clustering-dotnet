@@ -9,33 +9,56 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
     /// </summary>
     [ServiceContract]    
     public interface IAjaxService
-    {        
+    {
+        #region Post
+
         [OperationContract]
-        [WebInvoke(Method = "POST", UriTemplate = "GetMarkers",
+        [WebInvoke(Method = "POST", UriTemplate = "MarkerInfo",
             BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
-        JsonMarkersReply GetMarkers(double nelat, double nelon, double swlat, double swlon,
+        JsonMarkerInfoReply MarkerInfo(string id, string type, int sendid);
+
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "Markers",
+            BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
+        JsonMarkersReply Markers(double nelat, double nelon, double swlat, double swlon,
                                  int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, string filter, int sendid);
+        #endregion Post
 
-        [OperationContract]
-        [WebInvoke(Method = "POST", UriTemplate = "GetMarkerInfo",
-            BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
-        JsonMarkerInfoReply GetMarkerInfo(string id, string type, int sendid);
-           
-   
-        [OperationContract]
-        [WebGet(
-            UriTemplate = "GetInfo",
-            ResponseFormat = WebMessageFormat.Json)
-        ]
-        JsonInfoReply GetInfo();
 
+
+        #region Get
 
         [OperationContract]
         [WebGet(
-            UriTemplate = "GetKnn/{s}",
+            UriTemplate = "GetMarkers/{s}",
+            ResponseFormat = WebMessageFormat.Json)
+        ]        
+        JsonMarkersReply GetMarkers(string s);
+
+        [OperationContract]
+        [WebGet(
+            UriTemplate = "GetMarkerInfo/{s}",
             ResponseFormat = WebMessageFormat.Json)
         ]
-        JsonKnnReply GetKnn(string s);
+        JsonMarkerInfoReply GetMarkerInfo(string s);
+      
+        [OperationContract]
+        [WebGet(
+            UriTemplate = "Knn/{s}",
+            ResponseFormat = WebMessageFormat.Json)
+        ]
+        JsonKnnReply Knn(string s);
+
+        // Debug
+        [OperationContract]
+        [WebGet(
+            UriTemplate = "Info",
+            ResponseFormat = WebMessageFormat.Json)
+        ]
+        JsonInfoReply Info();
+
+        #endregion Get
     }
 
 }

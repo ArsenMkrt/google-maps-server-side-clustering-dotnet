@@ -79,15 +79,14 @@ body {
 
 
 #gmcKN_zoomInfo
-{
-   
+{    
 }
 
 #gmcKN_checkboxContainer
 {
     position: absolute;
     width:144px;    
-    height:200px;
+    height:210px;
     border: 1px #000 solid;
     background: #eee;
     left:20px;

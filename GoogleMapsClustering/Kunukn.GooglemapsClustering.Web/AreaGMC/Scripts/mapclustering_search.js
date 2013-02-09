@@ -1,4 +1,5 @@
 ﻿// Author: Kunuk Nykjaer et al.
+// jQuery and google library
 
 // only search related js here
 // source: http://tech.cibul.net/geocode-with-google-maps-api-v3/
