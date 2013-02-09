@@ -175,7 +175,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
 
         // Preparing for K nearest neighbor
         // example of usage
-        // /AreaGMC/gmc.svc/GetKnn/10_5;10_20;3
+        // /AreaGMC/gmc.svc/Knn/10_5;10_20;3
         public JsonKnnReply Knn(string s)
         {
             var invalid = new JsonKnnReply { Data = string.Format("invalid: {0}", s ?? "null") };
@@ -207,7 +207,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
 
             return new JsonKnnReply
             {
-                Data = string.Format("{0}; {1}; {2}; msec: {3}", x.DoubleToString(), y.DoubleToString(), k, duration),
+                Data = string.Format("x: {0}; y: {1}; {2}; msec: {3}", x.DoubleToString(), y.DoubleToString(), k, duration),
                 Nns = algo.Knn.NNs.Select(p => p as PDist).ToList(),
             };
         }
