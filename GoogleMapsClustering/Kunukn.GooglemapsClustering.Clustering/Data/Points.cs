@@ -33,6 +33,12 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             return this.Data.ToList();
         }
 
+        public void SetRange(IPoints points)
+        {
+            this.Data.Clear();
+            this.Data.AddRange(points.Data);
+        }
+
         public override string ToString()
         {
             var sb = new StringBuilder();

@@ -11,5 +11,6 @@ namespace Kunukn.GooglemapsClustering.Clustering.Contract
         IP this[int i] { get; set; }
         void Add(IP p);
         List<IP> ToList();
+        void SetRange(IPoints points);
     }
 }

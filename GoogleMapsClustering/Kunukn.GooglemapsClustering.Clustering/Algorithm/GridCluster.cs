@@ -72,20 +72,16 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
             _deltaX = deltas[0];
             _deltaY = deltas[1];
             _grid = GetBoundaryExtended(jsonReceive);
+            Lines = new List<Line>();
 
-            if (AlgoConfig.DoShowGridLinesInGoogleMap)
-            {
-                MakeLines();
-            }
-                
+            if (AlgoConfig.DoShowGridLinesInGoogleMap) MakeLines();
         }
-
+        
         void MakeLines()
         {
             // Note, Google Maps does not seem to draw every lines if zoomed far out using this approach
             // a fix could be to split up the lines based on the coordinate values
-
-            Lines = new List<Line>();
+            
             var p2Lines = new List<Rectangle>();
 
             const int borderLinesAdding = 1;

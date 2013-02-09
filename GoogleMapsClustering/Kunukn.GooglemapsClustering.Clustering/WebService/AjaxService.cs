@@ -7,11 +7,13 @@ using Kunukn.GooglemapsClustering.Clustering.Algorithm;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 using Kunukn.GooglemapsClustering.Clustering.Data.Json;
 using Kunukn.GooglemapsClustering.Clustering.Utility;
-using Kunukn.SingleDetectLibrary.Code.Contract;
-using Kunukn.SingleDetectLibrary.Code.Data;
+
 using P = Kunukn.GooglemapsClustering.Clustering.Data.P;
-using Ps = Kunukn.GooglemapsClustering.Clustering.Data.Points;
-using IPs = Kunukn.GooglemapsClustering.Clustering.Contract.IPoints;
+using Points = Kunukn.GooglemapsClustering.Clustering.Data.Points;
+using IPoints = Kunukn.GooglemapsClustering.Clustering.Contract.IPoints;
+
+using ISingleDetectAlgorithm = Kunukn.SingleDetectLibrary.Code.Contract.ISingleDetectAlgorithm;
+using PDist = Kunukn.SingleDetectLibrary.Code.Data.PDist;
 
 namespace Kunukn.GooglemapsClustering.Clustering.WebService
 {
@@ -37,19 +39,25 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             jsonReceive.Viewport.Normalize();
 
             // Get all points from memory
-            var dataset = MemoryDatabase.GetPoints();                                  
+            IPoints points = MemoryDatabase.GetPoints();
             if (jsonReceive.TypeFilter.Count > 0)
             {
                 // Filter data by typeFilter value
-                dataset = new Ps { Data = dataset.Data.Where(p => jsonReceive.TypeFilter.Contains(p.T) == false).ToList() };
+                // Make new obj, don't overwrite obj data
+                points = new Points
+                              {
+                                  Data = points.Data
+                                  .Where(p => jsonReceive.TypeFilter.Contains(p.T) == false)
+                                  .ToList()
+                              };
             }
+
+            // Create new instance for every ajax request with input all points and json data
+            var clusterAlgo = new GridCluster(points, jsonReceive); // create polylines
 
             // Clustering
             if (clusteringEnabled && jsonReceive.Zoomlevel < jsonReceive.ZoomlevelClusterStop)
-            {
-                // Create new instance for every ajax request with input all points and json data
-                var clusterAlgo = new GridCluster(dataset, jsonReceive);
-
+            {                
                 // Calculate data to be displayed
                 var clusterPoints = clusterAlgo.GetCluster(new ClusterInfo { ZoomLevel = jsonReceive.Zoomlevel });
 
@@ -62,10 +70,10 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
 
             // If we are here then there are no clustering
             // The number of items returned is restricted to avoid json data overflow
-            IPs filteredDataset = ClusterAlgorithmBase.FilterDataset(dataset, jsonReceive.Viewport);
-            IPs filteredDatasetMaxPoints = new Ps { Data = filteredDataset.Data.Take(AlgoConfig.MaxMarkersReturned).ToList() };
+            IPoints filteredDataset = ClusterAlgorithmBase.FilterDataset(points, jsonReceive.Viewport);
+            IPoints filteredDatasetMaxPoints = new Points { Data = filteredDataset.Data.Take(AlgoConfig.MaxMarkersReturned).ToList() };
 
-            reply = new JsonMarkersReply { Markers = DataConvert(filteredDatasetMaxPoints), Rid = sendid };
+            reply = new JsonMarkersReply { Markers = DataConvert(filteredDatasetMaxPoints), Rid = sendid, Polylines = clusterAlgo.Lines };
             return reply;
         }
 
@@ -82,7 +90,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             var reply = new JsonInfoReply
             {
                 DbSize = MemoryDatabase.GetPoints().Count,
-                Points = DataConvert(new Ps { Data = MemoryDatabase.GetPoints().Data.Take(3).ToList() })
+                Points = DataConvert(new Points { Data = MemoryDatabase.GetPoints().Data.Take(3).ToList() })
             };
             return reply;
         }
@@ -133,7 +141,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
         /// </summary>
         /// <param name="ps"></param>
         /// <returns></returns>
-        protected static IList<P> DataConvert(IPs ps)
+        protected static IList<P> DataConvert(IPoints ps)
         {
             return ps.Data.Select(p => p as P).ToList();
         }
