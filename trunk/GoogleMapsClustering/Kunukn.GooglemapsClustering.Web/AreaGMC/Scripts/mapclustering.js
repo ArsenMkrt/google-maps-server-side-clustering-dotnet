@@ -64,10 +64,10 @@ var gmcKN = {
             google.maps.event.addListener(gmcKN.map, 'zoom_changed', function () {
                 document.getElementById("gmcKN_zoomInfo").innerHTML = "&nbsp;Zoom: " + gmcKN.map.getZoom() + ".  ";
                 if (gmcKN.map.getZoom() < gmcKN.mymap.settings.alwaysClusteringEnabledWhenZoomLevelLess) {
-                    $('#gmcKN_Clustering_span').hide();
+                    document.getElementById('gmcKN_Clustering_span').style.display = "none";
                 }
                 else {
-                    $('#gmcKN_Clustering_span').show();
+                    document.getElementById('gmcKN_Clustering_span').style.display = "block";
                 }
             });
             google.maps.event.trigger(gmcKN.map, 'zoom_changed'); //trigger first time event
@@ -213,7 +213,7 @@ var gmcKN = {
                     success: function (data) {
                         var items = data;
 
-                        var lastReceivedGetMarkers = items.Rid; // ReplyId
+                        var lastReceivedGetMarkers = data.Rid; // ReplyId
                         if (lastReceivedGetMarkers <= gmcKN.async.lastReceivedGetMarkers) {
                             // async mismatch, this is old reply, dont use it
                             gmcKN.log('async mismatch ' + lastReceivedGetMarkers + ' ' + gmcKN.async.lastReceivedGetMarkers);
@@ -222,7 +222,7 @@ var gmcKN = {
                         // update
                         gmcKN.async.lastReceivedGetMarkers = lastReceivedGetMarkers;
 
-                        gmcKN.markersCount = items.Count;
+                        gmcKN.markersCount = data.Count;
                         document.getElementById("gmcKN_markersCount").innerHTML = "&nbsp;Markers: " + gmcKN.markersCount + ".  ";
 
                         // grid lines clear current
@@ -233,8 +233,9 @@ var gmcKN = {
                         gmcKN.mymap.events.polys.length = 0; // clear array   
 
 
-                        if (gmcKN.debug.showGridLines === true && items.Polylines !== null) {
-                            $.each(items.Polylines, function () {
+                        if (gmcKN.debug.showGridLines === true && data.Polylines) {
+
+                            $.each(data.Polylines, function () {
                                 var item = this;
                                 var x = item.X;
                                 var y = item.Y;
@@ -253,7 +254,8 @@ var gmcKN = {
                                     strokeWeight: 2,
                                     map: gmcKN.map
                                 });
-                                gmcKN.mymap.events.polys.push(polyline); // used for ref, for next screen clearing
+                                // used for ref, for next screen clearing
+                                gmcKN.mymap.events.polys.push(polyline); 
                             });
                         }
 
@@ -262,9 +264,9 @@ var gmcKN = {
                         var newmarkersTodo = [];    // points to be displayed
 
                         // store new points to be drawn                  
-                        for (i in items.Markers) {
-                            if (items.Markers.hasOwnProperty(i)) {
-                                var p = items.Markers[i];
+                        for (i in data.Markers) {
+                            if (data.Markers.hasOwnProperty(i)) {
+                                var p = data.Markers[i];
                                 var key = gmcKN.getKey(p); //key                            
                                 pointsCacheIncome[key] = p;
                             }
@@ -285,9 +287,9 @@ var gmcKN = {
                         }
 
                         // add new markers from event not already drawn
-                        for (var i in items.Markers) {
-                            if (items.Markers.hasOwnProperty(i)) {
-                                var p = items.Markers[i];
+                        for (var i in data.Markers) {
+                            if (data.Markers.hasOwnProperty(i)) {
+                                var p = data.Markers[i];
                                 var key = gmcKN.getKey(p); //key                            
                                 if (pointsCacheOnMap[key] === undefined) {
                                     if (pointsCacheIncome[key] === undefined) {
@@ -431,7 +433,7 @@ var gmcKN = {
                     success: function (data) {
                         items = data;
 
-                        var lastReceivedMarkerDetail = items.Rid; // replyId
+                        var lastReceivedMarkerDetail = data.Rid; // replyId
                         if (lastReceivedMarkerDetail <= gmcKN.async.lastReceivedMarkerDetail) {
                             // async mismatch, this is old reply, dont use it
                             gmcKN.log('async mismatch ' + lastReceivedMarkerDetail + ' ' + gmcKN.async.lastReceivedMarkerDetail);
@@ -443,7 +445,7 @@ var gmcKN = {
                         var latlon = "";
                         if (gmcKN.debug.showCalloutLatLon === true)
                             latlon = "<br/>lat: " + marker.getPosition().lat() + " lon: " + marker.getPosition().lng();
-                        gmcKN.infowindow.setContent(items.Content + latlon);
+                        gmcKN.infowindow.setContent(data.Content + latlon);
                         gmcKN.infowindow.open(gmcKN.map, marker);
                     },
                     error: function (xhr, err) {
