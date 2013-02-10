@@ -51,8 +51,8 @@ The format of the csv file is
 longitude; latitude; point id in GUID format; type id.
 
 The point id and type id data in this example are dummy data.
-Only the longitude and latitude are parsed to double values.
-point id and type id are string values and are not parsed.
+The longitude and latitude are parsed to double values.
+point id and type id are parsed as int values.
 
 There is also the possible to load from a serialized file programmatically but no example file is included.
 Look in the code {{{Kunukn.GooglemapsClustering.Clustering.Utility.Dataset.LoadDatasetFromDatabase()}}}
@@ -195,12 +195,6 @@ A. MIT License.
 *Q. How much does it cost to use Google Maps?*
 
 A. Google knows the answer. Try this link https://developers.google.com/maps/faq
-
----------------------------------
-
-*Q. Could you port this to Java?*
-
-A. Yes I was thinking about it, but decided I want to spend my time on other projects for the time being.
 
 ---------------------------------
 
