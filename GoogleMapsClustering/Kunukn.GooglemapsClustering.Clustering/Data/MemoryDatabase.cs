@@ -104,15 +104,12 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             };
             rect.Validate();
             
-            // Naive stratey works with all points on Earth and runs in O(n)
+            // Naive stratey works with all points on Earth.
             // Grid strategy runs much faster and can be used as approx algo 
             // but only works on certain local areas, not wrapped world. e.g. from lon -90 to lon 90, 
             // e.g. Europe only areas or US only areas etc. but not New Zealand due to being near lon 180.
             // All points must be within rect boundary
-            IKnnAlgorithm algo = new KnnAlgorithm(dataset, rect, StrategyType.Naive)
-                                     {
-                                         KnnSameTypeOnly = false // only apply knn on same type?
-                                     };            
+            IKnnAlgorithm algo = new KnnAlgorithm(dataset, rect, StrategyType.Naive);          
             Data = algo;
         }       
     }
