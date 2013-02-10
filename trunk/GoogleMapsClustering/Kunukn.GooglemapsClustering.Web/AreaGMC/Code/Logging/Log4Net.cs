@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Reflection;
-using Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.Code.Contract;
+using Kunukn.GooglemapsClustering.Web.AreaGMC.Code.Contract;
 
 [assembly: log4net.Config.XmlConfigurator(ConfigFile = "log4net.config", Watch = true)]
 
-namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.Code.Logging
+namespace Kunukn.GooglemapsClustering.Web.AreaGMC.Code.Logging
 {
     public class Log4Net : ILog2
     {       

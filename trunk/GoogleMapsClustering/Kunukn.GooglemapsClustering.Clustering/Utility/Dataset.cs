@@ -45,8 +45,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
 
                 var x = arr[0].ToDouble();
                 var y = arr[1].ToDouble();
-                var i = arr[2];
-                var t = arr[3];
+                var i = arr[2].ToInt();
+                var t = arr[3].ToInt();
 
                 dataset.Add(new P { X = x, Y = y, I = i, T = t });
             }

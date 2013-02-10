@@ -11,8 +11,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.Contract
         double Lon { get; set; }  // lon
         double Lat { get; set; }  // lat
         int C { get; set; }     // count of cluster
-        string I { get; set; }  // marker id
-        string T { get; set; }  // marker type
+        int I { get; set; }  // marker id
+        int T { get; set; }  // marker type
 
         object Data { get; set; } // data container for anything, use it as you like
         

@@ -89,7 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaGMC\Code\Contract\ILog2.cs" />
-    <Compile Include="AreaGMC\Code\Helpers\SystemHelper.cs" />
+    <Compile Include="AreaGMC\Code\Logging\NoLog.cs" />
     <Compile Include="AreaGMC\Code\Logging\Log4Net.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -98,6 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="AreaGMC\Code\Helpers\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Kunukn.GooglemapsClustering.Clustering\Kunukn.GooglemapsClustering.Clustering.csproj">

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Kunukn.SingleDetectLibrary.Code;
 using Kunukn.SingleDetectLibrary.Code.Contract;
 using P = Kunukn.GooglemapsClustering.Clustering.Data.P;
@@ -61,6 +60,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
                 _flag = true;
             }
 
+
             // Load from file
 
             var points = Utility.Dataset.LoadDataset(FilePath);            
@@ -87,8 +87,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             return Points;
         }
 
-        // Used for testing K nearest neighbor
-        // Currently only working as K-NN in a box, not wrapped world K-NN
+        // Read about this at github.com/kunukn/single-detect
         static void SetKnnAlgo(IPoints points)
         {            
             IPointsKnn dataset = new PointsKnn();
@@ -103,7 +102,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             };
             rect.Validate();
             
-            ISingleDetectAlgorithm algo = new SingleDetectAlgorithm(dataset, rect);
+            // Naive stratey works with all points on Earh and runs in O(n)
+            ISingleDetectAlgorithm algo = new SingleDetectAlgorithm(dataset, rect, StrategyType.Naive);
             Data = algo;
         }       
     }

@@ -3,7 +3,8 @@ using System.Reflection;
 using System.Web;
 using System.Web.Routing;
 using Kunukn.GooglemapsClustering.Clustering.Data;
-using Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.Code.Logging;
+using Kunukn.GooglemapsClustering.Web.AreaGMC.Code.Contract;
+using Kunukn.GooglemapsClustering.Web.AreaGMC.Code.Logging;
 
 namespace Kunukn.GooglemapsClustering.Web
 {
@@ -12,16 +13,16 @@ namespace Kunukn.GooglemapsClustering.Web
     /// </summary>
     public class Global : System.Web.HttpApplication
     {
-        private static Log4Net _log;
+        private static ILog2 _log;
 
         void Application_Start(object sender, EventArgs e)
-        {                               
-           _log = new Log4Net();            
+        {
+            _log = new NoLog(); // Log4Net();
            //_log.Info(MethodBase.GetCurrentMethod(), "Init");
 
             // Database load simulation            
             MemoryDatabase.SetFilepath(HttpContext.Current.Server.MapPath("~") + @"AreaGMC\Files\Points.csv");
-            MemoryDatabase.GetPoints(); // preload points from file
+            MemoryDatabase.GetPoints(); // preload points
 
             RegisterRoutes();
         }

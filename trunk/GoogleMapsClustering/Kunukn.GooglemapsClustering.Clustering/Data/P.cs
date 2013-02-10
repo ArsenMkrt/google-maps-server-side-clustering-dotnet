@@ -25,7 +25,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
         }
 
         // Dist betwee two points on Earth
-        public override double Distance(double x, double y)
+        public new virtual double Distance(double x, double y)
         {
             return MathTool.Haversine(this.Y, this.X, y, x);
         }
@@ -42,8 +42,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
         public P(SerializationInfo info, StreamingContext ctxt)
         {
             this.C = 1;
-            this.I = (string)info.GetValue("I", typeof(string));
-            this.T = (string)info.GetValue("T", typeof(string));
+            this.I = (int)info.GetValue("I", typeof(int));
+            this.T = (int)info.GetValue("T", typeof(int));
             this.X = ((string)info.GetValue("X", typeof(string))).ToDouble();
             this.Y = ((string)info.GetValue("Y", typeof(string))).ToDouble();
         }

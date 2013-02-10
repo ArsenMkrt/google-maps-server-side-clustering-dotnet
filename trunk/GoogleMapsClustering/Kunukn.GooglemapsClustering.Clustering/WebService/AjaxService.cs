@@ -114,14 +114,22 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
         {
             var invalid = new JsonMarkersReply { Ok = "0" };
 
-            if (string.IsNullOrWhiteSpace(s)) return invalid;
+            if (string.IsNullOrWhiteSpace(s))
+            {
+                invalid.EMsg = "params is empty";
+                return invalid;
+            }
 
             var arr = s.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-            if (arr.Length != 10) return invalid;
-
-            try
+            if (arr.Length != 10)
             {
-                var i = 0;
+                invalid.EMsg = "params length incorrect";
+                return invalid; 
+            }
+
+            var i = 0;
+            try
+            {                
                 var nelat = arr[i++].Replace("_", ".").ToDouble();
                 var nelon = arr[i++].Replace("_", ".").ToDouble();
                 var swlat = arr[i++].Replace("_", ".").ToDouble();
@@ -138,7 +146,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             }
             catch (Exception ex)
             {
-                // suppress
+                invalid.EMsg = string.Format("Parsing error at param: {0}, {1}",
+                    i-1,ex.Message);
             }
 
             return invalid;
@@ -149,14 +158,18 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
         {
             var invalid = new JsonMarkerInfoReply { Ok = "0" };
 
-            if (string.IsNullOrWhiteSpace(s)) return invalid;
+            if (string.IsNullOrWhiteSpace(s))
+            {
+                invalid.EMsg = "params is empty";
+                return invalid;
+            }
 
             var arr = s.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
             if (arr.Length != 3) return invalid;
 
+            var i = 0;
             try
-            {
-                var i = 0;
+            {                
                 var id = arr[i++];
                 var type = arr[i++];
                 var sendid = int.Parse(arr[i++]);
@@ -166,7 +179,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             }
             catch (Exception ex)
             {
-                // suppress
+                invalid.EMsg = string.Format("Parsing error at param: {0}, {1}", 
+                    i - 1, ex.Message);
             }
 
             return invalid;

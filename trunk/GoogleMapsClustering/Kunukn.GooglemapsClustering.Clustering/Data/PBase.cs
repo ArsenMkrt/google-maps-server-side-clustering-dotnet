@@ -14,10 +14,11 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
         
         public virtual double X { get { return Lon; } set { Lon = value; } }        
         public virtual double Y { get { return Lat; } set { Lat = value; } }
+        public virtual int Type { get { return T; } set { T = value; } }
         
         public virtual int C { get; set; } // count
-        public virtual string I { get; set; } // marker id           
-        public virtual string T { get; set; } // marker type        
+        public virtual int I { get; set; } // marker id           
+        public virtual int T { get; set; } // marker type        
         public virtual string Name { get; set; } // custom
 
         private double _lat;
@@ -33,7 +34,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             set { _lon = value; }
         }
 
-        void Init() { I = string.Empty; T = string.Empty; C = 1; }
+        void Init() { C = 1; }
 
         public virtual double Distance(PBase p)
         {
