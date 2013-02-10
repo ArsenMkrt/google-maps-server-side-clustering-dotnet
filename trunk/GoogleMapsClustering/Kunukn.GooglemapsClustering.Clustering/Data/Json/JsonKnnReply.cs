@@ -4,7 +4,7 @@ using Kunukn.SingleDetectLibrary.Code.Data;
 
 namespace Kunukn.GooglemapsClustering.Clustering.Data.Json
 {
-    public class JsonKnnReply
+    public class JsonKnnReply : JsonReplyBase
     {
         public string Data { get; set; }
         public IList<PDist> Nns { get; set; } // nearest neighbors

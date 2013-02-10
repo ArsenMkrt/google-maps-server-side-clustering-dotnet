@@ -206,15 +206,25 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
         // /AreaGMC/gmc.svc/Knn/10_5;10_20;3
         public JsonKnnReply Knn(string s)
         {
-            var invalid = new JsonKnnReply { Data = string.Format("invalid: {0}", s ?? "null") };
-            if (string.IsNullOrEmpty(s)) return invalid;
+            var invalid = new JsonKnnReply {};
+            if (string.IsNullOrEmpty(s))
+            {
+                invalid.EMsg = "param is empty";
+                return invalid;
+            }
 
             var arr = s.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-            if (arr.Length != 3) return invalid;
+            if (arr.Length != 3 && arr.Length != 4)
+            {
+                invalid.EMsg = string.Format("param length is not valid: {0}",arr.Length);
+                return invalid;
+            }
 
             var lat = arr[0].Replace("_", ".");
             var lon = arr[1].Replace("_", ".");
             var neighbors = arr[2];
+            var type = -1;
+            if (arr.Length == 4) type = arr[3].ToInt();
 
             double x, y;
             int k;
@@ -223,15 +233,23 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             b &= double.TryParse(lat, System.Globalization.NumberStyles.Any, CultureInfo.GetCultureInfo("en-US"), out y);
             b &= int.TryParse(neighbors, out k);
 
-            if (!b) return invalid;
+            if (!b)
+            {
+                invalid.EMsg = "params were not parsed correctly";
+                return invalid;
+            }
 
             // knn algo
             var algo = MemoryDatabase.Data as IKnnAlgorithm;
-            if (algo == null) return invalid;
+            if (algo == null)
+            {
+                invalid.EMsg = "algorithm is not available";
+                return invalid;
+            }
 
             // Use algo
-            var origin = new SingleDetectLibrary.Code.Data.P { X = x, Y = y };
-            var duration = algo.UpdateKnn(origin, k);
+            var origin = new SingleDetectLibrary.Code.Data.P { X = x, Y = y, Type = type};
+            var duration = algo.UpdateKnn(origin, k, type != -1);
 
             return new JsonKnnReply
             {
