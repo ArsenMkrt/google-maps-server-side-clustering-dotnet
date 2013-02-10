@@ -39,7 +39,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            Temp();
+            //Temp();
             //Knn();
             //LatLonParse();
             //PMapTest();
@@ -65,10 +65,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
 
         static void Temp()
         {
-            for (int i = 0; i <= 30; i++)
-            {
-                Console.WriteLine("Type{0} = {1},",i+1,Math.Pow(2,i));                                
-            }
+          
         }
 
         static void Knn()
