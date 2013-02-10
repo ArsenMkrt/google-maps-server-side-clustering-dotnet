@@ -12,7 +12,7 @@ using P = Kunukn.GooglemapsClustering.Clustering.Data.P;
 using Points = Kunukn.GooglemapsClustering.Clustering.Data.Points;
 using IPoints = Kunukn.GooglemapsClustering.Clustering.Contract.IPoints;
 
-using ISingleDetectAlgorithm = Kunukn.SingleDetectLibrary.Code.Contract.ISingleDetectAlgorithm;
+using IKnnAlgorithm = Kunukn.SingleDetectLibrary.Code.Contract.IAlgorithm;
 using PDist = Kunukn.SingleDetectLibrary.Code.Data.PDist;
 
 namespace Kunukn.GooglemapsClustering.Clustering.WebService
@@ -226,7 +226,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             if (!b) return invalid;
 
             // knn algo
-            var algo = MemoryDatabase.Data as ISingleDetectAlgorithm;
+            var algo = MemoryDatabase.Data as IKnnAlgorithm;
             if (algo == null) return invalid;
 
             // Use algo

@@ -88,7 +88,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             rect.Validate();
             const int k = 3;
 
-            ISingleDetectAlgorithm algo = new SingleDetectAlgorithm(dataset, rect, StrategyType.Grid);
+            IAlgorithm algo = new Algorithm(dataset, rect, StrategyType.Grid);
 
             var origin = new SingleDetectLibrary.Code.Data.P { X = 0, Y = 0 };            
             algo.UpdateIndex(origin);

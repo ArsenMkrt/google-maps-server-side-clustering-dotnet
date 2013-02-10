@@ -8,6 +8,8 @@ using IP = Kunukn.GooglemapsClustering.Clustering.Contract.IP;
 using IPoints = Kunukn.GooglemapsClustering.Clustering.Contract.IPoints;
 
 // K Nearest Neighbor
+using IKnnAlgorithm = Kunukn.SingleDetectLibrary.Code.Contract.IAlgorithm;
+using KnnAlgorithm = Kunukn.SingleDetectLibrary.Code.Algorithm;
 using IPsKnn = Kunukn.SingleDetectLibrary.Code.Contract.IPoints;
 using IPKnn = Kunukn.SingleDetectLibrary.Code.Contract.IP;
 using IPointsKnn = Kunukn.SingleDetectLibrary.Code.Contract.IPoints;
@@ -102,8 +104,15 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             };
             rect.Validate();
             
-            // Naive stratey works with all points on Earh and runs in O(n)
-            ISingleDetectAlgorithm algo = new SingleDetectAlgorithm(dataset, rect, StrategyType.Naive);
+            // Naive stratey works with all points on Earth and runs in O(n)
+            // Grid strategy runs much faster and can be used as approx algo 
+            // but only works on certain local areas, not wrapped world. e.g. from lon -90 to lon 90, 
+            // e.g. Europe only areas or US only areas etc. but not New Zealand due to being near lon 180.
+            // All points must be within rect boundary
+            IKnnAlgorithm algo = new KnnAlgorithm(dataset, rect, StrategyType.Naive)
+                                     {
+                                         KnnSameTypeOnly = false // only apply knn on same type?
+                                     };            
             Data = algo;
         }       
     }
