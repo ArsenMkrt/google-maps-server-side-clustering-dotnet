@@ -4,13 +4,9 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Web.Script.Serialization;
-using Kunukn.GooglemapsClustering.Clustering;
 using Kunukn.GooglemapsClustering.Clustering.Algorithm;
-using Kunukn.GooglemapsClustering.Clustering.Contract;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 using Kunukn.GooglemapsClustering.Clustering.Utility;
-using Kunukn.GooglemapsClustering.WebGoogleMapClustering;
 
 using P = Kunukn.GooglemapsClustering.Clustering.Data.P;
 using IP = Kunukn.GooglemapsClustering.Clustering.Contract.IP;
@@ -43,6 +39,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
+            Temp();
             //Knn();
             //LatLonParse();
             //PMapTest();
@@ -64,6 +61,14 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             WL(string.Format("Elapsed: {0}\n", stopwatch.Elapsed.ToString()));
             WL("\npress a key to exit ...");
             Console.ReadKey();
+        }
+
+        static void Temp()
+        {
+            for (int i = 0; i <= 30; i++)
+            {
+                Console.WriteLine("Type{0} = {1},",i+1,Math.Pow(2,i));                                
+            }
         }
 
         static void Knn()
@@ -133,7 +138,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
 
                 double? lon = null;
                 double? lat = null;
-                string id = arr[0];
+                var id = arr[0].ToInt();
 
                 for (var i = 1; i < arr.Length - 2; i++)
                 {
@@ -158,7 +163,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
 
                 if (lon.HasValue && lat.HasValue && MathTool.IsLonValid(lon.Value) && MathTool.IsLatValid(lat.Value))
                 {
-                    dataset.Add(new P { X = lon.Value, Y = lat.Value, I = id, T = (rand.Next(numOfType) + 1).ToString() });
+                    dataset.Add(new P { X = lon.Value, Y = lat.Value, I = id, T = (rand.Next(numOfType) + 1) });
                 }
             }
 
@@ -213,7 +218,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             {
                 var lat = (b.Miny + b.AbsY * Rand.NextDouble()).NormalizeLatitude();
                 var lon = (b.Minx + b.AbsX * Rand.NextDouble()).NormalizeLongitude();
-                list.Add(new P { I = Guid.NewGuid().ToString(), C = 1, Y = lat, X = lon, T = i.ToString() });
+                list.Add(new P { I = Rand.Next(1000000000), C = 1, Y = lat, X = lon, T = i });
             }
 
             return new Points {Data = list};
@@ -293,8 +298,8 @@ namespace Kunukn.GooglemapsClustering.TestConsole
                 {
                     double x = arr[0].ToDouble();
                     double y = arr[1].ToDouble();
-                    var i = arr[2];
-                    var t = arr[3];
+                    var i = arr[2].ToInt();
+                    var t = arr[3].ToInt();
 
                     dataset.Add(new P { X = x, Y = y, I = i, T = t });
                 }

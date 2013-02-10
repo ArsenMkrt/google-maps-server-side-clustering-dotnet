@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Kunukn.GooglemapsClustering.WebGoogleMapClustering.AreaGMC.Code.Contract
+namespace Kunukn.GooglemapsClustering.Web.AreaGMC.Code.Contract
 {
     public interface ILog2
     {

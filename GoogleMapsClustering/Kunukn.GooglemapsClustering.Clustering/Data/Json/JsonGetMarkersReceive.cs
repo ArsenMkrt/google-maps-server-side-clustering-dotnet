@@ -99,7 +99,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data.Json
 
         public bool IsClusteringEnabled { get; private set; }
         public bool IsDebugLinesEnabled { get; private set; }
-        public HashSet<string> TypeFilter { get; private set; }
+        public HashSet<int> TypeFilter { get; private set; }
 
         public JsonGetMarkersReceive(double nelat, double nelon, double swlat, double swlon, int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, string filter, int sendid)
         {            
@@ -120,21 +120,21 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data.Json
             IsClusteringEnabled = binary.Length >= 1 && binary[0] == '1';
             IsDebugLinesEnabled = binary.Length >= 2 && binary[1] == '1';
 
-            var typeFilter = new HashSet<string>();
+            var typeFilter = new HashSet<int>();
             var type1 = binary.Length >= 3 && binary[2] == '1';
             var type2 = binary.Length >= 4 && binary[3] == '1';
             var type3 = binary.Length >= 5 && binary[4] == '1';                       
             if (!type1)
             {
-                typeFilter.Add("1");
+                typeFilter.Add(1);
             }
             if (!type2)
             {
-                typeFilter.Add("2");
+                typeFilter.Add(2);
             }
             if (!type3)
             {
-                typeFilter.Add("3");
+                typeFilter.Add(3);
             }
             TypeFilter = typeFilter;
         }

@@ -7,7 +7,7 @@ var gmcKN = {
     map: undefined,
     infowindow: undefined,
     debugMarker: undefined,
-    debuginfo: undefined,    
+    debuginfo: undefined,
 
     // http://code.google.com/intl/da-DK/apis/maps/documentation/javascript/reference.html
     geocoder: new google.maps.Geocoder(),
@@ -27,8 +27,8 @@ var gmcKN = {
 
     log: function (s) {
         if (console.log) {
-            console.log(s);    
-        }        
+            console.log(s);
+        }
     },
 
     zoomIn: function () {
@@ -125,7 +125,7 @@ var gmcKN = {
                 offsetH: 0,
                 offsetW: 0
             },
-            textErrorMessage: 'Error'
+            textErrorMessage: 'An error has occured'
         },
 
         events: {
@@ -233,7 +233,10 @@ var gmcKN = {
                     dataType: 'json',
                     success: function (data) {
 
-                        if (data.Ok === "0") return; // invalid state has occured
+                        if (data.Ok === "0") {
+                            gmcKN.log(data.EMsg);
+                            return; // invalid state has occured
+                        }
 
                         var lastReceivedGetMarkers = data.Rid; // ReplyId
                         if (lastReceivedGetMarkers <= gmcKN.async.lastReceivedGetMarkers) {
@@ -243,7 +246,7 @@ var gmcKN = {
                         }
                         // update
                         gmcKN.async.lastReceivedGetMarkers = lastReceivedGetMarkers;
-                        
+
                         var mia = "";
                         if (data.Mia > 0) {
                             mia = "<br/>&nbsp;Mia: " + data.Mia;
@@ -252,7 +255,6 @@ var gmcKN = {
 
                         // grid lines clear current
                         $.each(gmcKN.mymap.events.polys, function () {
-                            var item = this;
                             this.setMap(null); // clear prev lines
                         });
                         gmcKN.mymap.events.polys.length = 0; // clear array   
@@ -283,16 +285,18 @@ var gmcKN = {
                             });
                         }
 
-                        var pointsCacheIncome = []; // points to be drawn, new points received
-                        var pointsCacheOnMap = [];  // current drawn points
-                        var newmarkersTodo = [];    // points to be displayed
+                        var markersCacheIncome = []; // points to be drawn, new points received
+                        var markersCacheOnMap = [];  // current drawn points
+
+                        // points to be displayed, diff of markersCacheIncome and markersCacheOnMap
+                        var markersDrawTodo = [];
 
                         // store new points to be drawn                  
                         for (i in data.Markers) {
                             if (data.Markers.hasOwnProperty(i)) {
                                 var p = data.Markers[i];
                                 var key = gmcKN.getKey(p); //key                            
-                                pointsCacheIncome[key] = p;
+                                markersCacheIncome[key] = p;
                             }
                         }
                         // store current existing valid markers
@@ -301,7 +305,7 @@ var gmcKN = {
                                 var m = gmcKN.markers[i];
                                 var key = m.get("key"); //key  
                                 if (key !== 0) {//0 is used as has been deleted
-                                    pointsCacheOnMap[key] = 1;
+                                    markersCacheOnMap[key] = 1;
                                 }
 
                                 if (key === undefined) {
@@ -315,12 +319,12 @@ var gmcKN = {
                             if (data.Markers.hasOwnProperty(i)) {
                                 var p = data.Markers[i];
                                 var key = gmcKN.getKey(p); //key                            
-                                if (pointsCacheOnMap[key] === undefined) {
-                                    if (pointsCacheIncome[key] === undefined) {
+                                if (markersCacheOnMap[key] === undefined) {
+                                    if (markersCacheIncome[key] === undefined) {
                                         gmcKN.log("error in code: key2"); //catch error in code
                                     }
-                                    var newmarker = pointsCacheIncome[key];
-                                    newmarkersTodo.push(newmarker);
+                                    var newmarker = markersCacheIncome[key];
+                                    markersDrawTodo.push(newmarker);
                                 }
                             }
                         }
@@ -330,7 +334,7 @@ var gmcKN = {
                             if (gmcKN.markers.hasOwnProperty(i)) {
                                 var m = gmcKN.markers[i];
                                 var key = m.get("key"); //key                            
-                                if (key !== 0 && pointsCacheIncome[key] === undefined) {
+                                if (key !== 0 && markersCacheIncome[key] === undefined) {
                                     $(".countinfo_" + key).remove();
                                     gmcKN.markers[i].set("key", 0); // mark as deleted
                                     gmcKN.markers[i].setMap(null); // this removes the marker from the map
@@ -359,26 +363,27 @@ var gmcKN = {
                         }
 
                         // clear array
-                        pointsCacheIncome.length = 0;
-                        pointsCacheOnMap.length = 0;
+                        markersCacheIncome.length = 0;
+                        markersCacheOnMap.length = 0;
                         temp.length = 0;
 
-                        $.each(newmarkersTodo, function () {
+                        $.each(markersDrawTodo, function () {
                             var item = this;
                             var lat = item.Y; // lat
                             var lon = item.X; // lon
 
                             var latLng = new google.maps.LatLng(lat, lon, true);
 
+                            // identify type and select icon
                             var iconImg;
                             if (item.C === 1) {
-                                if (item.T === '1') {
+                                if (item.T === 1) {
                                     iconImg = pinImg1;
                                 }
-                                else if (item.T === '2') {
+                                else if (item.T === 2) {
                                     iconImg = pinImg2;
                                 }
-                                else if (item.T === '3') {
+                                else if (item.T === 3) {
                                     iconImg = pinImg3;
                                 } else {
                                     iconImg = pinImg; //fallback
@@ -394,7 +399,7 @@ var gmcKN = {
                                 zIndex: 1
                             });
                             var key = gmcKN.getKey(item);
-                            marker.set("key", key); // used for next event, remove or keep the marker
+                            marker.set("key", key); // ref used for next event, remove or keep the marker
 
                             if (item.C === 1) { // single item, no cluster
                                 //gmcKN.infowindow.close();
@@ -430,11 +435,13 @@ var gmcKN = {
                         });
 
                         // clear array
-                        newmarkersTodo.length = 0;
+                        markersDrawTodo.length = 0;
                     },
                     error: function (xhr, err) {
-                        //alert(gmcKN.mymap.settings.textErrorMessage); //friendly error msg
-                        alert("readyState: " + xhr.readyState + "\nstatus: " + xhr.status + "\nresponseText: " + xhr.responseText);
+                        var msg = "readyState: " + xhr.readyState + "\nstatus: " + xhr.status + "\nresponseText: " + xhr.responseText;
+                        gmcKN.log(msg);
+                        alert(gmcKN.mymap.settings.textErrorMessage); //friendly error msg
+                        //alert(msg);                        
                     }
                 });
 
@@ -458,15 +465,18 @@ var gmcKN = {
                     type: 'GET', // get
                     url: gmcKN.mymap.settings.jsonGetMarkerInfoUrl + getParams, // get
 
-//                    type: 'POST', // post                    
-//                    url: gmcKN.mymap.settings.jsonMarkerInfoUrl, // post                    
-//                    data: postParams,
+                    // type: 'POST', // post                    
+                    // url: gmcKN.mymap.settings.jsonMarkerInfoUrl, // post                    
+                    // data: postParams, // post
 
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     success: function (data) {
 
-                        if (data.Ok === "0") return; // invalid state has occured
+                        if (data.Ok === "0") {
+                            gmcKN.log(data.EMsg);
+                            return; // invalid state has occured
+                        }
 
                         var lastReceivedMarkerDetail = data.Rid; // replyId
                         if (lastReceivedMarkerDetail <= gmcKN.async.lastReceivedMarkerDetail) {
@@ -484,9 +494,11 @@ var gmcKN = {
                         gmcKN.infowindow.open(gmcKN.map, marker);
                     },
                     error: function (xhr, err) {
-                        alert("readyState: " + xhr.readyState + "\nstatus: " + xhr.status + "\nresponseText: " + xhr.responseText);
+                        var msg = "readyState: " + xhr.readyState + "\nstatus: " + xhr.status + "\nresponseText: " + xhr.responseText;
+                        gmcKN.log(msg);
+                        //alert(msg);
+                        alert(gmcKN.mymap.settings.textErrorMessage); //friendly error msg
                     }
-
                 });
             }
         }
@@ -505,15 +517,21 @@ var gmcKN = {
 
     // Checkbox values as binary sum
     getFilterValues: function () {
-        var cb1 = $('#gmcKN_Clustering').attr('checked') === 'checked' ? 1 : 0;
-        var cb2 = $('#gmcKN_Lines').attr('checked') === 'checked' ? 1 : 0;
+        var s = "";
+        var cb1 = $(s = '#gmcKN_Clustering') ? ($(s).attr('checked') === 'checked' ? 1 : 0) : 0;
+        var cb2 = $(s = '#gmcKN_Lines') ? ($(s).attr('checked') === 'checked' ? 1 : 0) : 0;
 
-        var cb3 = $('#gmcKN_Type1').attr('checked') === 'checked' ? 1 : 0;
-        var cb4 = $('#gmcKN_Type2').attr('checked') === 'checked' ? 1 : 0;
-        var cb5 = $('#gmcKN_Type3').attr('checked') === 'checked' ? 1 : 0;
+        var cb3 = $(s = '#gmcKN_Type1') ? ($(s).attr('checked') === 'checked' ? 1 : 0) : 0;
+        var cb4 = $(s = '#gmcKN_Type2') ? ($(s).attr('checked') === 'checked' ? 1 : 0) : 0;
+        var cb5 = $(s = '#gmcKN_Type3') ? ($(s).attr('checked') === 'checked' ? 1 : 0) : 0;
+        var cb6 = $(s = '#gmcKN_Type4') ? ($(s).attr('checked') === 'checked' ? 1 : 0) : 0;
+        var cb7 = $(s = '#gmcKN_Type5') ? ($(s).attr('checked') === 'checked' ? 1 : 0) : 0;
+        var cb8 = $(s = '#gmcKN_Type6') ? ($(s).attr('checked') === 'checked' ? 1 : 0) : 0;
+        var cb9 = $(s = '#gmcKN_Type7') ? ($(s).attr('checked') === 'checked' ? 1 : 0) : 0;
 
         // binary sum, take less space in string request
-        var filter = cb1 * 1 + cb2 * 2 + cb3 * 4 + cb4 * 8 + cb5 * 16;
+        var filter = cb1 * 1 + cb2 * 2 + cb3 * 4 + cb4 * 8
+            + cb5 * 16 + cb6 * 32 + cb7 * 64 + cb8 * 128 + cb9 * 256;
         return filter + "";
     },
 

@@ -14,6 +14,11 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
             return double.Parse(s, NumberStyles.Float, NumberFormatInfo.InvariantInfo);
         }
 
+        public static int ToInt(this string s)
+        {
+            return int.Parse(s);
+        }
+
         public static string DoubleToString(this double d)
         {
             double rounded = Math.Round(d, Numbers.Round);
