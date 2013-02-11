@@ -48,21 +48,21 @@ gmcKN.mymap.latlonsearch = function() {
 };
 
 gmcKN.mymap.initializeSearch = function () {
-    
+
     $('#gmcKN_search').focus();
-    $('#gmcKN_latitude').keypress(function(e) {
+    $('#gmcKN_latitude').keypress(function (e) {
         if (e.which === 13) {
             gmcKN.mymap.latlonsearch();
         }
     });
-    $('#gmcKN_longitude').keypress(function(e) {
+    $('#gmcKN_longitude').keypress(function (e) {
         if (e.which === 13) {
             gmcKN.mymap.latlonsearch();
         }
     });
 
     gmcKN.searchInfo.searchMarker = new google.maps.Marker({
-    //init
+        //init
         map: gmcKN.map,
         draggable: true,
         zIndex: 1
@@ -72,9 +72,14 @@ gmcKN.mymap.initializeSearch = function () {
     gmcKN.searchInfo.searchMarker.setVisible(true);
 
     //Add listener to marker for reverse geocoding
-    google.maps.event.addListener(gmcKN.searchInfo.searchMarker, 'drag', function() {
-        gmcKN.geocoder.geocode({ 'latLng': gmcKN.searchInfo.searchMarker.getPosition() }, function(results, status) {
+    google.maps.event.addListener(gmcKN.searchInfo.searchMarker, 'drag', function () {
+
+        gmcKN.geocoder.geocode({ 'latLng': gmcKN.searchInfo.searchMarker.getPosition() }, function (results, status) {
+
+            gmcKN.mymap.events.loadKnn(); // reload knn
+            
             if (status === google.maps.GeocoderStatus.OK) {
+                
                 if (results[0]) {
                     var addr = results[0].formatted_address;
                     $('#gmcKN_search').val(addr);
@@ -96,12 +101,12 @@ gmcKN.mymap.initializeSearch = function () {
         });
     });
 
-    $(function() {
+    $(function () {
         $("#gmcKN_search").autocomplete({
-        //This uses the geocoder to fetch address values
-            source: function(request, response) {
-                gmcKN.geocoder.geocode({ 'address': request.term }, function(results, status) { //WORLD
-                    response($.map(results, function(item) {
+            //This uses the geocoder to fetch address values
+            source: function (request, response) {
+                gmcKN.geocoder.geocode({ 'address': request.term }, function (results, status) { //WORLD
+                    response($.map(results, function (item) {
 
                         return {
                             label: item.formatted_address,
@@ -114,7 +119,7 @@ gmcKN.mymap.initializeSearch = function () {
                 });
             },
             //This is executed upon selection of an address
-            select: function(event, ui) {
+            select: function (event, ui) {
                 //parseFloat()   
                 var lat = ui.item.latitude + "";
                 var lon = ui.item.longitude + "";
