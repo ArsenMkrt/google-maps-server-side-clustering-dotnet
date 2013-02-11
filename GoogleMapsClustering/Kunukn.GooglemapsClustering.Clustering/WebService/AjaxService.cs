@@ -227,6 +227,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
         // Preparing for K nearest neighbor
         // example of usage
         // /AreaGMC/gmc.svc/Knn/8_5;10_25;3
+        // /AreaGMC/gmc.svc/Knn/8_5;10_25;3;1
         public JsonKnnReply Knn(string s)
         {
             var sw = new Stopwatch();
@@ -275,12 +276,14 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
 
             // Use algo
             var origin = new SingleDetectLibrary.Code.Data.P { X = x, Y = y, Type = type};
-            var duration = algo.UpdateKnn(origin, k, type != -1);
+            var knnSameTypeOnly = type != -1;
+            var duration = algo.UpdateKnn(origin, k, knnSameTypeOnly);
 
             return new JsonKnnReply
             {
-                Data = string.Format("x: {0}; y: {1}; {2}; algo msec: {3}", x.DoubleToString(), y.DoubleToString(), k, duration),
-                Nns = algo.Knn.NNs.Select(p => p as PDist).ToList(),
+                Data = string.Format("x: {0}; y: {1}; k: {2}; sameTypeOnly: {3}, algo msec: {4}", 
+                    x.DoubleToString(), y.DoubleToString(), k, knnSameTypeOnly, duration),
+                Nns = algo.Knn.NNs.Select(p => p as PDist).ToList(), // cannot be interface, thus casting
                 Msec = Sw(sw),
             };
         }
@@ -288,7 +291,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
         #endregion Get
 
         /// <summary>
-        /// Solve serializing to Json issue, use replace or use your own P type as you like 
+        /// Solve serializing to Json issue (Cannot be interface type)
+        /// Use replace or use your own P type as you like 
         /// </summary>
         /// <param name="ps"></param>
         /// <returns></returns>
@@ -296,7 +300,5 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
         {
             return ps.Data.Select(p => p as P).ToList();
         }
-
     }
-
 }
