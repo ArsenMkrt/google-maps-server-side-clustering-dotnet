@@ -133,7 +133,9 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
 
         public override IPoints GetCluster(ClusterInfo clusterInfo)
         {
-            return RunClusterAlgo(clusterInfo);
+            var r = RunClusterAlgo(clusterInfo);
+
+            return r;
         }
 
 

@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <link type="text/css" rel="stylesheet" href="Styles/Gmc.css" />
+    <link type="text/css" rel="stylesheet" href="Styles/Gmc.css?v=123" />
     <link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/excite-bike/jquery-ui.css" />
 </head>
 <body>
@@ -38,15 +38,11 @@
                 <br />
                 -->
 
-            <input type="checkbox" id="gmcKN_Type1" name="Type" value="Type1" onclick="gmcKN.checkboxClicked('gmc_type1',this.checked+'');"
-                   checked="checked" />Type1<br />
-            <input type="checkbox" id="gmcKN_Type2" name="Type" value="Type2" onclick="gmcKN.checkboxClicked('gmc_type2',this.checked+'');"
-                   checked="checked" />Type2<br />
-            <input type="checkbox" id="gmcKN_Type3" name="Type" value="Type3" onclick="gmcKN.checkboxClicked('gmc_type3',this.checked+'');"
-                   checked="checked" />Type3<br />
-            <input type="checkbox" id="gmcKN_Lines" name="Type" value="Lines" onclick="gmcKN.checkboxClicked('gmc_meta_lines',this.checked+'');" />
-            <span>Lines</span>
-            <br />
+            <input type="checkbox" id="gmcKN_Type1" name="Type" value="Type1" onclick="gmcKN.checkboxClicked('gmc_type1',this.checked+'');" checked />Type1<br />
+            <input type="checkbox" id="gmcKN_Type2" name="Type" value="Type2" onclick="gmcKN.checkboxClicked('gmc_type2',this.checked+'');" checked />Type2<br />
+            <input type="checkbox" id="gmcKN_Type3" name="Type" value="Type3" onclick="gmcKN.checkboxClicked('gmc_type3',this.checked+'');" checked />Type3<br />
+            <input type="checkbox" id="gmcKN_Knn"  title="drag the search marker" name="Type" value="Knn"  onclick="gmcKN.checkboxClicked('gmc_meta_knn',this.checked+'');" /> K-NN<br />
+            <input type="checkbox" id="gmcKN_Lines" name="Type" value="Lines" onclick="gmcKN.checkboxClicked('gmc_meta_lines',this.checked+'');" /> Lines<br />
             <span id="gmcKN_Clustering_span">
                 <input type="checkbox" id="gmcKN_Clustering" name="Type" value="Clustering" onclick="gmcKN.checkboxClicked('gmc_clustering',this.checked+'');"
                        checked="checked" />

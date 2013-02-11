@@ -3,7 +3,8 @@
 
 var gmcKN = {
 
-    markers: [],
+    markers: [], // markers on screen
+    knnmarkers: [], // K-nearest markers
     map: undefined,
     infowindow: undefined,
     debugMarker: undefined,
@@ -11,6 +12,8 @@ var gmcKN = {
 
     // http://code.google.com/intl/da-DK/apis/maps/documentation/javascript/reference.html
     geocoder: new google.maps.Geocoder(),
+    knn: false, // K-nearest neighbor display flag
+    knn_K: 5, // number of K-nearest neighbor
     debug: {
         showGridLines: false,
         showBoundaryMarker: false,
@@ -84,9 +87,12 @@ var gmcKN = {
             alwaysClusteringEnabledWhenZoomLevelLess: 2,
 
             jsonGetMarkerUrl: '/AreaGMC/gmc.svc/GetMarkers', // get
-            jsonMarkerUrl: '/AreaGMC/gmc.svc/Markers', // post
+            jsonMarkerUrl: '/AreaGMC/gmc.svc/Markers', // post  //not used by default
+
             jsonGetMarkerInfoUrl: '/AreaGMC/gmc.svc/GetMarkerInfo', // get
-            jsonMarkerInfoUrl: '/AreaGMC/gmc.svc/MarkerInfo', // post
+            jsonMarkerInfoUrl: '/AreaGMC/gmc.svc/MarkerInfo', // post //not used by default
+
+            jsonKnnUrl: '/AreaGMC/gmc.svc/Knn', // get // K-nearest neighbors
 
             clusterImage: {
                 src: 'Images/cluster2.png', //this is invisible img only used for click-event detecting
@@ -259,6 +265,8 @@ var gmcKN = {
                         });
                         gmcKN.mymap.events.polys.length = 0; // clear array   
 
+                        //gmcKN.mymap.events.loadKnn();
+
                         if (gmcKN.debug.showGridLines === true && data.Polylines) {
 
                             $.each(data.Polylines, function () {
@@ -285,87 +293,90 @@ var gmcKN = {
                             });
                         }
 
-                        var markersCacheIncome = []; // points to be drawn, new points received
-                        var markersCacheOnMap = [];  // current drawn points
 
-                        // points to be displayed, diff of markersCacheIncome and markersCacheOnMap
-                        var markersDrawTodo = [];
+//                        var markersCacheIncome = []; // points to be drawn, new points received
+//                        var markersCacheOnMap = [];  // current drawn points
 
-                        // store new points to be drawn                  
-                        for (i in data.Markers) {
-                            if (data.Markers.hasOwnProperty(i)) {
-                                var p = data.Markers[i];
-                                var key = gmcKN.getKey(p); //key                            
-                                markersCacheIncome[key] = p;
-                            }
-                        }
-                        // store current existing valid markers
-                        for (var i in gmcKN.markers) {
-                            if (gmcKN.markers.hasOwnProperty(i)) {
-                                var m = gmcKN.markers[i];
-                                var key = m.get("key"); //key  
-                                if (key !== 0) {//0 is used as has been deleted
-                                    markersCacheOnMap[key] = 1;
-                                }
+//                        // points to be displayed, diff of markersCacheIncome and markersCacheOnMap
+//                        var markersDrawTodo = [];
 
-                                if (key === undefined) {
-                                    gmcKN.log("error in code: key"); //catch error in code
-                                }
-                            }
-                        }
+//                        // store new points to be drawn                  
+//                        for (i in data.Markers) {
+//                            if (data.Markers.hasOwnProperty(i)) {
+//                                var p = data.Markers[i];
+//                                var key = gmcKN.getKey(p); //key                            
+//                                markersCacheIncome[key] = p;
+//                            }
+//                        }
+//                        // store current existing valid markers
+//                        for (var i in gmcKN.markers) {
+//                            if (gmcKN.markers.hasOwnProperty(i)) {
+//                                var m = gmcKN.markers[i];
+//                                var key = m.get("key"); //key  
+//                                if (key !== 0) {//0 is used as has been deleted
+//                                    markersCacheOnMap[key] = 1;
+//                                }
 
-                        // add new markers from event not already drawn
-                        for (var i in data.Markers) {
-                            if (data.Markers.hasOwnProperty(i)) {
-                                var p = data.Markers[i];
-                                var key = gmcKN.getKey(p); //key                            
-                                if (markersCacheOnMap[key] === undefined) {
-                                    if (markersCacheIncome[key] === undefined) {
-                                        gmcKN.log("error in code: key2"); //catch error in code
-                                    }
-                                    var newmarker = markersCacheIncome[key];
-                                    markersDrawTodo.push(newmarker);
-                                }
-                            }
-                        }
+//                                if (key === undefined) {
+//                                    gmcKN.log("error in code: key"); //catch error in code
+//                                }
+//                            }
+//                        }
 
-                        // remove current markers which should not be displayed
-                        for (i in gmcKN.markers) {
-                            if (gmcKN.markers.hasOwnProperty(i)) {
-                                var m = gmcKN.markers[i];
-                                var key = m.get("key"); //key                            
-                                if (key !== 0 && markersCacheIncome[key] === undefined) {
-                                    $(".countinfo_" + key).remove();
-                                    gmcKN.markers[i].set("key", 0); // mark as deleted
-                                    gmcKN.markers[i].setMap(null); // this removes the marker from the map
-                                }
-                            }
-                        }
+//                        // add new markers from event not already drawn
+//                        for (var i in data.Markers) {
+//                            if (data.Markers.hasOwnProperty(i)) {
+//                                var p = data.Markers[i];
+//                                var key = gmcKN.getKey(p); //key                            
+//                                if (markersCacheOnMap[key] === undefined) {
+//                                    if (markersCacheIncome[key] === undefined) {
+//                                        gmcKN.log("error in code: key2"); //catch error in code
+//                                    }
+//                                    var newmarker = markersCacheIncome[key];
+//                                    markersDrawTodo.push(newmarker);
+//                                }
+//                            }
+//                        }
 
-                        // trim markers array size
-                        var temp = [];
-                        for (i in gmcKN.markers) {
-                            if (gmcKN.markers.hasOwnProperty(i)) {
-                                var key = gmcKN.markers[i].get("key"); //key                            
-                                if (key !== 0) {
-                                    var tempItem = gmcKN.markers[i];
-                                    temp.push(tempItem);
-                                }
-                            }
-                        }
+//                        // remove current markers which should not be displayed
+//                        for (i in gmcKN.markers) {
+//                            if (gmcKN.markers.hasOwnProperty(i)) {
+//                                var m = gmcKN.markers[i];
+//                                var key = m.get("key"); //key                            
+//                                if (key !== 0 && markersCacheIncome[key] === undefined) {
+//                                    $(".countinfo_" + key).remove();
+//                                    gmcKN.markers[i].set("key", 0); // mark as deleted
+//                                    gmcKN.markers[i].setMap(null); // this removes the marker from the map
+//                                }
+//                            }
+//                        }
 
-                        gmcKN.markers.length = 0;
-                        for (i in temp) {
-                            if (temp.hasOwnProperty(i)) {
-                                var tempItem = temp[i];
-                                gmcKN.markers.push(tempItem);
-                            }
-                        }
+//                        // trim markers array size
+//                        var temp = [];
+//                        for (i in gmcKN.markers) {
+//                            if (gmcKN.markers.hasOwnProperty(i)) {
+//                                var key = gmcKN.markers[i].get("key"); //key                            
+//                                if (key !== 0) {
+//                                    var tempItem = gmcKN.markers[i];
+//                                    temp.push(tempItem);
+//                                }
+//                            }
+//                        }
 
-                        // clear array
-                        markersCacheIncome.length = 0;
-                        markersCacheOnMap.length = 0;
-                        temp.length = 0;
+//                        gmcKN.markers.length = 0;
+//                        for (i in temp) {
+//                            if (temp.hasOwnProperty(i)) {
+//                                var tempItem = temp[i];
+//                                gmcKN.markers.push(tempItem);
+//                            }
+//                        }
+
+//                        // clear array
+//                        markersCacheIncome.length = 0;
+//                        markersCacheOnMap.length = 0;
+//                        temp.length = 0;
+
+                        var markersDrawTodo = gmcKN.dynamicUpdateMarkers(data.Markers, gmcKN.markers, gmcKN.getKey, true);
 
                         $.each(markersDrawTodo, function () {
                             var item = this;
@@ -392,6 +403,7 @@ var gmcKN = {
                                 iconImg = clusterImg;
                             }
 
+                            // this draws a new marker on map
                             var marker = new google.maps.Marker({
                                 position: latLng,
                                 map: gmcKN.map,
@@ -404,7 +416,7 @@ var gmcKN = {
                             if (item.C === 1) { // single item, no cluster
                                 //gmcKN.infowindow.close();
                                 google.maps.event.addListener(marker, 'click', function (event) {
-                                    gmcKN.mymap.events.attachCallOut(marker, item);
+                                    gmcKN.mymap.events.popupWindow(marker, item);
                                 });
                             }
                             else { // cluster marker
@@ -447,8 +459,75 @@ var gmcKN = {
 
             },
 
-            // popup window
-            attachCallOut: function (marker, item) {
+            // load Knn
+            loadKnn: function () {
+
+                var k = gmcKN.knn === true ? gmcKN.knn_K : 0;
+
+                // if cache is empty and no k request then stop here
+                if (gmcKN.knnmarkers.length === 0 && k === 0) {
+                    return;
+                }
+
+                // clear currently displayed
+                for (var i in gmcKN.knnmarkers) {
+                    if (gmcKN.knnmarkers.hasOwnProperty(i)) {
+                        gmcKN.knnmarkers[i].setMap(null); // this removes the marker from the map    
+                    }
+                }
+
+                gmcKN.knnmarkers.length = 0; // clear cache
+                if (k === 0) {
+                    return;  // don't find Knn
+                }
+
+                // dependent on search marker (defined in other js file)
+                // locate K-NN from search marker pos
+                if (!gmcKN.searchInfo || !gmcKN.searchInfo.searchMarker) return;
+
+                var m = gmcKN.searchInfo.searchMarker;
+
+                // Get params
+                var getParams = "/" + gmcKN.dEscape(m.getPosition().lat()) + ";" + gmcKN.dEscape(m.getPosition().lng()) + ";" + k;
+
+                $.ajax({
+                    type: 'GET', // get
+                    url: gmcKN.mymap.settings.jsonKnnUrl + getParams, // get                   
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function (data) {
+
+                        if (data.Ok === "0") {
+                            gmcKN.log(data.EMsg);
+                            return; // invalid state has occured
+                        }
+
+                        $.each(data.Nns, function () {
+                            var item = this;
+                            var latlon = new google.maps.LatLng(item.Y, item.X);
+                            var iconImg = new google.maps.MarkerImage(gmcKN.mymap.settings.pinImage.src, new google.maps.Size(gmcKN.mymap.settings.pinImage.width, gmcKN.mymap.settings.pinImage.height), null, null);
+
+                            var marker = new google.maps.Marker({
+                                position: latlon,
+                                map: gmcKN.map,
+                                icon: iconImg,
+                                zIndex: 2
+                            });
+                            gmcKN.knnmarkers.push(marker);
+                        });
+
+                    },
+                    error: function (xhr, err) {
+                        var msg = "readyState: " + xhr.readyState + "\nstatus: " + xhr.status + "\nresponseText: " + xhr.responseText;
+                        gmcKN.log(msg);
+                        //alert(msg);
+                        alert(gmcKN.mymap.settings.textErrorMessage); //friendly error msg
+                    }
+                });
+            },
+
+            // marker detail
+            popupWindow: function (marker, item) {
 
                 ++gmcKN.async.lastSendMarkerDetail;
 
@@ -462,9 +541,12 @@ var gmcKN = {
                 var getParams = "/" + item.I + ";" + item.T + ";" + gmcKN.async.lastSendMarkerDetail;
 
                 $.ajax({
+
+                    // GET version
                     type: 'GET', // get
                     url: gmcKN.mymap.settings.jsonGetMarkerInfoUrl + getParams, // get
 
+                    // POST version
                     // type: 'POST', // post                    
                     // url: gmcKN.mymap.settings.jsonMarkerInfoUrl, // post                    
                     // data: postParams, // post
@@ -504,9 +586,16 @@ var gmcKN = {
         }
     },
 
-    // lon, lat, count, type
-    getKey: function (p) { //point
+    
+    // lon, lat, count, type, cannot use id because it is not set for cluster markers on return json
+    getKey: function (p) {
         var s = p.X + "__" + p.Y + "__" + p.C + "__" + p.T;
+        return s.replace(/\./g, "_"); //replace . with _
+    },
+
+    // lon, lat, distance
+    getKnnKey: function (p) { //point
+        var s = p.X + "__" + p.Y + "__" + p.Dist;
         return s.replace(/\./g, "_"); //replace . with _
     },
 
@@ -540,6 +629,10 @@ var gmcKN = {
             gmcKN.debug.showGridLines = !gmcKN.debug.showGridLines;
         }
 
+        else if (type === 'gmc_meta_knn') {
+            gmcKN.knn = !gmcKN.knn;
+        }
+
         // force update screen
         gmcKN.mymap.events.getBounds(true);
     },
@@ -569,6 +662,95 @@ var gmcKN = {
         div.appendChild(span);
         div.className = "countinfo_" + id;
         div.style.cssText = 'position: absolute; display: none;';
+    },
+
+    // Only update new markers not currently drawn and remove obsolete markers on screen
+    dynamicUpdateMarkers: function (markers, cache, keyfunction, isclusterbased) {
+        var markersCacheIncome = []; // points to be drawn, new points received
+        var markersCacheOnMap = [];  // current drawn points
+
+        // points to be displayed, diff of markersCacheIncome and markersCacheOnMap
+        var markersDrawTodo = [];
+
+        // store new points to be drawn                  
+        for (i in markers) {
+            if (markers.hasOwnProperty(i)) {
+                p = markers[i];
+                key = keyfunction(p); //key                            
+                markersCacheIncome[key] = p;
+            }
+        }
+        // store current existing valid markers
+        for (i in cache) {
+            if (cache.hasOwnProperty(i)) {
+                m = cache[i];
+                key = m.get("key"); // key  
+                if (key !== 0) { // 0 is used as has been deleted
+                    markersCacheOnMap[key] = 1;
+                }
+
+                if (key === undefined) {
+                    gmcKN.log("error in code: key"); //catch error in code
+                }
+            }
+        }
+
+        // add new markers from event not already drawn
+        for (var i in markers) {
+            if (markers.hasOwnProperty(i)) {
+                var p = markers[i];
+                key = keyfunction(p); //key                            
+                if (markersCacheOnMap[key] === undefined) {
+                    if (markersCacheIncome[key] === undefined) {
+                        gmcKN.log("error in code: key2"); //catch error in code
+                    }
+                    var newmarker = markersCacheIncome[key];
+                    markersDrawTodo.push(newmarker);
+                }
+            }
+        }
+
+        // remove current markers which should not be displayed
+        for (i in cache) {
+            if (cache.hasOwnProperty(i)) {
+                var m = cache[i];
+                key = m.get("key"); //key                            
+                if (key !== 0 && markersCacheIncome[key] === undefined) {
+                    if (isclusterbased === true) {
+                        $(".countinfo_" + key).remove();
+                    }
+                    cache[i].set("key", 0); // mark as deleted
+                    cache[i].setMap(null); // this removes the marker from the map
+                }
+            }
+        }
+
+        // trim markers array size
+        var temp = [];
+        for (i in cache) {
+            if (cache.hasOwnProperty(i)) {
+                var key = cache[i].get("key"); //key                            
+                if (key !== 0) {
+                    tempItem = cache[i];
+                    temp.push(tempItem);
+                }
+            }
+        }
+
+        cache.length = 0;
+        for (i in temp) {
+            if (temp.hasOwnProperty(i)) {
+                var tempItem = temp[i];
+                cache.push(tempItem);
+            }
+        }
+
+        // clear array
+        markersCacheIncome.length = 0;
+        markersCacheOnMap.length = 0;
+        temp.length = 0;
+
+        return markersDrawTodo;
     }
 };
 

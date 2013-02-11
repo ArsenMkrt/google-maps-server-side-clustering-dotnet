@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.ServiceModel.Activation;
@@ -22,11 +23,20 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
     public class AjaxService : IAjaxService
     {
 
+        long Sw(Stopwatch sw)
+        {
+            sw.Stop();
+            return sw.ElapsedMilliseconds;
+        }
+
         #region Post
 
         // Post
         public JsonMarkersReply Markers(double nelat, double nelon, double swlat, double swlon, int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, string filter, int sendid)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             var jsonReceive = new JsonGetMarkersReceive(nelat, nelon, swlat, swlon, zoomlevel, gridx, gridy, zoomlevelClusterStop, filter, sendid);
 
             var clusteringEnabled = jsonReceive.IsClusteringEnabled || AlgoConfig.AlwaysClusteringEnabledWhenZoomLevelLess > jsonReceive.Zoomlevel;
@@ -60,14 +70,17 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
                 var clusterPoints = clusterAlgo.GetCluster(new ClusterInfo
                                                                {
                                                                    ZoomLevel = jsonReceive.Zoomlevel
-                                                               });
-
+                                                               });                
+                
+                var converted = DataConvert(clusterPoints);
+                                
                 // Prepare data to the client
                 reply = new JsonMarkersReply
                             {
-                                Markers = DataConvert(clusterPoints),
+                                Markers = converted,
                                 Rid = sendid,
-                                Polylines = clusterAlgo.Lines
+                                Polylines = clusterAlgo.Lines,
+                                Msec = Sw(sw),
                             };
 
                 // Return client data
@@ -90,7 +103,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
                             Rid = sendid,
                             Polylines = clusterAlgo.Lines,
                             Mia = filteredDataset.Count - filteredDatasetMaxPoints.Count,
-                        };
+                            Msec = Sw(sw),
+                        };            
             return reply;
         }
 
@@ -99,8 +113,17 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
         // Post
         public JsonMarkerInfoReply MarkerInfo(string id, string type, int sendid)
         {
-            var reply = new JsonMarkerInfoReply { Id = id, Type = type, Rid = sendid };
+            var sw = new Stopwatch();
+            sw.Start();
+
+            var reply = new JsonMarkerInfoReply
+                            {
+                                Id = id, 
+                                Type = type, 
+                                Rid = sendid,                                
+                            };
             reply.BuildContent();
+            reply.Msec = Sw(sw);
             return reply;
         }
 
@@ -147,7 +170,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             catch (Exception ex)
             {
                 invalid.EMsg = string.Format("Parsing error at param: {0}, {1}",
-                    i-1,ex.Message);
+                    i - 1, ex.Message);
             }
 
             return invalid;
@@ -203,9 +226,12 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
 
         // Preparing for K nearest neighbor
         // example of usage
-        // /AreaGMC/gmc.svc/Knn/10_5;10_20;3
+        // /AreaGMC/gmc.svc/Knn/8_5;10_25;3
         public JsonKnnReply Knn(string s)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             var invalid = new JsonKnnReply {};
             if (string.IsNullOrEmpty(s))
             {
@@ -253,8 +279,9 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
 
             return new JsonKnnReply
             {
-                Data = string.Format("x: {0}; y: {1}; {2}; msec: {3}", x.DoubleToString(), y.DoubleToString(), k, duration),
+                Data = string.Format("x: {0}; y: {1}; {2}; algo msec: {3}", x.DoubleToString(), y.DoubleToString(), k, duration),
                 Nns = algo.Knn.NNs.Select(p => p as PDist).ToList(),
+                Msec = Sw(sw),
             };
         }
 

@@ -5,13 +5,15 @@ using System.Web.Script.Serialization;
 namespace Kunukn.GooglemapsClustering.Clustering.Data.Json
 {
     public class JsonMarkerInfoReply : JsonReplyBase
-    {
+    {        
         public string Content { get; set; }        
 
         [ScriptIgnore] // don't include in json reply
         public string Type  { get; set; }
         [ScriptIgnore]
         public string Id { get; set; }
+
+        
 
         public JsonMarkerInfoReply()
         {
