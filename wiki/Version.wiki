@@ -1,7 +1,14 @@
 = Version history =
 
 
-== Version 2 ==
+== Version 3 (SVN) ==
+  * Support for K-nearest neighbors
+  * WCF Get services
+  * Minimum external dependency is jQuery and Google Maps api
+  * mapclustering.js only have jQuery and Google Maps api dependency
+
+
+== Version 2 (File download) ==
   * Support for type filtering
   * Demo points that covers globally
   * Refactored javascript (one namespace only: gmcKN)
@@ -9,6 +16,6 @@
   * Ability to set minimum cluster size
 
 
-== Version 1 ==
+== Version 1 (File download) ==
   * Server-side clustering which works globally
   * Ability to cluster 100.000+ points within 1 second
