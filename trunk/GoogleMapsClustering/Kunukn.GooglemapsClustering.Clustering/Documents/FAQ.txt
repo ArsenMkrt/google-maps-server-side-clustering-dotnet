@@ -110,15 +110,6 @@ A. Increase or decrease the value in
 
 ---------------------------------
 
-*Q. Why do the red gridlines look wierd when zoomed far out?*
-
-A. The data for drawing the gridlines are assumed correct last time I checked. The Google API 
-for drawing red linens can't draw all longitude value scenarious (I Assume), 
-e.g. from 60 to -100. I didn't want to spend more time on the value scenarious to make it work 
-by splitting draw functions to something like e.g. 60 to 180 and then -180 to -100
-
----------------------------------
-
 *Q. Is the clustering broken if I change the window size?*
 
 A. The clustering might behave buggy if you increase the window size. 
@@ -136,6 +127,18 @@ http://code.google.com/intl/da-DK/apis/maps/articles/toomanymarkers.html
 
 ---------------------------------
 
+*Q. What are the webservices used?*
+
+A. There are 3 get REST services
+
+  * *{{{gmc.svc/getmarkers}}}* - for all the markers.
+  * *{{{gmc.svc/getmarkerinfo}}}* - for specific info for seletected marker.
+  * *{{{gmc.svc/knn}}}* - for k-nearest neighbors.
+
+For usage examples see {{{IAjaxService}}} interface and {{{AjaxService}}} class
+
+---------------------------------
+
 *Q. Who made the Google Maps search function in this example?*
 
 A. The example code is with inspiration from
@@ -143,26 +146,15 @@ http://tech.cibul.net/geocode-with-google-maps-api-v3/
 
 ---------------------------------
 
-*Q. What is the complexity of time and space?*
+*Q. How many points are there in the demo example?*
 
-A. Time complexity is on average(m*n) and space complexity is O(m*n)
-where n is the number of points used in total and m is the number of grids returned to the client. 
-You are welcome to analyse it yourself :) I use hashset and hashmap to minimize the time complexity.
+A. There are 130.530 points.
 
-Time complexity is ~ O(n^2) on worst case but extremely unlikely, 
-happens if most centroids are merged with neighbor-centroids 
-(not a likely scenario for common dataset, where data only exists at grid borderlines).
 ---------------------------------
 
 *Q. Where did you get the points?*
 
 A. The points are taken from the file cities1000 at http://download.geonames.org/export/dump/
-
----------------------------------
-
-*Q. How many points are there in the demo example?*
-
-A. There are 130.530 points.
 
 ---------------------------------
 
@@ -195,6 +187,27 @@ A. MIT License.
 *Q. How much does it cost to use Google Maps?*
 
 A. Google knows the answer. Try this link https://developers.google.com/maps/faq
+
+---------------------------------
+
+*Q. Why do the red gridlines look wierd when zoomed far out?*
+
+A. The data for drawing the gridlines are assumed correct last time I checked. The Google API 
+for drawing red linens can't draw all longitude value scenarious (I Assume), 
+e.g. from 60 to -100. I didn't want to spend more time on the value scenarious to make it work 
+by splitting draw functions to something like e.g. 60 to 180 and then -180 to -100
+
+---------------------------------
+
+*Q. What is the complexity of time and space?*
+
+A. Time complexity is on average(m*n) and space complexity is O(m*n)
+where n is the number of points used in total and m is the number of grids returned to the client. 
+You are welcome to analyse it yourself :) I use hashset and hashmap to minimize the time complexity.
+
+Time complexity is ~ O(n^2) on worst case but extremely unlikely, 
+happens if most centroids are merged with neighbor-centroids 
+(not a likely scenario for common dataset, where data only exists at grid borderlines).
 
 ---------------------------------
 
