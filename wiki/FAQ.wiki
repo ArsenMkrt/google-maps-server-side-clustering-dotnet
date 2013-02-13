@@ -131,7 +131,7 @@ http://code.google.com/intl/da-DK/apis/maps/articles/toomanymarkers.html
 
 A. There are 3 REST services
 
-  * {{{gmc.svc/getmarkers}}} - for all the markers.
+  * *{{{gmc.svc/getmarkers}}}* - for all the markers.
   * {{{gmc.svc/getmarkerinfo}}} - for specific info for seletected marker.
   * {{{gmc.svc/knn}}} - for k-nearest neighbors.
 
