@@ -129,7 +129,7 @@ http://code.google.com/intl/da-DK/apis/maps/articles/toomanymarkers.html
 
 *Q. What are the webservices used?*
 
-A. There are 3 REST services
+A. There are 3 get REST services
 
   * *{{{gmc.svc/getmarkers}}}* - for all the markers.
   * *{{{gmc.svc/getmarkerinfo}}}* - for specific info for seletected marker.
