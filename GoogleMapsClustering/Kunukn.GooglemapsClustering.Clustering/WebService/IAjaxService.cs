@@ -22,7 +22,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
         [WebInvoke(Method = "POST", UriTemplate = "Markers",
             BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
         JsonMarkersReply Markers(double nelat, double nelon, double swlat, double swlon,
-                                 int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, string filter, int sendid);
+                                 int zoomlevel, int zoomlevelClusterStop, string filter, int sendid);
         #endregion Post
 
 

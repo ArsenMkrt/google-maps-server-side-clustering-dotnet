@@ -32,12 +32,16 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
         #region Post
 
         // Post
-        public JsonMarkersReply Markers(double nelat, double nelon, double swlat, double swlon, int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, string filter, int sendid)
+        public JsonMarkersReply 
+            Markers(
+            double nelat, double nelon, double swlat, double swlon, 
+            int zoomlevel, int zoomlevelClusterStop, string filter, int sendid
+            )
         {
             var sw = new Stopwatch();
             sw.Start();
 
-            var jsonReceive = new JsonGetMarkersReceive(nelat, nelon, swlat, swlon, zoomlevel, gridx, gridy, zoomlevelClusterStop, filter, sendid);
+            var jsonReceive = new JsonGetMarkersReceive(nelat, nelon, swlat, swlon, zoomlevel, zoomlevelClusterStop, filter, sendid);
 
             var clusteringEnabled = jsonReceive.IsClusteringEnabled || AlgoConfig.AlwaysClusteringEnabledWhenZoomLevelLess > jsonReceive.Zoomlevel;
 
@@ -48,7 +52,13 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
 
             // Get all points from memory
             IPoints points = MemoryDatabase.GetPoints();
-            if (jsonReceive.TypeFilter.Count > 0)
+
+            if (jsonReceive.TypeFilter.Count == AlgoConfig.MarkerTypes.Count)
+            {
+                // Filter all 
+                points = new Points(); // empty
+            }
+            else if (jsonReceive.TypeFilter.Count > 0)
             {
                 // Filter data by typeFilter value
                 // Make new obj, don't overwrite obj data
@@ -144,7 +154,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             }
 
             var arr = s.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-            if (arr.Length != 10)
+            if (arr.Length != 8)
             {
                 invalid.EMsg = "params length incorrect";
                 return invalid; 
@@ -157,15 +167,14 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
                 var nelon = arr[i++].Replace("_", ".").ToDouble();
                 var swlat = arr[i++].Replace("_", ".").ToDouble();
                 var swlon = arr[i++].Replace("_", ".").ToDouble();
-                var zoomlevel = int.Parse(arr[i++]);
-                var gridx = int.Parse(arr[i++]);
-                var gridy = int.Parse(arr[i++]);
+                var zoomlevel = int.Parse(arr[i++]);                
                 var zoomlevelClusterStop = int.Parse(arr[i++]);
                 var filter = arr[i++];
                 var sendid = int.Parse(arr[i++]);
 
                 // values are validated there
-                return Markers(nelat, nelon, swlat, swlon, zoomlevel, gridx, gridy, zoomlevelClusterStop, filter, sendid);
+                return Markers(nelat, nelon, swlat, swlon, 
+                    zoomlevel, zoomlevelClusterStop, filter, sendid);
             }
             catch (Exception ex)
             {
@@ -223,11 +232,10 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             return reply;
         }
 
-
-        // Preparing for K nearest neighbor
-        // example of usage
-        // /AreaGMC/gmc.svc/Knn/8_5;10_25;3
-        // /AreaGMC/gmc.svc/Knn/8_5;10_25;3;1
+        
+        // Example of usage:
+        // Get 3 nearest ->         /AreaGMC/gmc.svc/Knn/8_5;10_25;3
+        // Get 3 nearest type 1 ->  /AreaGMC/gmc.svc/Knn/8_5;10_25;3;1
         public JsonKnnReply Knn(string s)
         {
             var sw = new Stopwatch();

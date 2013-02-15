@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using System.Web;
 using System.Web.Routing;
-using Kunukn.GooglemapsClustering.Clustering.Data;
+using Kunukn.GooglemapsClustering.Clustering.Utility;
 using Kunukn.GooglemapsClustering.Web.AreaGMC.Code.Contract;
 using Kunukn.GooglemapsClustering.Web.AreaGMC.Code.Logging;
 
@@ -18,12 +18,11 @@ namespace Kunukn.GooglemapsClustering.Web
         void Application_Start(object sender, EventArgs e)
         {
             _log = new NoLog(); // Log4Net();
-           //_log.Info(MethodBase.GetCurrentMethod(), "Init");
+           _log.Info(MethodBase.GetCurrentMethod(), "Init");
 
-            // Database load simulation            
-            MemoryDatabase.SetFilepath(HttpContext.Current.Server.MapPath("~") + @"AreaGMC\Files\Points.csv");
-            MemoryDatabase.GetPoints(); // preload points
-
+            // Init Google Maps Clustering
+            GmcInit.Init(HttpContext.Current.Server.MapPath("~") + @"AreaGMC\Files\Points.csv");
+            
             RegisterRoutes();
         }
 

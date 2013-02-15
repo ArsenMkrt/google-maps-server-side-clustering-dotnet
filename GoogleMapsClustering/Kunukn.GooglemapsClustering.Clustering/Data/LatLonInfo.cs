@@ -14,5 +14,8 @@
         public const double MaxWorldLength = 360;
 
         public const double AngleConvert = 180;
+
+        public const int Lat = 0;
+        public const int Lon = 1;
     }
 }

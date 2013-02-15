@@ -28,7 +28,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
         private static IPoints PointsBackup { get; set; }
         public static object Data { get; private set; } // data container
         private static string FilePath { get; set; }
-        private static readonly Object _lock = new Object();
+        private static readonly Object Lock = new Object();
 
         static MemoryDatabase()
         {
@@ -50,7 +50,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
 
         private static IPoints LoadPoints()
         {
-            lock (_lock)
+            lock (Lock)
             {
                 if (_flag)
                 {

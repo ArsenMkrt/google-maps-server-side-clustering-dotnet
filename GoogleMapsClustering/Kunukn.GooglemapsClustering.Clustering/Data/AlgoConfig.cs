@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Data;
@@ -16,15 +17,22 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             var global = GetSectionGlobal();
             string s;
 
+            Gridx = int.Parse(local[s = "Gridx"] ?? global[s] ?? Throw(s));
+            Gridy = int.Parse(local[s = "Gridy"] ?? global[s] ?? Throw(s));
             DoShowGridLinesInGoogleMap = bool.Parse(local[s = "DoShowGridLinesInGoogleMap"] ?? global[s] ?? Throw(s) );
-            OuterGridExtend = int.Parse(local[s = "OuterGridExtend"] ?? global[s] ?? Throw(s));
+            OuterGridExtend = int.Parse(local[s = "OuterGridExtend"] ?? global[s] ?? Throw(s));                        
             DoUpdateAllCentroidsToNearestContainingPoint = bool.Parse(local[s = "DoUpdateAllCentroidsToNearestContainingPoint"] ?? global[s] ?? Throw(s));
             DoMergeGridIfCentroidsAreCloseToEachOther = bool.Parse(local[s = "DoMergeGridIfCentroidsAreCloseToEachOther"] ?? global[s] ?? Throw(s));
             MergeWithin = int.Parse(local[s = "MergeWithin"] ?? global[s] ?? Throw(s));
             MinClusterSize = int.Parse(local[s = "MinClusterSize"] ?? global[s] ?? Throw(s));
             MaxMarkersReturned = int.Parse(local[s = "MaxMarkersReturned"] ?? global[s] ?? Throw(s));
             AlwaysClusteringEnabledWhenZoomLevelLess = int.Parse(local[s = "AlwaysClusteringEnabledWhenZoomLevelLess"] ?? global[s] ?? Throw(s));
-            Environment = local[s = "Environment"] ?? global[s] ?? Throw(s);            
+            Environment = local[s = "Environment"] ?? global[s] ?? Throw(s);
+            PreClustered = bool.Parse(local[s = "PreClustered"] ?? global[s] ?? Throw(s));
+            
+            var types = (local[s = "MarkerTypes"] ?? global[s] ?? Throw(s)).Split(new []{";"},StringSplitOptions.RemoveEmptyEntries);
+            MarkerTypes = new HashSet<int>();
+            foreach (var type in types) MarkerTypes.Add(int.Parse(type));                        
         }
 
         // Use debug data        
@@ -51,9 +59,20 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
         // to disable this effect set the value to -1
         public static readonly int AlwaysClusteringEnabledWhenZoomLevelLess;
 
-        // Not used
+        // Pre cluster on app startup, NOT IMPLEMENTED YET
+        public static readonly bool PreClustered;
+
+        // Grid array
+        public static readonly int Gridx;
+        public static readonly int Gridy;
+
+        // Array of existing marker types
+        public static readonly HashSet<int> MarkerTypes;
+                
+        // 
         public static readonly string Environment;        
 
+        // 
         public static NameValueCollection GetSectionLocal()
         {
             return (NameValueCollection)ConfigurationManager.GetSection(SectionLocal);
