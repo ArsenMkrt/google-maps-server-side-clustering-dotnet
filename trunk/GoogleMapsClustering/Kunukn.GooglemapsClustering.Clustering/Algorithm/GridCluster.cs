@@ -13,17 +13,17 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
     public class GridCluster : ClusterAlgorithmBase
     {
         // Absolut position
-        protected readonly Boundary _grid = new Boundary();
+        protected readonly Boundary Grid = new Boundary();
 
         // Bucket placement calc, grid cluster algo
-        protected readonly double _deltaX;
-        protected readonly double _deltaY;
+        protected readonly double DeltaX;
+        protected readonly double DeltaY;
 
         public static Boundary GetBoundaryExtended(JsonGetMarkersReceive jsonReceive)
         {
-            double[] deltas = GetDelta(jsonReceive);
-            double deltaX = deltas[0];
-            double deltaY = deltas[1];
+            var deltas = GetDelta(jsonReceive);
+            var deltaX = deltas[0];
+            var deltaY = deltas[1];
 
             // Grid with extended outer grid-area non-visible            
             var a = MathTool.FloorLatLon(jsonReceive.Viewport.Minx, deltaX) - deltaX * AlgoConfig.OuterGridExtend;
@@ -52,14 +52,14 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
             const int xZoomLevel1 = 480;
             // Absolute base value of latitude distance
             const int yZoomLevel1 = 240;
-                       
-            // Relative values, used for adjusting grid size
-            var gridScaleX = jsonReceive.Gridx;
-            var gridScaleY = jsonReceive.Gridy;
 
-            double x = MathTool.Half(xZoomLevel1, jsonReceive.Zoomlevel - 1) / gridScaleX;
-            double y = MathTool.Half(yZoomLevel1, jsonReceive.Zoomlevel - 1) / gridScaleY;
-            return new [] { x, y };
+            // Relative values, used for adjusting grid size
+            var gridScaleX = AlgoConfig.Gridx;
+            var gridScaleY = AlgoConfig.Gridy;
+
+            var x = MathTool.Half(xZoomLevel1, jsonReceive.Zoomlevel - 1) / gridScaleX;
+            var y = MathTool.Half(yZoomLevel1, jsonReceive.Zoomlevel - 1) / gridScaleY;
+            return new double[] { x, y };
         }
 
         public List<Line> Lines { get; private set; }
@@ -68,74 +68,87 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
             : base(dataset)
         {
             // Important, set _delta and _grid values in constructor as first step
-            double[] deltas = GetDelta(jsonReceive);
-            _deltaX = deltas[0];
-            _deltaY = deltas[1];
-            _grid = GetBoundaryExtended(jsonReceive);
+            var deltas = GetDelta(jsonReceive);
+            DeltaX = deltas[0];
+            DeltaY = deltas[1];
+            Grid = GetBoundaryExtended(jsonReceive);
             Lines = new List<Line>();
 
-            if (AlgoConfig.DoShowGridLinesInGoogleMap) MakeLines();
+            if (AlgoConfig.DoShowGridLinesInGoogleMap) MakeLines(jsonReceive);
         }
-        
-        void MakeLines()
+
+        void MakeLines(JsonGetMarkersReceive jsonReceive)
         {
-            // Note, Google Maps does not seem to draw every lines if zoomed far out using this approach
-            // a fix could be to split up the lines based on the coordinate values
+            // Make the red lines data to be drawn in Google map
             
-            var p2Lines = new List<Rectangle>();
+            var temp = new List<Rectangle>();
 
             const int borderLinesAdding = 1;
-            int linesStepsX = (int)(Math.Round(_grid.AbsX / _deltaX) + borderLinesAdding);
-            int linesStepsY = (int)(Math.Round(_grid.AbsY / _deltaY) + borderLinesAdding);
+            var linesStepsX = (int)(Math.Round(Grid.AbsX / DeltaX) + borderLinesAdding);
+            var linesStepsY = (int)(Math.Round(Grid.AbsY / DeltaY) + borderLinesAdding);
 
-            var b = new Boundary(_grid);
-            b.Miny = MathTool.ConstrainLatitude(b.Miny, 5.5); // Google Maps didn't draw lines near lat -90 or 90 last time I checked
-            b.Maxy = MathTool.ConstrainLatitude(b.Maxy, 5.5);
+            var b = new Boundary(Grid);
+            const double restrictLat = 5.5;
+            b.Miny = MathTool.ConstrainLatitude(b.Miny, restrictLat); // Make sure it is visible on screen, restrict by some value
+            b.Maxy = MathTool.ConstrainLatitude(b.Maxy, restrictLat);
 
-            // make the red lines data to be drawn in Google map
-            // vertical lines
-            for (int i = 0; i < linesStepsX; i++)
+            // Vertical lines
+            for (var i = 0; i < linesStepsX; i++)
             {
-                var xx = b.Minx + i * _deltaX;
-
-                double x = xx;
-                double x2 = xx;
-                double y = b.Miny;
-                double y2 = b.Maxy;
-                p2Lines.Add(new Rectangle { Minx = x, Miny = y, Maxx = x2, Maxy = y2 });
-            }
-
-            // horizontal lines            
-            for (int i = 0; i < linesStepsY; i++)
-            {
-                var yy = b.Miny + i * _deltaY;
-                if (MathTool.IsLowerThanLatMin(yy) || MathTool.IsGreaterThanLatMax(yy))
+                var xx  = b.Minx + i * DeltaX;
+                
+                // Draw region
+                if (jsonReceive.Zoomlevel > 3)
                 {
-                    continue;
-                }                    
+                    temp.Add(new Rectangle { Minx = xx, Miny = b.Miny, Maxx = xx, Maxy = b.Maxy });
+                }
+                // World wrap issue when same latlon area visible multiple times
+                // Make sure line is drawn from left to right on screen
+                else
+                {
+                    temp.Add(new Rectangle { Minx = xx, Miny = LatLonInfo.MinLatValue + restrictLat, Maxx = xx, Maxy = 0 });
+                    temp.Add(new Rectangle { Minx = xx, Miny = 0, Maxx = xx, Maxy = LatLonInfo.MaxLatValue-restrictLat });
+                }
 
-                double y = yy;
-                double y2 = yy;
-                double x = b.Minx;
-                double x2 = b.Maxx;
-                p2Lines.Add(new Rectangle { Minx = x, Miny = y, Maxx = x2, Maxy = y2 });
             }
 
-            foreach (var p2 in p2Lines)
+            // Horizontal lines            
+            for (var i = 0; i < linesStepsY; i++)
             {
-                string x = (p2.Minx).NormalizeLongitude().DoubleToString();                                        
-                string x2 = (p2.Maxx).NormalizeLongitude().DoubleToString();
-                string y = (p2.Miny).NormalizeLatitude().DoubleToString();
-                string y2 = (p2.Maxy).NormalizeLatitude().DoubleToString();
+                var yy = b.Miny + i * DeltaY;
+                                
+                // Draw region
+                if (jsonReceive.Zoomlevel > 3)
+                {
+                    // Don't draw lines outsize the world
+                    if (MathTool.IsLowerThanLatMin(yy) || MathTool.IsGreaterThanLatMax(yy)) continue;
+
+                    temp.Add(new Rectangle { Minx = b.Minx, Miny = yy, Maxx = b.Maxx, Maxy = yy });
+                }                
+                // World wrap issue when same latlon area visible multiple times
+                // Make sure line is drawn from left to right on screen
+                else
+                {
+                    temp.Add(new Rectangle { Minx = LatLonInfo.MinLonValue, Miny = yy, Maxx = 0, Maxy = yy });
+                    temp.Add(new Rectangle { Minx = 0, Miny = yy, Maxx = LatLonInfo.MaxLonValue, Maxy = yy });
+                }
+            }
+
+            // Normalize the lines and add as string
+            foreach (var line in temp)
+            {
+                var x = (line.Minx).NormalizeLongitude().DoubleToString();
+                var x2 = (line.Maxx).NormalizeLongitude().DoubleToString();
+                var y = (line.Miny).NormalizeLatitude().DoubleToString();
+                var y2 = (line.Maxy).NormalizeLatitude().DoubleToString();                
                 Lines.Add(new Line { X = x, Y = y, X2 = x2, Y2 = y2 });
             }
         }
+       
 
         public override IPoints GetCluster(ClusterInfo clusterInfo)
         {
-            var r = RunClusterAlgo(clusterInfo);
-
-            return r;
+            return RunClusterAlgo(clusterInfo);
         }
 
 
@@ -146,16 +159,14 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
         }
 
         // Average running time (m*n)
-        // worst case might actually be ~ O(n^2) if most of centroids are merged, due to centroid re-calculation, very very unlikely
+        // worst case might actually be 
+        // ~ O(n^2) if most of centroids are merged, due to centroid re-calculation, very very unlikely
         void MergeClustersGrid()
         {
             foreach (var key in BucketsLookup.Keys)
             {
                 var bucket = BucketsLookup[key];
-                if (bucket.IsUsed == false)
-                {
-                    continue;
-                }                    
+                if (!bucket.IsUsed) continue; // skip not used
 
                 var x = bucket.Idx;
                 var y = bucket.Idy;
@@ -176,22 +187,22 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
         }
         void MergeClustersGridHelper(string currentKey, IEnumerable<string> neighborKeys)
         {
-            double minDistX = _deltaX / AlgoConfig.MergeWithin;
-            double minDistY = _deltaY / AlgoConfig.MergeWithin;
+            double minDistX = DeltaX / AlgoConfig.MergeWithin;
+            double minDistY = DeltaY / AlgoConfig.MergeWithin;
             // If clusters in grid are too close to each other, merge them
             double withinDist = Math.Max(minDistX, minDistY);
 
             foreach (var neighborKey in neighborKeys)
             {
                 if (!BucketsLookup.ContainsKey(neighborKey)) continue;
-                                  
+
                 var neighbor = BucketsLookup[neighborKey];
                 if (neighbor.IsUsed == false) continue;
-                                    
+
                 var current = BucketsLookup[currentKey];
                 var dist = MathTool.Distance(current.Centroid, neighbor.Centroid);
-                if (dist > withinDist) continue;                
-                    
+                if (dist > withinDist) continue;
+
                 current.Points.Data.AddRange(neighbor.Points.Data);//O(n)
 
                 // recalc centroid
@@ -200,7 +211,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
                 neighbor.IsUsed = false; // merged, then not used anymore
                 neighbor.Points.Data.Clear(); // clear mem
             }
-        }        
+        }
 
         // To work properly it requires the p is already normalized
         public static int[] GetPointMappedIds(IP p, Boundary grid, double deltax, double deltay)
@@ -228,28 +239,28 @@ longitude        150   170  180  -170   -150
 here we want idx 8, 9, -10 and -9 be equal to each other, we set them to idx=8
 then the longitudes from 170 to -170 will be clustered together
              */
-            
+
             var overlapMapMinX = (int)(LatLonInfo.MinLonValue / deltax) - 1;
             var overlapMapMaxX = (int)(LatLonInfo.MaxLonValue / deltax);
 
             // The deltaX = 20 example scenario, then set the value 9 to 8 and -10 to -9            
 
             // Similar to if (LatLonInfo.MaxLonValue % deltax == 0) without floating presicion issue
-            if (Math.Abs(LatLonInfo.MaxLonValue % deltax - 0) < Numbers.Epsilon)            
+            if (Math.Abs(LatLonInfo.MaxLonValue % deltax - 0) < Numbers.Epsilon)
             {
                 overlapMapMaxX--;
                 overlapMapMinX++;
             }
-            
+
             var idxx = (int)(p.X / deltax);
             if (p.X < 0) idxx--;
-            
+
             if (Math.Abs(LatLonInfo.MaxLonValue % p.X - 0) < Numbers.Epsilon)
             {
                 if (p.X < 0) idxx++;
                 else idxx--;
             }
-                                    
+
             if (idxx == overlapMapMinX) idxx = overlapMapMaxX;
 
             idx = idxx;
@@ -257,30 +268,30 @@ then the longitudes from 170 to -170 will be clustered together
             // Latitude never wraps around with Google Maps, ignore 90, -90 wrap-around for latitude
             idy = (int)(relativeY / deltay);
 
-            return new []{idx, idy};
+            return new[] { idx, idy };
         }
 
 
         public IPoints RunClusterAlgo(ClusterInfo clusterInfo)
         {
             // Skip points outside the grid
-            IPoints filtered = clusterInfo.IsFilterData ? FilterDataset(Dataset, _grid) : Dataset;
+            IPoints filtered = clusterInfo.IsFilterData ? FilterDataset(Dataset, Grid) : Dataset;
 
             // Put points in buckets
             foreach (var p in filtered.Data)
             {
-                int[] idxy = GetPointMappedIds(p, _grid, _deltaX, _deltaY);
-                int idx = idxy[0];
-                int idy = idxy[1];
+                var idxy = GetPointMappedIds(p, Grid, DeltaX, DeltaY);
+                var idx = idxy[0];
+                var idy = idxy[1];
 
                 // Bucket id
-                string id = GetId(idx, idy);
+                var id = GetId(idx, idy);
 
                 // Bucket exists, add point
                 if (BucketsLookup.ContainsKey(id))
                 {
-                    BucketsLookup[id].Points.Add(p);   
-                }                    
+                    BucketsLookup[id].Points.Add(p);
+                }
                 // New bucket, create and add point
                 else
                 {
@@ -295,9 +306,9 @@ then the longitudes from 170 to -170 will be clustered together
 
             // Merge if gridpoint is to close
             if (AlgoConfig.DoMergeGridIfCentroidsAreCloseToEachOther) MergeClustersGrid();
-            
+
             if (AlgoConfig.DoUpdateAllCentroidsToNearestContainingPoint) UpdateAllCentroidsToNearestContainingPoint();
-                            
+
             // Check again
             // Merge if gridpoint is to close
             if (AlgoConfig.DoMergeGridIfCentroidsAreCloseToEachOther
@@ -308,7 +319,7 @@ then the longitudes from 170 to -170 will be clustered together
                 UpdateAllCentroidsToNearestContainingPoint();
             }
 
-            return GetClusterResult(_grid);
+            return GetClusterResult(Grid);
         }
     }
 }

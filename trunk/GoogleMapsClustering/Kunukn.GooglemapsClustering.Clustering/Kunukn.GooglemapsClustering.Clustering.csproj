@@ -60,6 +60,7 @@
     <Compile Include="Data\AlgoConfig.cs" />
     <Compile Include="Data\Json\JsonKnnReply.cs" />
     <Compile Include="Data\Json\JsonInfoReply.cs" />
+    <Compile Include="Utility\GmcInit.cs" />
     <Compile Include="Utility\Dataset.cs" />
     <Compile Include="Utility\FileUtil.cs" />
     <Compile Include="Utility\ParseValue.cs" />

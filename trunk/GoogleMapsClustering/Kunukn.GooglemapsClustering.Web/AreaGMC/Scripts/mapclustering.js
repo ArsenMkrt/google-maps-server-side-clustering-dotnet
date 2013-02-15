@@ -78,8 +78,6 @@ var gmcKN = {
             google.maps.event.trigger(gmcKN.map, 'zoom_changed'); //trigger first time event
         },
         settings: {
-            gridx: 6,
-            gridy: 5,
             mapCenterLat: 35,
             mapCenterLon: 10,
             zoomLevel: 2,
@@ -208,8 +206,6 @@ var gmcKN = {
                     '","swlat":"' + mapData.swLat +
                     '","swlon":"' + mapData.swLon +
                     '","zoomlevel":"' + mapData.zoomLevel +
-                    '","gridx":"' + gmcKN.mymap.settings.gridx +
-                    '","gridy":"' + gmcKN.mymap.settings.gridy +
                     '","zoomlevelClusterStop":"' + gmcKN.mymap.settings.zoomlevelClusterStop +
                     '","filter":"' + gmcKN.getFilterValues() +
                     '","sendid":"' + gmcKN.async.lastSendGetMarkers + '"}';
@@ -220,8 +216,6 @@ var gmcKN = {
                     gmcKN.dEscape(mapData.swLat) + ";" +
                     gmcKN.dEscape(mapData.swLon) + ";" +
                     mapData.zoomLevel + ";" +
-                    gmcKN.mymap.settings.gridx + ";" +
-                    gmcKN.mymap.settings.gridy + ";" +
                     gmcKN.mymap.settings.zoomlevelClusterStop + ";" +
                     gmcKN.getFilterValues() + ";" +
                     gmcKN.async.lastSendGetMarkers;
@@ -292,89 +286,6 @@ var gmcKN = {
                                 gmcKN.mymap.events.polys.push(polyline);
                             });
                         }
-
-
-//                        var markersCacheIncome = []; // points to be drawn, new points received
-//                        var markersCacheOnMap = [];  // current drawn points
-
-//                        // points to be displayed, diff of markersCacheIncome and markersCacheOnMap
-//                        var markersDrawTodo = [];
-
-//                        // store new points to be drawn                  
-//                        for (i in data.Markers) {
-//                            if (data.Markers.hasOwnProperty(i)) {
-//                                var p = data.Markers[i];
-//                                var key = gmcKN.getKey(p); //key                            
-//                                markersCacheIncome[key] = p;
-//                            }
-//                        }
-//                        // store current existing valid markers
-//                        for (var i in gmcKN.markers) {
-//                            if (gmcKN.markers.hasOwnProperty(i)) {
-//                                var m = gmcKN.markers[i];
-//                                var key = m.get("key"); //key  
-//                                if (key !== 0) {//0 is used as has been deleted
-//                                    markersCacheOnMap[key] = 1;
-//                                }
-
-//                                if (key === undefined) {
-//                                    gmcKN.log("error in code: key"); //catch error in code
-//                                }
-//                            }
-//                        }
-
-//                        // add new markers from event not already drawn
-//                        for (var i in data.Markers) {
-//                            if (data.Markers.hasOwnProperty(i)) {
-//                                var p = data.Markers[i];
-//                                var key = gmcKN.getKey(p); //key                            
-//                                if (markersCacheOnMap[key] === undefined) {
-//                                    if (markersCacheIncome[key] === undefined) {
-//                                        gmcKN.log("error in code: key2"); //catch error in code
-//                                    }
-//                                    var newmarker = markersCacheIncome[key];
-//                                    markersDrawTodo.push(newmarker);
-//                                }
-//                            }
-//                        }
-
-//                        // remove current markers which should not be displayed
-//                        for (i in gmcKN.markers) {
-//                            if (gmcKN.markers.hasOwnProperty(i)) {
-//                                var m = gmcKN.markers[i];
-//                                var key = m.get("key"); //key                            
-//                                if (key !== 0 && markersCacheIncome[key] === undefined) {
-//                                    $(".countinfo_" + key).remove();
-//                                    gmcKN.markers[i].set("key", 0); // mark as deleted
-//                                    gmcKN.markers[i].setMap(null); // this removes the marker from the map
-//                                }
-//                            }
-//                        }
-
-//                        // trim markers array size
-//                        var temp = [];
-//                        for (i in gmcKN.markers) {
-//                            if (gmcKN.markers.hasOwnProperty(i)) {
-//                                var key = gmcKN.markers[i].get("key"); //key                            
-//                                if (key !== 0) {
-//                                    var tempItem = gmcKN.markers[i];
-//                                    temp.push(tempItem);
-//                                }
-//                            }
-//                        }
-
-//                        gmcKN.markers.length = 0;
-//                        for (i in temp) {
-//                            if (temp.hasOwnProperty(i)) {
-//                                var tempItem = temp[i];
-//                                gmcKN.markers.push(tempItem);
-//                            }
-//                        }
-
-//                        // clear array
-//                        markersCacheIncome.length = 0;
-//                        markersCacheOnMap.length = 0;
-//                        temp.length = 0;
 
                         var markersDrawTodo = gmcKN.dynamicUpdateMarkers(data.Markers, gmcKN.markers, gmcKN.getKey, true);
 

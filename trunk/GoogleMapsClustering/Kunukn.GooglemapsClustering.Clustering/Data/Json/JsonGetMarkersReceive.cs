@@ -8,10 +8,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data.Json
     /// </summary>
     public class JsonGetMarkersReceive
     {
-        // Don't trust user input, data range is restricted if user abuse or hacks client side
-        private const int ZoomLevelMax = 30;
-        private const int GridMax = 20;
-                
+        // Data range are restricted if user abuse client side
+        private const int ZoomLevelMax = 30;                        
         public int Sendid { get; private set; }
         public Boundary Viewport { get; private set; }
 
@@ -56,57 +54,15 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data.Json
                 }
             }
         }
-
-        private int _gridx;
-        public int Gridx
-        {
-            get
-            {
-                return _gridx;
-            }
-            private set {
-                _gridx = value;
-                if (_gridx <= 0)
-                {
-                    _gridx = 1;
-                }
-                else if (_gridx > GridMax)
-                {
-                    _gridx = GridMax;
-                }
-            }
-        }
-        private int _gridy;
-        public int Gridy
-        {
-            get
-            {
-                return _gridy;
-            }
-            private set
-            {
-                _gridy = value;
-                if (_gridy <= 0)
-                {
-                    _gridy = 1;
-                }
-                else if (_gridy > GridMax)
-                {
-                    _gridy = GridMax;
-                }
-            }
-        }
-
+   
         public bool IsClusteringEnabled { get; private set; }
         public bool IsDebugLinesEnabled { get; private set; }
         public HashSet<int> TypeFilter { get; private set; }
 
-        public JsonGetMarkersReceive(double nelat, double nelon, double swlat, double swlon, int zoomlevel, int gridx, int gridy, int zoomlevelClusterStop, string filter, int sendid)
+        public JsonGetMarkersReceive(double nelat, double nelon, double swlat, double swlon, int zoomlevel,int zoomlevelClusterStop, string filter, int sendid)
         {            
             Zoomlevel = zoomlevel;
-            ZoomlevelClusterStop = zoomlevelClusterStop;
-            Gridx = gridx;
-            Gridy = gridy;
+            ZoomlevelClusterStop = zoomlevelClusterStop;            
             Sendid = sendid;
 
             Viewport = new Boundary { Minx = swlon, Maxx = nelon, Miny = swlat, Maxy = nelat };

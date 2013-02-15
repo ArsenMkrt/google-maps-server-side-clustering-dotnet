@@ -190,15 +190,6 @@ A. Google knows the answer. Try this link https://developers.google.com/maps/faq
 
 ---------------------------------
 
-*Q. Why do the red gridlines look wierd when zoomed far out?*
-
-A. The data for drawing the gridlines are assumed correct last time I checked. The Google API 
-for drawing red linens can't draw all longitude value scenarious (I Assume), 
-e.g. from 60 to -100. I didn't want to spend more time on the value scenarious to make it work 
-by splitting draw functions to something like e.g. 60 to 180 and then -180 to -100
-
----------------------------------
-
 *Q. What is the complexity of time and space?*
 
 A. Time complexity is on average(m*n) and space complexity is O(m*n)
@@ -208,6 +199,14 @@ You are welcome to analyse it yourself :) I use hashset and hashmap to minimize 
 Time complexity is ~ O(n^2) on worst case but extremely unlikely, 
 happens if most centroids are merged with neighbor-centroids 
 (not a likely scenario for common dataset, where data only exists at grid borderlines).
+
+---------------------------------
+
+*Q. Why do the red gridlines look wierd when zoomed far out?*
+
+A. Because the world wraps and multiple areas are displayed for same latlon values.
+Some more logic can be applied to draw the grid lines properly for those conditions but has been left out.
+This happens only on zoom level below 3.
 
 ---------------------------------
 
