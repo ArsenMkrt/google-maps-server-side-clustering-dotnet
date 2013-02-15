@@ -54,9 +54,6 @@ The point id and type id data in this example are dummy data.
 The longitude and latitude are parsed to double values.
 point id and type id are parsed as int values.
 
-There is also the possible to load from a serialized file programmatically but no example file is included.
-Look in the code {{{Kunukn.GooglemapsClustering.Clustering.Utility.Dataset.LoadDatasetFromDatabase()}}}
-
 ---------------------------------
 
 *Q. How do I set the initial zoom-level and position?*
