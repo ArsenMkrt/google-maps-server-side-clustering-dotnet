@@ -34,8 +34,8 @@ then you would have to rely on pre-clustering for time complexity improvement.
 
 *Q. How do I control the grid size?*
 
-A. In the file mapclustering.js
-specific values are set for gridx and gridy in the settings.
+A. In the file {{{GmcGlobalKeySettings.config}}}
+Gridx and Gridy
 
 ---------------------------------
 
