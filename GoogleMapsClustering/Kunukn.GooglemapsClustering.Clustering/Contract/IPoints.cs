@@ -7,10 +7,10 @@ namespace Kunukn.GooglemapsClustering.Clustering.Contract
     public interface IPoints : ISerializable
     {
         int Count { get ; } 
-        List<IP> Data { get; set; }
+        List<IP> Data { get; set; } // uses AddRange
         IP this[int i] { get; set; }
         void Add(IP p);
-        List<IP> ToList();
+        IList<IP> ToList();
         void SetRange(IPoints points);
     }
 }

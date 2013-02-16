@@ -10,12 +10,20 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
     /// Point class, overwrite it, modify it, extend it as you like
     /// </summary>
     [Serializable]
-    public class P : PBase, IP, SingleDetectLibrary.Code.Contract.IP, ISerializable
+    public class P : PBase,                         // Gmc 
+        IP, SingleDetectLibrary.Code.Contract.IP,   // K-nearest neighbors        
+        ISerializable                               // Json data
     {
         public P()
         {
             GridIndex = new GridIndex();
         }
+        public P(double x, double y) : this()
+        {
+            X = x;
+            Y = y;
+        }
+
 
         public virtual IP Normalize()
         {
@@ -39,6 +47,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
         public virtual GridIndex GridIndex { get; set; }
 
 
+        // Used for e.g. serialization to file
         public P(SerializationInfo info, StreamingContext ctxt)
         {
             this.C = 1;
@@ -58,5 +67,13 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             info.AddValue("C", this.C);
         }
 
+        public int CompareTo(P other, int dimension)
+        {
+            if (dimension == 0)
+                return this.X.CompareTo(other.X);
+            if (dimension == 1)
+                return this.Y.CompareTo(other.Y);
+            throw new ArgumentException("Invalid dimension.");
+        }
     }
 }

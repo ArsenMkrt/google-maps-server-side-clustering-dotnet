@@ -24,13 +24,13 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
         private double _lat;
         public virtual double Lat
         {
-            get { return ParseValue.Round(_lat); }
+            get { return _lat.Round(); }
             set { _lat = value; }
         }
         private double _lon;
         public virtual double Lon
         {
-            get { return ParseValue.Round(_lon); }
+            get { return _lon.Round(); }
             set { _lon = value; }
         }
 

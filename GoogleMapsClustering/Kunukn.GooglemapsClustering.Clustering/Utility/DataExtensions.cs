@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using Kunukn.GooglemapsClustering.Clustering.Contract;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 
@@ -7,6 +9,9 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
 {
     public static class DataExtensions
     {
+        static readonly CultureInfo CultureEnUs = new CultureInfo("en-US");
+        const string S = "G";
+
         const double Pi2 = Math.PI * 2;
         public const int RoundConvertError = 5;
 
@@ -14,7 +19,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
         {
             return Math.Round(d, Numbers.Round);
         }
-
+        
         public static void Normalize(this IPoints list)
         {
             foreach (var p in list.Data) p.Normalize();
@@ -215,6 +220,27 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
             }
 
             return normalized;
+        }
+
+        public static double ToDouble(this string s)
+        {
+            return double.Parse(s, NumberStyles.Float, NumberFormatInfo.InvariantInfo);
+        }
+
+        public static int ToInt(this string s)
+        {
+            return int.Parse(s);
+        }
+
+        public static string DoubleToString(this double d)
+        {
+            double rounded = Math.Round(d, Numbers.Round);
+            return rounded.ToString(S, CultureEnUs);
+        }       
+
+        public static string ListToString<T>(this List<T> list  )
+        {
+            return list.Aggregate("", (a, b) => a + "[" + b + "]\n");            
         }
     }
 }

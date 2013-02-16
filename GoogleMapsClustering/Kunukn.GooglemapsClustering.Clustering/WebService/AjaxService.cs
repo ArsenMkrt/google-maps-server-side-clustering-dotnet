@@ -72,7 +72,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
 
             // Create new instance for every ajax request with input all points and json data
             var clusterAlgo = new GridCluster(points, jsonReceive); // create polylines
-
+                     
             // Clustering
             if (clusteringEnabled && jsonReceive.Zoomlevel < jsonReceive.ZoomlevelClusterStop)
             {

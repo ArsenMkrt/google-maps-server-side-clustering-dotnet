@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
+
 using Kunukn.GooglemapsClustering.Clustering.Algorithm;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 using Kunukn.GooglemapsClustering.Clustering.Utility;
@@ -31,8 +32,8 @@ namespace Kunukn.GooglemapsClustering.TestConsole
     /// </summary>
     class Program
     {
-        private static readonly Action<object> WL = Console.WriteLine;
-
+        private static readonly Action<object> CW = Console.WriteLine;
+                
         static readonly Random Rand = new Random();
         public static DateTime Starttime;
         static void Main(string[] args)
@@ -41,8 +42,8 @@ namespace Kunukn.GooglemapsClustering.TestConsole
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-
-            //Temp();
+            
+            Temp();            
             //Knn();
             //LatLonParse();
             //PMapTest();
@@ -61,16 +62,20 @@ namespace Kunukn.GooglemapsClustering.TestConsole
 
             stopwatch.Stop();
 
-            WL(string.Format("Elapsed: {0}\n", stopwatch.Elapsed.ToString()));
-            WL("\npress a key to exit ...");
+            CWF("Elapsed: {0}\n", stopwatch.Elapsed.ToString());
+            CW("\npress a key to exit ...");
             Console.ReadKey();
         }
 
+
+       
+
         static void Temp()
         {
-          
+           
         }
 
+      
         static void Knn()
         {
             IPoints points = Dataset.LoadDataset(@"c:\temp\points.csv");
@@ -99,11 +104,11 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             var duration = algo.UpdateKnn(origin, k);
 
             // Print result
-            WL(string.Format("{0} msec. {1}:", algo.Strategy.Name, duration));
-            WL("K Nearest Neighbors:");
-            WL(string.Format("Origin: {0}", origin));
-            WL(string.Format("Distance sum: {0}", algo.Knn.GetDistanceSum()));
-            algo.Knn.NNs.OrderBy(i => i.Distance).ToList().ForEach(WL);
+            CW(string.Format("{0} msec. {1}:", algo.Strategy.Name, duration));
+            CW("K Nearest Neighbors:");
+            CW(string.Format("Origin: {0}", origin));
+            CW(string.Format("Distance sum: {0}", algo.Knn.GetDistanceSum()));
+            algo.Knn.NNs.OrderBy(i => i.Distance).ToList().ForEach(CW);
 
 
             // Update strategy
@@ -113,10 +118,10 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             duration = algo.UpdateKnn(origin, k);
 
             // Print result
-            WL(string.Format("\n{0} msec. {1}:", algo.Strategy.Name, duration));
-            WL("K Nearest Neighbors:");
-            WL(string.Format("Distance sum: {0}", algo.Knn.GetDistanceSum()));
-            algo.Knn.NNs.OrderBy(i => i.Distance).ToList().ForEach(WL);
+            CW(string.Format("\n{0} msec. {1}:", algo.Strategy.Name, duration));
+            CW("K Nearest Neighbors:");
+            CW(string.Format("Distance sum: {0}", algo.Knn.GetDistanceSum()));
+            algo.Knn.NNs.OrderBy(i => i.Distance).ToList().ForEach(CW);
         }
 
         // lat lon points data
@@ -193,19 +198,19 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             const int dy = 20;
 
             var xy = GridCluster.GetPointMappedIds(new P { X = 175, Y = 35 }, b, dx, dy);
-            Console.WriteLine("x: {0}   y: {1}", xy[0], xy[1]);
+            CWF("x: {0}   y: {1}", xy[0], xy[1]);
 
             xy = GridCluster.GetPointMappedIds(new P { X = 175, Y = 35 }, b, dx, dy);
-            Console.WriteLine("x: {0}   y: {1}", xy[0], xy[1]);
+            CWF("x: {0}   y: {1}", xy[0], xy[1]);
 
             xy = GridCluster.GetPointMappedIds(new P { X = 180, Y = 35 }, b, dx, dy);
-            Console.WriteLine("x: {0}   y: {1}", xy[0], xy[1]);
+            CWF("x: {0}   y: {1}", xy[0], xy[1]);
 
             xy = GridCluster.GetPointMappedIds((new P { X = 181, Y = 35 }).Normalize(), b, dx, dy);
-            Console.WriteLine("x: {0}   y: {1}", xy[0], xy[1]);
+            CWF("x: {0}   y: {1}", xy[0], xy[1]);
 
             xy = GridCluster.GetPointMappedIds((new P { X = -181, Y = 35 }).Normalize(), b, dx, dy);
-            Console.WriteLine("x: {0}   y: {1}", xy[0], xy[1]);
+            CWF("x: {0}   y: {1}", xy[0], xy[1]);
         }
 
         static IPoints GenerateRandomDataset(int n, Boundary b)
@@ -258,7 +263,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
                 throw new ApplicationException("Path is invalid: " + path2);
             }
 
-            IPoints all = Dataset.LoadDataset(path1);
+            var all = Dataset.LoadDataset(path1);
             var points2 = Dataset.LoadDataset(path2);
             all.Data.AddRange(points2.Data);
             
@@ -269,7 +274,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
 
         static void ReworkDataset(string name)
         {
-            string execfolder = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
+            var execfolder = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
             var path = execfolder + @"\..\..\..\Kunukn.GooglemapsClustering.Web\AreaGMC\Files\" + name;
             var fi = new FileInfo(path);
             if (fi.Directory == null || !fi.Directory.Exists)
@@ -294,15 +299,15 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             foreach (var s in list)
             {
                 var arr = s.Split(';');
-                if (arr.Length == 4)
-                {
-                    double x = arr[0].ToDouble();
-                    double y = arr[1].ToDouble();
-                    var i = arr[2].ToInt();
-                    var t = arr[3].ToInt();
+                if (arr.Length != 4) continue;
 
-                    dataset.Add(new P { X = x, Y = y, I = i, T = t });
-                }
+
+                double x = arr[0].ToDouble();
+                double y = arr[1].ToDouble();
+                var i = arr[2].ToInt();
+                var t = arr[3].ToInt();
+
+                dataset.Add(new P { X = x, Y = y, I = i, T = t });
             }
 
             FileUtil.SaveDataSetToFile(dataset, "temp.ser");
@@ -311,63 +316,63 @@ namespace Kunukn.GooglemapsClustering.TestConsole
 
         static void TestLonLatDiff()
         {
-            Console.WriteLine(MathTool.LatLonDiff(-170, 170));
-            Console.WriteLine(MathTool.LatLonDiff(170, -170));
+            CW(MathTool.LatLonDiff(-170, 170));
+            CW(MathTool.LatLonDiff(170, -170));
 
-            Console.WriteLine(MathTool.LatLonDiff(-10, 10));
-            Console.WriteLine(MathTool.LatLonDiff(10, -10));
+            CW(MathTool.LatLonDiff(-10, 10));
+            CW(MathTool.LatLonDiff(10, -10));
 
-            Console.WriteLine(MathTool.LatLonDiff(10, 30));
-            Console.WriteLine(MathTool.LatLonDiff(30, 10));
+            CW(MathTool.LatLonDiff(10, 30));
+            CW(MathTool.LatLonDiff(30, 10));
 
-            Console.WriteLine(MathTool.LatLonDiff(-10, -30));
-            Console.WriteLine(MathTool.LatLonDiff(-30, -10));
+            CW(MathTool.LatLonDiff(-10, -30));
+            CW(MathTool.LatLonDiff(-30, -10));
 
-            Console.WriteLine(MathTool.LatLonDiff(-80, 80));
-            Console.WriteLine(MathTool.LatLonDiff(80, -80));
+            CW(MathTool.LatLonDiff(-80, 80));
+            CW(MathTool.LatLonDiff(80, -80));
         }
 
         static void TestDegree()
         {
-            Console.WriteLine(DataExtensions.LatLonToDegree(-180).ToString());
-            Console.WriteLine(DataExtensions.LatLonToDegree(-170).ToString());
-            Console.WriteLine(DataExtensions.LatLonToDegree(10).ToString());
-            Console.WriteLine(DataExtensions.LatLonToDegree(180).ToString());
-            Console.WriteLine(DataExtensions.LatLonToDegree(0).ToString());
+            CW(DataExtensions.LatLonToDegree(-180).ToString());
+            CW(DataExtensions.LatLonToDegree(-170).ToString());
+            CW(DataExtensions.LatLonToDegree(10).ToString());
+            CW(DataExtensions.LatLonToDegree(180).ToString());
+            CW(DataExtensions.LatLonToDegree(0).ToString());
         }
 
         static void TestRadian()
         {
-            Console.WriteLine(DataExtensions.LatLonToRadian(-180).ToString());
-            Console.WriteLine(DataExtensions.LatLonToRadian(-170).ToString());
-            Console.WriteLine(DataExtensions.LatLonToRadian(10).ToString());
-            Console.WriteLine(DataExtensions.LatLonToRadian(180).ToString());
-            Console.WriteLine(DataExtensions.LatLonToRadian(0).ToString());
+            CW(DataExtensions.LatLonToRadian(-180).ToString());
+            CW(DataExtensions.LatLonToRadian(-170).ToString());
+            CW(DataExtensions.LatLonToRadian(10).ToString());
+            CW(DataExtensions.LatLonToRadian(180).ToString());
+            CW(DataExtensions.LatLonToRadian(0).ToString());
         }
 
         static void TestFloor()
         {
-            int delta = 10;
-            //Console.WriteLine(((int)(179 / delta)) * delta);
-            //Console.WriteLine(((int)(-179 / delta)) * delta);
+            const int delta = 10;
+            //CW(((int)(179 / delta)) * delta);
+            //CW(((int)(-179 / delta)) * delta);
 
             double a = -185;
             double b = 175;
-            //Console.WriteLine(a.NormalizeLongitude() );            
-            //Console.WriteLine(b.NormalizeLongitude() );
+            //CW(a.NormalizeLongitude() );            
+            //CW(b.NormalizeLongitude() );
 
             var v = MathTool.FloorLatLon(a, delta) - delta;
-            Console.WriteLine(v);
+            CW(v);
             var w = MathTool.FloorLatLon(b, delta) - delta;
-            Console.WriteLine(w);
+            CW(w);
 
             //var v = MathTool.FloorLatLon(a, delta);
-            //Console.WriteLine(v);
+            //CW(v);
             //var w = MathTool.FloorLatLon(b, delta);
-            //Console.WriteLine(w);
+            //CW(w);
 
-            Console.WriteLine(v.NormalizeLongitude());
-            Console.WriteLine(w.NormalizeLongitude());
+            CW(v.NormalizeLongitude());
+            CW(w.NormalizeLongitude());
         }
 
         static void TestBaseGetCentroidFromClusterLatLon()
@@ -382,7 +387,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             var p = ClusterAlgorithmBase.GetCentroidFromClusterLatLon(
                 new Points{Data = list});
 
-            Console.WriteLine(p);
+            CW(p);
         }
 
         static void ReadSerializedFileAndCount()
@@ -391,45 +396,51 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             var b = new Boundary { Minx = -179, Maxx = 179, Miny = -90, Maxy = 90 };
             int i = points.Data.Count(p => MathTool.IsInside(b, p));
 
-            Console.WriteLine("count: " + i);
+            CWF("count: {0}", i);
         }
 
         static void ReadCsvFileAndCount()
         {
-            string execfolder = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
+            var execfolder = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath);
             var path = execfolder + @"\..\..\..\Kunukn.GooglemapsClustering.Web\AreaGMC\Files\Points.csv";
             var points = Dataset.LoadDataset(path);
 
             //var b = new Boundary { Minx = -179, Maxx = 179, Miny = -90, Maxy = 90 };
             //int i = points.Count(p => MathTool.IsInside(b, p));
 
-            Console.WriteLine("count: " + points.Count);
+            CWF("count: {0}", points.Count);
         }
 
 
         static void TestNormalize()
         {
-            Console.WriteLine("*** Lon");
-            Console.WriteLine(DataExtensions.NormalizeLongitude(0));
-            Console.WriteLine(DataExtensions.NormalizeLongitude(190));
-            Console.WriteLine(DataExtensions.NormalizeLongitude(-190));
-            Console.WriteLine(DataExtensions.NormalizeLongitude(-180));
-            Console.WriteLine(DataExtensions.NormalizeLongitude(-181));
-            Console.WriteLine(DataExtensions.NormalizeLongitude(180));
-            Console.WriteLine(DataExtensions.NormalizeLongitude(181));
-            Console.WriteLine(DataExtensions.NormalizeLongitude(200));
-            Console.WriteLine(DataExtensions.NormalizeLongitude(-200));
-            Console.WriteLine(DataExtensions.NormalizeLongitude(360));
+            CW("*** Lon");
+            CW(DataExtensions.NormalizeLongitude(0));
+            CW(DataExtensions.NormalizeLongitude(190));
+            CW(DataExtensions.NormalizeLongitude(-190));
+            CW(DataExtensions.NormalizeLongitude(-180));
+            CW(DataExtensions.NormalizeLongitude(-181));
+            CW(DataExtensions.NormalizeLongitude(180));
+            CW(DataExtensions.NormalizeLongitude(181));
+            CW(DataExtensions.NormalizeLongitude(200));
+            CW(DataExtensions.NormalizeLongitude(-200));
+            CW(DataExtensions.NormalizeLongitude(360));
 
-            Console.WriteLine("*** Lat");
-            Console.WriteLine(DataExtensions.NormalizeLatitude(0));
-            Console.WriteLine(DataExtensions.NormalizeLatitude(-90));
-            Console.WriteLine(DataExtensions.NormalizeLatitude(-91));
-            Console.WriteLine(DataExtensions.NormalizeLatitude(90));
-            Console.WriteLine(DataExtensions.NormalizeLatitude(91));
-            Console.WriteLine(DataExtensions.NormalizeLatitude(120));
-            Console.WriteLine(DataExtensions.NormalizeLatitude(-120));
-            Console.WriteLine(DataExtensions.NormalizeLatitude(180));
+            CW("*** Lat");
+            CW(DataExtensions.NormalizeLatitude(0));
+            CW(DataExtensions.NormalizeLatitude(-90));
+            CW(DataExtensions.NormalizeLatitude(-91));
+            CW(DataExtensions.NormalizeLatitude(90));
+            CW(DataExtensions.NormalizeLatitude(91));
+            CW(DataExtensions.NormalizeLatitude(120));
+            CW(DataExtensions.NormalizeLatitude(-120));
+            CW(DataExtensions.NormalizeLatitude(180));
+        }
+
+        public static void CWF(string text, params object[] args)
+        {
+            var message = args.Length == 0 ? text : string.Format(text, args);
+            CW(message);
         }
     }
 }
