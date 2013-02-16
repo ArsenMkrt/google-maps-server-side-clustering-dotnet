@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using Kunukn.SingleDetectLibrary.Code;
 using Kunukn.SingleDetectLibrary.Code.Contract;
 using P = Kunukn.GooglemapsClustering.Clustering.Data.P;
@@ -29,6 +30,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
         public static object Data { get; private set; } // data container
         private static string FilePath { get; set; }
         private static readonly Object Lock = new Object();
+        
 
         static MemoryDatabase()
         {
@@ -41,6 +43,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             if (Points != null && Points.Count > 0) return Points;          
             return LoadPoints();
         }
+              
 
         public static void SetFilepath(string path)
         {
@@ -66,7 +69,10 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             // Load from file
 
             var points = Utility.Dataset.LoadDataset(FilePath);            
-            if (points == null || !points.Data.Any() ) throw new ApplicationException("Data was not loaded from file");
+            if (points == null || !points.Data.Any() )
+            {
+                throw new ApplicationException("Data was not loaded from file");
+            }
                         
             // Randomize order, when limit take is used for max marker display
             // random locations are selected
@@ -84,10 +90,11 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
 
             Points = points;
             PointsBackup.SetRange(points);
-            SetKnnAlgo(points); // K Nearest neighbor algorithm
-            
+            SetKnnAlgo(points); // K Nearest neighbor algorithm            
+
             return Points;
         }
+  
 
         // Read about this at github.com/kunukn/single-detect
         static void SetKnnAlgo(IPoints points)

@@ -28,7 +28,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             Data.Add(p);
         }
 
-        public List<IP> ToList()
+        public IList<IP> ToList()
         {
             return this.Data.ToList();
         }

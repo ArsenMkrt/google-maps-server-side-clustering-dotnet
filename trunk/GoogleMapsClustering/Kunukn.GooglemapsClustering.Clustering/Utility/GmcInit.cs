@@ -1,4 +1,5 @@
-﻿using Kunukn.GooglemapsClustering.Clustering.Data;
+﻿using System.Threading.Tasks;
+using Kunukn.GooglemapsClustering.Clustering.Data;
 
 namespace Kunukn.GooglemapsClustering.Clustering.Utility
 {
@@ -12,12 +13,19 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
         public static void Init(string path)
         {
             // Only run once
-            if(_done) return;
-            
-            _done = true;            
+            if (_done) return;
+            _done = true;
+
+            // Load in a new thread, faster UI display
+            var task = new Task(() => Run(path));
+            task.Start();
+        }
+
+        private static void Run(string path)
+        {
             // Database load simulation            
             MemoryDatabase.SetFilepath(path);
-            MemoryDatabase.GetPoints(); // preload points into memory
+            var points = MemoryDatabase.GetPoints(); // preload points into memory            
         }
     }
 }
