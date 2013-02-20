@@ -8,7 +8,7 @@ using Kunukn.GooglemapsClustering.Clustering.Algorithm;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 using Kunukn.GooglemapsClustering.Clustering.Data.Json;
 using Kunukn.GooglemapsClustering.Clustering.Utility;
-
+using Kunukn.SingleDetectLibrary.Code.Data;
 using P = Kunukn.GooglemapsClustering.Clustering.Data.P;
 using Points = Kunukn.GooglemapsClustering.Clustering.Data.Points;
 using IPoints = Kunukn.GooglemapsClustering.Clustering.Contract.IPoints;
@@ -285,7 +285,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             // Use algo
             var origin = new SingleDetectLibrary.Code.Data.P { X = x, Y = y, Type = type};
             var knnSameTypeOnly = type != -1;
-            var duration = algo.UpdateKnn(origin, k, knnSameTypeOnly);
+
+            var duration = algo.UpdateKnn(origin, new KnnConfiguration{K = k, SameTypeOnly = knnSameTypeOnly});
 
             return new JsonKnnReply
             {

@@ -9,7 +9,7 @@ using System.Threading;
 using Kunukn.GooglemapsClustering.Clustering.Algorithm;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 using Kunukn.GooglemapsClustering.Clustering.Utility;
-
+using Kunukn.SingleDetectLibrary.Code.Data;
 using P = Kunukn.GooglemapsClustering.Clustering.Data.P;
 using IP = Kunukn.GooglemapsClustering.Clustering.Contract.IP;
 using IPoints = Kunukn.GooglemapsClustering.Clustering.Contract.IPoints;
@@ -22,6 +22,7 @@ using IPKnn = Kunukn.SingleDetectLibrary.Code.Contract.IP;
 using IPointsKnn = Kunukn.SingleDetectLibrary.Code.Contract.IPoints;
 using PointsKnn = Kunukn.SingleDetectLibrary.Code.Data.Points;
 using PKnn = Kunukn.SingleDetectLibrary.Code.Data.P;
+using Points = Kunukn.GooglemapsClustering.Clustering.Data.Points;
 
 namespace Kunukn.GooglemapsClustering.TestConsole
 {
@@ -101,7 +102,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             var origin = new SingleDetectLibrary.Code.Data.P { X = 0, Y = 0 };            
             algo.UpdateIndex(origin);
 
-            var duration = algo.UpdateKnn(origin, k);
+            var duration = algo.UpdateKnn(origin, new KnnConfiguration{K = k});
 
             // Print result
             CW(string.Format("{0} msec. {1}:", algo.Strategy.Name, duration));
@@ -115,7 +116,7 @@ namespace Kunukn.GooglemapsClustering.TestConsole
             algo.SetAlgorithmStrategy(new NaiveStrategy());
 
             // Use algo
-            duration = algo.UpdateKnn(origin, k);
+            duration = algo.UpdateKnn(origin, new KnnConfiguration{K = k});
 
             // Print result
             CW(string.Format("\n{0} msec. {1}:", algo.Strategy.Name, duration));
