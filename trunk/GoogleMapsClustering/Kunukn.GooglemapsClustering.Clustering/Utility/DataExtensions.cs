@@ -242,5 +242,16 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
         {
             return list.Aggregate("", (a, b) => a + "[" + b + "]\n");            
         }
+
+        public static int[] ToNumbers(this string s)
+        {
+            if(string.IsNullOrWhiteSpace(s)) return new int[]{};
+
+            var arr = s.Split(new [] {";"}, StringSplitOptions.RemoveEmptyEntries);
+            var ints = new int[arr.Length];
+            for (var i = 0; i < arr.Length; i++) ints[i] = int.Parse(arr[i]);
+
+            return ints;
+        }
     }
 }

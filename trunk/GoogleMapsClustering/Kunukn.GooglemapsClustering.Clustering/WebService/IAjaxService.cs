@@ -15,14 +15,14 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "MarkerInfo",
             BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
-        JsonMarkerInfoReply MarkerInfo(string id, string type, int sendid);
+        JsonMarkerInfoReply MarkerInfo(string id, int sendid);
 
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "Markers",
             BodyStyle = WebMessageBodyStyle.WrappedRequest, ResponseFormat = WebMessageFormat.Json)]
         JsonMarkersReply Markers(double nelat, double nelon, double swlat, double swlon,
-                                 int zoomlevel, int zoomlevelClusterStop, string filter, int sendid);
+                                 int zoomlevel, string filter, int sendid);
         #endregion Post
 
 

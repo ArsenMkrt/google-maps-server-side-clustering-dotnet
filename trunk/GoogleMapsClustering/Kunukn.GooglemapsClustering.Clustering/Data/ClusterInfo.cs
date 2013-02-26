@@ -7,8 +7,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
 {
     public class ClusterInfo
     {
-        public int ZoomLevel { get; set; }
-
+        public int ZoomLevel { get; set; }        
 
         // Don't filter when zoomed far out, because user json receive swlon and nelon values "jumps" to next overlapping lon point
         // and the program can't know from what to filter. 
@@ -17,5 +16,10 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
         
         // Set a higher zoomlevel value if you increase the html window size. This works with width 800px, height 600px
         public bool IsFilterData { get { return ZoomLevel>=3;} } 
+
+
+        public ClusterInfo()
+        {            
+        }
     }
 }
