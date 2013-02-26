@@ -79,6 +79,10 @@ namespace Kunukn.GooglemapsClustering.Clustering.Algorithm
 
         void MakeLines(JsonGetMarkersReceive jsonReceive)
         {
+            if(!jsonReceive.IsDebugLinesEnabled) return; // client disabled it
+
+
+
             // Make the red lines data to be drawn in Google map
             
             var temp = new List<Rectangle>();

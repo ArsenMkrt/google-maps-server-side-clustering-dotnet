@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.ServiceModel.Activation;
 using Kunukn.GooglemapsClustering.Clustering.Algorithm;
+using Kunukn.GooglemapsClustering.Clustering.Contract;
 using Kunukn.GooglemapsClustering.Clustering.Data;
 using Kunukn.GooglemapsClustering.Clustering.Data.Json;
 using Kunukn.GooglemapsClustering.Clustering.Utility;
@@ -29,19 +31,61 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             return sw.ElapsedMilliseconds;
         }
 
+        static class Ajax
+        {
+            // markers
+            public const string nelat = "nelat";
+            public const string nelon = "nelon";
+            public const string swlat = "swlat";
+            public const string swlon = "swlon";
+            public const string zoom = "zoom";
+
+            public const string filter = "filter";
+            public const string sid = "sid";
+
+            // markerInfo
+            public const string id = "id";
+
+            // knn
+            public const string lat = "lat";
+            public const string lon = "lon";
+            public const string k = "k";
+            public const string type = "type";
+
+            public static readonly HashSet<string> MarkersReq = new HashSet<string>
+                                                     {
+                                                         nelat,
+                                                         nelon,
+                                                         swlat,
+                                                         swlon,
+                                                         zoom,
+                                                     };
+
+            public static readonly HashSet<string> MarkerInfoReq = new HashSet<string>
+                                                     {
+                                                         id
+                                                     };
+
+            public static readonly HashSet<string> KnnReq = new HashSet<string>
+                                                     {
+                                                         lat,
+                                                         lon,
+                                                         k,
+                                                     };
+        }
+
         #region Post
 
         // Post
-        public JsonMarkersReply 
-            Markers(
-            double nelat, double nelon, double swlat, double swlon, 
-            int zoomlevel, int zoomlevelClusterStop, string filter, int sendid
+        public JsonMarkersReply Markers(
+            double nelat, double nelon, double swlat, double swlon,
+            int zoomlevel, string filter, int sendid
             )
         {
             var sw = new Stopwatch();
             sw.Start();
 
-            var jsonReceive = new JsonGetMarkersReceive(nelat, nelon, swlat, swlon, zoomlevel, zoomlevelClusterStop, filter, sendid);
+            var jsonReceive = new JsonGetMarkersReceive(nelat, nelon, swlat, swlon, zoomlevel, filter, sendid);
 
             var clusteringEnabled = jsonReceive.IsClusteringEnabled || AlgoConfig.AlwaysClusteringEnabledWhenZoomLevelLess > jsonReceive.Zoomlevel;
 
@@ -53,19 +97,19 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             // Get all points from memory
             IPoints points = MemoryDatabase.GetPoints();
 
-            if (jsonReceive.TypeFilter.Count == AlgoConfig.MarkerTypes.Count)
+            if (jsonReceive.TypeFilterExclude.Count == AlgoConfig.MarkerTypes.Count)
             {
                 // Filter all 
                 points = new Points(); // empty
             }
-            else if (jsonReceive.TypeFilter.Count > 0)
+            else if (jsonReceive.TypeFilterExclude.Count > 0)
             {
                 // Filter data by typeFilter value
                 // Make new obj, don't overwrite obj data
                 points = new Points
                               {
                                   Data = points.Data
-                                  .Where(p => jsonReceive.TypeFilter.Contains(p.T) == false)
+                                  .Where(p => jsonReceive.TypeFilterExclude.Contains(p.T) == false)
                                   .ToList()
                               };
             }
@@ -74,14 +118,14 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             var clusterAlgo = new GridCluster(points, jsonReceive); // create polylines
                      
             // Clustering
-            if (clusteringEnabled && jsonReceive.Zoomlevel < jsonReceive.ZoomlevelClusterStop)
+            if (clusteringEnabled && jsonReceive.Zoomlevel < AlgoConfig.ZoomlevelClusterStop)
             {
                 // Calculate data to be displayed
                 var clusterPoints = clusterAlgo.GetCluster(new ClusterInfo
                                                                {
-                                                                   ZoomLevel = jsonReceive.Zoomlevel
+                                                                   ZoomLevel = jsonReceive.Zoomlevel,                                                                   
                                                                });                
-                
+                                
                 var converted = DataConvert(clusterPoints);
                                 
                 // Prepare data to the client
@@ -114,37 +158,49 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
                             Polylines = clusterAlgo.Lines,
                             Mia = filteredDataset.Count - filteredDatasetMaxPoints.Count,
                             Msec = Sw(sw),
-                        };            
+                        };
             return reply;
         }
 
       
 
         // Post
-        public JsonMarkerInfoReply MarkerInfo(string id, string type, int sendid)
+        public JsonMarkerInfoReply MarkerInfo(string id, int sendid)
         {
             var sw = new Stopwatch();
             sw.Start();
 
+            var uid = int.Parse(id);
+
+            var marker = MemoryDatabase.GetPoints().Data.SingleOrDefault(i => i.I == uid);
+            if(marker==null)
+            {                
+                return new JsonMarkerInfoReply
+                {
+                    Id = id,
+                    Content = "Marker could not be found",
+                    Rid = sendid,
+                    Msec = Sw(sw)
+                };
+            }
+
             var reply = new JsonMarkerInfoReply
                             {
-                                Id = id, 
-                                Type = type, 
                                 Rid = sendid,                                
                             };
-            reply.BuildContent();
+            reply.BuildContent(marker);
+
             reply.Msec = Sw(sw);
             return reply;
         }
 
         #endregion Post
-
-
+       
         #region Get        
 
         // Get
         public JsonMarkersReply GetMarkers(string s)
-        {
+        {           
             var invalid = new JsonMarkersReply { Ok = "0" };
 
             if (string.IsNullOrWhiteSpace(s))
@@ -154,32 +210,48 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             }
 
             var arr = s.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-            if (arr.Length != 8)
+            if (arr.Length < 5)
             {
                 invalid.EMsg = "params length incorrect";
                 return invalid; 
             }
 
-            var i = 0;
-            try
-            {                
-                var nelat = arr[i++].Replace("_", ".").ToDouble();
-                var nelon = arr[i++].Replace("_", ".").ToDouble();
-                var swlat = arr[i++].Replace("_", ".").ToDouble();
-                var swlon = arr[i++].Replace("_", ".").ToDouble();
-                var zoomlevel = int.Parse(arr[i++]);                
-                var zoomlevelClusterStop = int.Parse(arr[i++]);
-                var filter = arr[i++];
-                var sendid = int.Parse(arr[i++]);
+            var nvc = new NameValueCollection();
+            foreach (var a in arr)
+            {
+                var kv = a.Split(new[] {"="}, StringSplitOptions.RemoveEmptyEntries);
+                if (kv.Length != 2) continue;
 
+                nvc.Add(kv[0], kv[1]);
+            }
+
+            foreach (var key in Ajax.MarkersReq)
+            {
+                if (nvc[key]!=null) continue;
+
+                invalid.EMsg = string.Format("param {0} is missing",key);
+                return invalid;
+            }
+            
+            try
+            {                                
+                var nelat = nvc[Ajax.nelat].Replace("_", ".").ToDouble();
+                var nelon = nvc[Ajax.nelon].Replace("_", ".").ToDouble();
+                var swlat = nvc[Ajax.swlat].Replace("_", ".").ToDouble();
+                var swlon = nvc[Ajax.swlon].Replace("_", ".").ToDouble();
+                var zoomlevel = int.Parse(nvc[Ajax.zoom]);
+                               
+                var filter = nvc[Ajax.filter] ?? "";
+                var sendid = nvc[Ajax.sid] == null ? 1 : int.Parse(nvc[Ajax.sid]);
+                               
                 // values are validated there
-                return Markers(nelat, nelon, swlat, swlon, 
-                    zoomlevel, zoomlevelClusterStop, filter, sendid);
+                return Markers(nelat, nelon, swlat, swlon, zoomlevel,
+                    filter, sendid);
             }
             catch (Exception ex)
             {
-                invalid.EMsg = string.Format("Parsing error at param: {0}, {1}",
-                    i - 1, ex.Message);
+                invalid.EMsg = string.Format("Parsing error param: {0}",
+                    ex.Message);
             }
 
             return invalid;
@@ -197,22 +269,38 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             }
 
             var arr = s.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-            if (arr.Length != 3) return invalid;
+            if (arr.Length < 1) return invalid;
 
-            var i = 0;
+            var nvc = new NameValueCollection();
+            foreach (var a in arr)
+            {
+                var kv = a.Split(new[] {"="}, StringSplitOptions.RemoveEmptyEntries);
+                if (kv.Length != 2) continue;
+
+                nvc.Add(kv[0], kv[1]);
+            }
+
+            foreach (var key in Ajax.MarkerInfoReq)
+            {
+                if (nvc[key]!=null) continue;
+
+                invalid.EMsg = string.Format("param {0} is missing",key);
+                return invalid;
+            }
+            
+                        
             try
-            {                
-                var id = arr[i++];
-                var type = arr[i++];
-                var sendid = int.Parse(arr[i++]);
+            {   
+                var id = nvc[Ajax.id];
+                var sid = nvc[Ajax.sid] == null ? 1 : int.Parse(nvc[Ajax.sid]);
 
                 // values are validated there
-                return MarkerInfo(id,type,sendid);
+                return MarkerInfo(id,sid);
             }
             catch (Exception ex)
             {
-                invalid.EMsg = string.Format("Parsing error at param: {0}, {1}", 
-                    i - 1, ex.Message);
+                invalid.EMsg = string.Format("Parsing error param: {0}", 
+                    ex.Message);
             }
 
             return invalid;
@@ -234,8 +322,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
 
         
         // Example of usage:
-        // Get 3 nearest ->         /AreaGMC/gmc.svc/Knn/8_5;10_25;3
-        // Get 3 nearest type 1 ->  /AreaGMC/gmc.svc/Knn/8_5;10_25;3;1
+        // Get 3 nearest ->         /AreaGMC/gmc.svc/Knn/lat=8_5;lon=10_25;k=3
+        // Get 3 nearest type 1 ->  /AreaGMC/gmc.svc/Knn/lat=8_5;lon=10_25;k=3;type=1
         public JsonKnnReply Knn(string s)
         {
             var sw = new Stopwatch();
@@ -249,52 +337,85 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             }
 
             var arr = s.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-            if (arr.Length != 3 && arr.Length != 4)
+            if (arr.Length < 3)
             {
                 invalid.EMsg = string.Format("param length is not valid: {0}",arr.Length);
                 return invalid;
             }
 
-            var lat = arr[0].Replace("_", ".");
-            var lon = arr[1].Replace("_", ".");
-            var neighbors = arr[2];
-            var type = -1;
-            if (arr.Length == 4) type = arr[3].ToInt();
-
-            double x, y;
-            int k;
-
-            var b = double.TryParse(lon, System.Globalization.NumberStyles.Any, CultureInfo.GetCultureInfo("en-US"), out x);
-            b &= double.TryParse(lat, System.Globalization.NumberStyles.Any, CultureInfo.GetCultureInfo("en-US"), out y);
-            b &= int.TryParse(neighbors, out k);
-
-            if (!b)
+            var nvc = new NameValueCollection();
+            foreach (var a in arr)
             {
-                invalid.EMsg = "params were not parsed correctly";
+                var kv = a.Split(new[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
+                if (kv.Length != 2) continue;
+
+                nvc.Add(kv[0], kv[1]);
+            }
+
+            foreach (var key in Ajax.KnnReq)
+            {
+                if (nvc[key] != null) continue;
+
+                invalid.EMsg = string.Format("param {0} is missing", key);
                 return invalid;
             }
 
-            // knn algo
-            var algo = MemoryDatabase.Data as IKnnAlgorithm;
-            if (algo == null)
+            double y, x;
+            int k, type;
+
+            try
             {
-                invalid.EMsg = "algorithm is not available";
-                return invalid;
+                y = nvc[Ajax.lat].Replace("_", ".").ToDouble();
+                x = nvc[Ajax.lon].Replace("_", ".").ToDouble();
+                k = int.Parse(nvc[Ajax.k]);
+                type = nvc[Ajax.type] == null ? -1 : int.Parse(nvc[Ajax.type]);
+
+                // knn algo
+                var algo = MemoryDatabase.Data as IKnnAlgorithm;
+                if (algo == null)
+                {
+                    invalid.EMsg = "algorithm is not available";
+                    return invalid;
+                }
+
+                // Use algo
+                var origin = new SingleDetectLibrary.Code.Data.P { X = x, Y = y, Type = type };
+                var knnSameTypeOnly = type != -1;
+
+                var duration = algo.UpdateKnn(origin, new KnnConfiguration { K = k, SameTypeOnly = knnSameTypeOnly });
+
+                var nns = algo.Knn.NNs.Select(p => p as PDist).ToList();
+                var gmsNns = new List<GmcPDist>();
+                foreach (var i in nns)
+                {
+                    //i.Distance = Math.Round(i.Distance, 7);
+                    var pdist = new GmcPDist
+                                    {
+                                        Id = i.Point.Uid.ToString(),
+                                        Point = i.Point, 
+                                        Distance = Math.Round(i.Distance, 7)
+                                    };
+                    gmsNns.Add(pdist);
+                }
+                
+                var result = 
+                new JsonKnnReply
+                {
+                    Data = string.Format("Distance in km, x: {0}; y: {1}; k: {2}; sameTypeOnly: {3}, algo msec: {4}",
+                        x.DoubleToString(), y.DoubleToString(), k, knnSameTypeOnly, duration),
+                    Nns = gmsNns, // cannot be interface, thus casting
+                    
+                    Msec = Sw(sw),
+                };
+
+                return result;
             }
-
-            // Use algo
-            var origin = new SingleDetectLibrary.Code.Data.P { X = x, Y = y, Type = type};
-            var knnSameTypeOnly = type != -1;
-
-            var duration = algo.UpdateKnn(origin, new KnnConfiguration{K = k, SameTypeOnly = knnSameTypeOnly});
-
-            return new JsonKnnReply
+            catch (Exception ex)
             {
-                Data = string.Format("x: {0}; y: {1}; k: {2}; sameTypeOnly: {3}, algo msec: {4}", 
-                    x.DoubleToString(), y.DoubleToString(), k, knnSameTypeOnly, duration),
-                Nns = algo.Knn.NNs.Select(p => p as PDist).ToList(), // cannot be interface, thus casting
-                Msec = Sw(sw),
-            };
+                invalid.EMsg = string.Format("Parsing error param: {0}",
+                    ex.Message);
+                return invalid;
+            }                                                         
         }
 
         #endregion Get

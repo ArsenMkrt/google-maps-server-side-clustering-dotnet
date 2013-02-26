@@ -16,8 +16,7 @@ var gmcKN = {
     knn_K: 5, // number of K-nearest neighbor
     debug: {
         showGridLines: false,
-        showBoundaryMarker: false,
-        showCalloutLatLon: true
+        showBoundaryMarker: false        
     },
     // prevent async send/receive order problem by using counter ref in send/reply in webservice
     async: {
@@ -32,6 +31,10 @@ var gmcKN = {
         if (console.log) {
             console.log(s);
         }
+    },
+
+    round: function (num, decimals) {
+        return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);
     },
 
     zoomIn: function () {
@@ -81,7 +84,6 @@ var gmcKN = {
             mapCenterLat: 35,
             mapCenterLon: 10,
             zoomLevel: 2,
-            zoomlevelClusterStop: 15, // don't cluster from this zoom level and larger
             alwaysClusteringEnabledWhenZoomLevelLess: 2,
 
             jsonGetMarkerUrl: '/AreaGMC/gmc.svc/GetMarkers', // get
@@ -143,10 +145,10 @@ var gmcKN = {
                 var NE = bounds.getNorthEast();
                 var SW = bounds.getSouthWest();
                 var mapData = [];
-                mapData.neLat = NE.lat();
-                mapData.neLon = NE.lng();
-                mapData.swLat = SW.lat();
-                mapData.swLon = SW.lng();
+                mapData.neLat = gmcKN.round(NE.lat(), 7);
+                mapData.neLon = gmcKN.round(NE.lng(), 7);
+                mapData.swLat = gmcKN.round(SW.lat(), 7);
+                mapData.swLon = gmcKN.round(SW.lng(), 7);
                 mapData.zoomLevel = gmcKN.map.getZoom();
 
                 //------------- DEBUG
@@ -206,19 +208,17 @@ var gmcKN = {
                     '","swlat":"' + mapData.swLat +
                     '","swlon":"' + mapData.swLon +
                     '","zoomlevel":"' + mapData.zoomLevel +
-                    '","zoomlevelClusterStop":"' + gmcKN.mymap.settings.zoomlevelClusterStop +
                     '","filter":"' + gmcKN.getFilterValues() +
                     '","sendid":"' + gmcKN.async.lastSendGetMarkers + '"}';
 
                 var getParams = "/" +
-                    gmcKN.dEscape(mapData.neLat) + ";" +
-                    gmcKN.dEscape(mapData.neLon) + ";" +
-                    gmcKN.dEscape(mapData.swLat) + ";" +
-                    gmcKN.dEscape(mapData.swLon) + ";" +
-                    mapData.zoomLevel + ";" +
-                    gmcKN.mymap.settings.zoomlevelClusterStop + ";" +
-                    gmcKN.getFilterValues() + ";" +
-                    gmcKN.async.lastSendGetMarkers;
+                    "nelat=" + gmcKN.dEscape(mapData.neLat) + ";" +
+                    "nelon=" + gmcKN.dEscape(mapData.neLon) + ";" +
+                    "swlat=" + gmcKN.dEscape(mapData.swLat) + ";" +
+                    "swlon=" + gmcKN.dEscape(mapData.swLon) + ";" +
+                    "zoom=" + mapData.zoomLevel + ";" +
+                    "filter=" + gmcKN.getFilterValues() + ";" +
+                    "sid=" + gmcKN.async.lastSendGetMarkers;
 
                 $.ajax({
 
@@ -399,7 +399,10 @@ var gmcKN = {
                 var m = gmcKN.searchInfo.searchMarker;
 
                 // Get params
-                var getParams = "/" + gmcKN.dEscape(m.getPosition().lat()) + ";" + gmcKN.dEscape(m.getPosition().lng()) + ";" + k;
+                var getParams = "/" +
+                    "lat=" + gmcKN.dEscape(gmcKN.round(m.getPosition().lat(),7)) + ";" +
+                    "lon=" + gmcKN.dEscape(gmcKN.round(m.getPosition().lng(),7)) + ";" +
+                    "k=" + k;
 
                 $.ajax({
                     type: 'GET', // get
@@ -443,13 +446,14 @@ var gmcKN = {
                 ++gmcKN.async.lastSendMarkerDetail;
 
                 // Post params
-                var postParams = '{"id":"' + item.I +
-                    '","type":"' + item.T +
+                var postParams = '{"id":"' + item.I +                    
                     '","sendid":"' + gmcKN.async.lastSendMarkerDetail +
                     '"}';
 
                 // Get params
-                var getParams = "/" + item.I + ";" + item.T + ";" + gmcKN.async.lastSendMarkerDetail;
+                var getParams = "/" +
+                    "id=" + item.I + ";" +
+                    "sid=" + gmcKN.async.lastSendMarkerDetail;
 
                 $.ajax({
 
@@ -479,15 +483,12 @@ var gmcKN = {
                         }
                         // update
                         gmcKN.async.lastReceivedMarkerDetail = lastReceivedMarkerDetail;
-
-                        var latlon = "";
-                        if (gmcKN.debug.showCalloutLatLon === true)
-                            latlon = "<br/>lat: " + marker.getPosition().lat() + " lon: " + marker.getPosition().lng();
-                        gmcKN.infowindow.setContent(data.Content + latlon);
+                        
+                        gmcKN.infowindow.setContent(data.Content);
                         gmcKN.infowindow.open(gmcKN.map, marker);
                     },
                     error: function (xhr, err) {
-                        var msg = "readyState: " + xhr.readyState + "\nstatus: " + xhr.status + "\nresponseText: " + xhr.responseText;
+                        var msg = "readyState: " + xhr.readyState + "\nstatus: " + xhr.status + "\nresponseText: " + xhr.responseText + "\nerr:" + err;
                         gmcKN.log(msg);
                         //alert(msg);
                         alert(gmcKN.mymap.settings.textErrorMessage); //friendly error msg
@@ -497,7 +498,7 @@ var gmcKN = {
         }
     },
 
-    
+
     // lon, lat, count, type, cannot use id because it is not set for cluster markers on return json
     getKey: function (p) {
         var s = p.X + "__" + p.Y + "__" + p.C + "__" + p.T;

@@ -55,6 +55,7 @@
     <Compile Include="Algorithm\GridCluster.cs" />
     <Compile Include="Contract\IPoints.cs" />
     <Compile Include="Contract\IP.cs" />
+    <Compile Include="Data\Json\GmcPDist.cs" />
     <Compile Include="Data\Points.cs" />
     <Compile Include="Data\Enums.cs" />
     <Compile Include="Data\AlgoConfig.cs" />

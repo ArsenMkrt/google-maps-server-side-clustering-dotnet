@@ -27,6 +27,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
             MinClusterSize = int.Parse(local[s = "MinClusterSize"] ?? global[s] ?? Throw(s));
             MaxMarkersReturned = int.Parse(local[s = "MaxMarkersReturned"] ?? global[s] ?? Throw(s));
             AlwaysClusteringEnabledWhenZoomLevelLess = int.Parse(local[s = "AlwaysClusteringEnabledWhenZoomLevelLess"] ?? global[s] ?? Throw(s));
+            ZoomlevelClusterStop = int.Parse(local[s = "ZoomlevelClusterStop"] ?? global[s] ?? Throw(s));
+            
             Environment = local[s = "Environment"] ?? global[s] ?? Throw(s);
             PreClustered = bool.Parse(local[s = "PreClustered"] ?? global[s] ?? Throw(s));
             
@@ -58,7 +60,11 @@ namespace Kunukn.GooglemapsClustering.Clustering.Data
         // Always cluster if equal or below this zoom level
         // to disable this effect set the value to -1
         public static readonly int AlwaysClusteringEnabledWhenZoomLevelLess;
+        
+        // Stop clustering from this zoom level and larger
+        public static readonly int ZoomlevelClusterStop;
 
+        
         // Pre cluster on app startup, NOT IMPLEMENTED YET
         public static readonly bool PreClustered;
 
