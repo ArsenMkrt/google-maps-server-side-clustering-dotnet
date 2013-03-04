@@ -101,6 +101,15 @@ var gmcKN = {
                 offsetH: 30,
                 offsetW: 30
             },
+
+            pinDot: {
+                src: 'Images/mm_20_red.png', //default dot marker
+                height: 20,
+                width: 12,
+                offsetH: 0,
+                offsetW: 0
+            },
+
             pinImage: {
                 src: 'Images/pin24.png', //default unknown marker
                 height: 24,
@@ -419,7 +428,7 @@ var gmcKN = {
                         $.each(data.Nns, function () {
                             var item = this;
                             var latlon = new google.maps.LatLng(item.Y, item.X);
-                            var iconImg = new google.maps.MarkerImage(gmcKN.mymap.settings.pinImage.src, new google.maps.Size(gmcKN.mymap.settings.pinImage.width, gmcKN.mymap.settings.pinImage.height), null, null);
+                            var iconImg = new google.maps.MarkerImage(gmcKN.mymap.settings.pinDot.src, new google.maps.Size(gmcKN.mymap.settings.pinDot.width, gmcKN.mymap.settings.pinDot.height), null, null);
 
                             var marker = new google.maps.Marker({
                                 position: latlon,
