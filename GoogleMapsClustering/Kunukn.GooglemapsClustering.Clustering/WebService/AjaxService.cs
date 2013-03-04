@@ -50,6 +50,7 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
             public const string lat = "lat";
             public const string lon = "lon";
             public const string k = "k";
+            public const string dist = "dist";
             public const string type = "type";
 
             public static readonly HashSet<string> MarkersReq = new HashSet<string>
@@ -322,8 +323,9 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
 
         
         // Example of usage:
-        // Get 3 nearest ->         /AreaGMC/gmc.svc/Knn/lat=8_5;lon=10_25;k=3
-        // Get 3 nearest type 1 ->  /AreaGMC/gmc.svc/Knn/lat=8_5;lon=10_25;k=3;type=1
+        // Get 3 nearest ->             /AreaGMC/gmc.svc/Knn/lat=8_5;lon=10_25;k=3
+        // Get 3 nearest type 1 ->      /AreaGMC/gmc.svc/Knn/lat=8_5;lon=10_25;k=3;type=1
+        // Get nearest within 1 km ->   /AreaGMC/gmc.svc/Knn/lat=8_5;lon=10_25;k=1000000;dist=1
         public JsonKnnReply Knn(string s)
         {
             var sw = new Stopwatch();
@@ -360,16 +362,16 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
                 return invalid;
             }
 
-            double y, x;
-            int k, type;
-
             try
             {
-                y = nvc[Ajax.lat].Replace("_", ".").ToDouble();
-                x = nvc[Ajax.lon].Replace("_", ".").ToDouble();
-                k = int.Parse(nvc[Ajax.k]);
-                type = nvc[Ajax.type] == null ? -1 : int.Parse(nvc[Ajax.type]);
+                var y = nvc[Ajax.lat].Replace("_", ".").ToDouble();
+                var x = nvc[Ajax.lon].Replace("_", ".").ToDouble();
+                var k = int.Parse(nvc[Ajax.k]);
+                var type = nvc[Ajax.type] == null ? -1 : int.Parse(nvc[Ajax.type]);
 
+                double? dist = null;
+                if(! string.IsNullOrEmpty(nvc[Ajax.dist])) dist = nvc[Ajax.dist].Replace("_", ".").ToDouble();
+                               
                 // knn algo
                 var algo = MemoryDatabase.Data as IKnnAlgorithm;
                 if (algo == null)
@@ -382,7 +384,8 @@ namespace Kunukn.GooglemapsClustering.Clustering.WebService
                 var origin = new SingleDetectLibrary.Code.Data.P { X = x, Y = y, Type = type };
                 var knnSameTypeOnly = type != -1;
 
-                var duration = algo.UpdateKnn(origin, new KnnConfiguration { K = k, SameTypeOnly = knnSameTypeOnly });
+                var conf = new KnnConfiguration {K = k, SameTypeOnly = knnSameTypeOnly, MaxDistance = dist};                                
+                var duration = algo.UpdateKnn(origin, conf);
 
                 var nns = algo.Knn.NNs.Select(p => p as PDist).ToList();
                 var gmsNns = new List<GmcPDist>();
