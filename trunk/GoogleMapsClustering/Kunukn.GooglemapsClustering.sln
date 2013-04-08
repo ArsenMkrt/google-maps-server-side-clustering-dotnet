@@ -1,13 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3DD4781E-33BE-4B16-A046-85ECD18245A8}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kunukn.GooglemapsClustering.Web", "Kunukn.GooglemapsClustering.Web\Kunukn.GooglemapsClustering.Web.csproj", "{58F81B8D-2A6C-40C3-90A3-D03C470D361D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kunukn.GooglemapsClustering.Clustering", "Kunukn.GooglemapsClustering.Clustering\Kunukn.GooglemapsClustering.Clustering.csproj", "{BB8882F0-08A3-47D9-B4C2-31F60CD39F45}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kunukn.GooglemapsClustering.TestConsole", "Kunukn.GooglemapsClustering.TestConsole\Kunukn.GooglemapsClustering.TestConsole.csproj", "{6B5D10DE-2BD8-47CA-9287-97236C5AAF2D}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3DD4781E-33BE-4B16-A046-85ECD18245A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
