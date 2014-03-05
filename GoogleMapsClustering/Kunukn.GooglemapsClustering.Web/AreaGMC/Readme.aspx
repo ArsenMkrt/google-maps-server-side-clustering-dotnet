@@ -33,7 +33,7 @@ MIT License<br />
 There is a blog about how this Server-side clustering works. It can be read at: <a href="http://kunuk.wordpress.com/2011/11/05/google-map-server-side-clustering-with-asp-net/" target="_blank">google-map-server-side-clustering-with-asp-net</a>
 </p>
 <p>
-Project testet on: Windows 7, .Net v4, VS 2010, IIS 7.5
+Project testet on: Windows 7 and 8, .Net v4, VS 2010 and 2013 IIS 7.5
 </p>
 For more documentation look in the folder: / Kunukn.GooglemapsClustering.Clustering / Documents
 

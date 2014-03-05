@@ -27,14 +27,14 @@
     
     <h1>Google Maps Clustering Demo</h1> 
 
-    <a href="AreaGMC/MapClusteringSearch.html"><img src="AreaGMC/Images/clusteringpreview.gif" alt="preview"/></a>
+    <a href="AreaGMC/MapClusteringSearch.aspx"><img src="AreaGMC/Images/clusteringpreview.gif" alt="preview"/></a>
 
-    <a href="AreaGMC/Readme.html" target="_blank">Readme</a><br />
+    <a href="AreaGMC/Readme.aspx" target="_blank">Readme</a><br />
 
     <h3>Clustering</h3>
     <ul id="clustering">
-        <li><a href="AreaGMC/MapClustering.html">Google Maps Server-side Clustering</a></li>
-        <li><a href="AreaGMC/MapClusteringSearch.html">Google Maps Server-side Clustering with search</a></li>
+        <li><a href="AreaGMC/MapClustering.aspx">Google Maps Server-side Clustering</a></li>
+        <li><a href="AreaGMC/MapClusteringSearch.aspx">Google Maps Server-side Clustering with search</a></li>
     </ul>            
                     
     </div>

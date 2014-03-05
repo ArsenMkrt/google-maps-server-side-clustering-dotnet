@@ -14,12 +14,16 @@
     <RootNamespace>Kunukn.GooglemapsClustering.Web</RootNamespace>
     <AssemblyName>Kunukn.GooglemapsClustering.Web</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -67,8 +71,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AreaGMC\gmc.svc" />
-    <Content Include="AreaGMC\MapClustering.html" />
-    <Content Include="AreaGMC\MapClusteringSearch.html" />
+    <Content Include="AreaGMC\MapClustering.aspx" />
+    <Content Include="AreaGMC\MapClusteringSearch.aspx" />
     <Content Include="AreaGMC\Images\clusteringpreview.gif" />
     <Content Include="AreaGMC\Images\link.txt" />
     <Content Include="AreaGMC\Images\markers\court.png" />
@@ -76,10 +80,10 @@
     <Content Include="AreaGMC\Images\markers\house.png" />
     <Content Include="AreaGMC\Images\markers\link.txt" />
     <Content Include="AreaGMC\Images\mm_20_red.png" />
-    <Content Include="AreaGMC\Readme.html" />
+    <Content Include="AreaGMC\Readme.aspx" />
     <Content Include="AreaGMC\Scripts\mapclustering_search.js" />
     <Content Include="AreaGMC\Scripts\mapclustering.js" />
-    <Content Include="Default.html" />
+    <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="AreaGMC\Images\cluster2.png" />
     <Content Include="AreaGMC\Images\m1.png" />
@@ -114,7 +118,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="AreaGMC\Files\Points.csv" />
+    <Content Include="AreaGMC\Files\Points.csv" />
     <Content Include="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -132,11 +136,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>4724</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:55810/</IISUrl>
+          <IISUrl>http://localhost:4724/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>http://gmc.local</CustomServerUrl>

@@ -17,12 +17,9 @@ namespace Kunukn.GooglemapsClustering.Clustering.Utility
         {
             switch (loadType)
             {
-                case LoadType.Serialized:
-                    throw new NotSupportedException(MethodBase.GetCurrentMethod().ToString());
-                case LoadType.Csv:
-                    return LoadDatasetFromCsv(websitepath);                    
-                default:
-                    throw new ApplicationException("LoadDatasetFromDatabase unknown loadtype");
+                case LoadType.Serialized: throw new NotSupportedException(MethodBase.GetCurrentMethod().ToString());
+                case LoadType.Csv: return LoadDatasetFromCsv(websitepath);                    
+                default: throw new ApplicationException("LoadDatasetFromDatabase unknown loadtype");
             }
         }
 
