@@ -21,15 +21,15 @@ namespace Kunukn.GooglemapsClustering.Web
            _log.Info(MethodBase.GetCurrentMethod(), "Init");
 
             // Init Google Maps Clustering
-            GmcInit.Init(HttpContext.Current.Server.MapPath("~") + @"AreaGMC\Files\Points.csv");
-            
+            GmcInit.Init(HttpContext.Current.Server.MapPath("~") + @"\AreaGMC\Files\Points.csv");
+           
             RegisterRoutes();
         }
 
         private static void RegisterRoutes()
         {
             // Default
-            RouteTable.Routes.MapPageRoute("", "", "~/Default.html");                    
+            RouteTable.Routes.MapPageRoute("default", "", "~/Default.aspx");              
         }
 
         void Application_End(object sender, EventArgs e)
