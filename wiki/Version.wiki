@@ -2,10 +2,10 @@
 
 
 == Version 3 (SVN) ==
-  * Support for K-nearest neighbors
-  * WCF Get services
   * Minimum external dependency is jQuery and Google Maps api
   * mapclustering.js only have jQuery and Google Maps api dependency
+  * Support for K-nearest neighbors (experimental feature)
+  * Visual studio 2013 and MVC
 
 
 == Version 2 (File download) ==
@@ -14,8 +14,10 @@
   * Refactored javascript (one namespace only: gmcKN)
   * Support for access_token based service
   * Ability to set minimum cluster size
+  * Visual studio 2010 and webforms
 
 
 == Version 1 (File download) ==
   * Server-side clustering which works globally
   * Ability to cluster 100.000+ points within 1 second
+  * Visual studio 2010 and webforms
