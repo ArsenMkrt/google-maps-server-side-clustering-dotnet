@@ -5,7 +5,7 @@
   * Minimum external dependency is jQuery and Google Maps api
   * mapclustering.js only have jQuery and Google Maps api dependency
   * Support for K-nearest neighbors (experimental feature)
-  * Visual studio 2013 and MVC
+  * Visual studio 2013 and webforms
 
 
 == Version 2 (File download) ==
