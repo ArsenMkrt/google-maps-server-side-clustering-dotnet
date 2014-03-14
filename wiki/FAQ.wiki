@@ -120,7 +120,7 @@ if set to never filter, then too much data will be send back to the client when 
 
 A. Inspiration from 
 http://www.crunchpanorama.com/ and 
-http://code.google.com/intl/da-DK/apis/maps/articles/toomanymarkers.html
+https://developers.google.com/maps/articles/toomanymarkers
 
 ---------------------------------
 
