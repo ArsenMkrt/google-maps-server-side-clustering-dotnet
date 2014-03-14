@@ -1,10 +1,14 @@
 = Version history =
 
+== Future Versions ==
+  * https://github.com/kunukn/Google-Maps-Clustering-CSharp
+
 
 == Version 3 (SVN) ==
   * Minimum external dependency is jQuery and Google Maps api
   * mapclustering.js only have jQuery and Google Maps api dependency
   * Support for K-nearest neighbors (experimental feature)
+  * WCF updates
   * Visual studio 2013 and webforms
 
 
